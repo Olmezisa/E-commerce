@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit{
       console.log(this.registerForm.value);
       const succes=this.authService.register(email,password)
       if(succes){
-        alert('Register succesful');
+
         this.router.navigate(['/home'])
       }
       else{

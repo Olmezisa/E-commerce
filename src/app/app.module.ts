@@ -10,7 +10,9 @@ import { RegisterComponent } from './auth/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatDividerModule} from '@angular/material/divider'
+import {MatDividerModule} from '@angular/material/divider';
+import { NavbarComponent } from './header/navbar/navbar.component';
+import { FooterComponent } from './header/footer/footer.component'
 
 
 
@@ -21,7 +23,9 @@ import {MatDividerModule} from '@angular/material/divider'
     HeaderComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    NavbarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

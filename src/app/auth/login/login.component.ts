@@ -30,7 +30,6 @@ export class LoginComponent {
       const succes= this.authService.login(email,password);
       if(succes){
         this.router.navigate(['/home']);
-        alert("Login successful");
       }
       else{
         alert("email and password are incorrect");
