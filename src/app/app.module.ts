@@ -13,6 +13,11 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatDividerModule} from '@angular/material/divider';
 import { NavbarComponent } from './header/navbar/navbar.component';
 import { FooterComponent } from './header/footer/footer.component'
+import { CommonModule } from '@angular/common';
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
+import { AuthService } from './services/auth.service';
+
 
 
 
@@ -33,11 +38,34 @@ import { FooterComponent } from './header/footer/footer.component'
     MatIconModule,
     MatMenuModule,
     MatDividerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule,
+    SocialLoginModule,
 
   ],
   providers: [
-    provideClientHydration(withEventReplay())
+    provideClientHydration(withEventReplay()),
+    AuthService,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              'GOOGLE_CLIENT_ID_HERE'
+            )
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(
+              'FACEBOOK_APP_ID_HERE'
+            )
+          }
+        ]
+      } as SocialAuthServiceConfig
+    }
   ],
   bootstrap: [AppComponent]
 })

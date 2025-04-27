@@ -1,11 +1,14 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+
 
 export interface User {
   email: string;
-  password: string;
+  password?: string;
   city?: string;
+  token?: string;
+  provider?: 'google' | 'facebook';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -15,7 +18,10 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: any
+  ) {
+
     if (isPlatformBrowser(this.platformId)) {
       const saved = localStorage.getItem('currentUser');
       if (saved) {
@@ -24,13 +30,11 @@ export class AuthService {
     }
   }
 
+
   login(email: string, password: string): boolean {
     const user = this.users.find(u => u.email === email && u.password === password);
     if (user) {
-      this.currentUserSubject.next(user);
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-      }
+      this.setCurrentUser(user);
       return true;
     }
     return false;
@@ -42,10 +46,7 @@ export class AuthService {
     }
     const newUser: User = { email, password };
     this.users.push(newUser);
-    this.currentUserSubject.next(newUser);
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('currentUser', JSON.stringify(newUser));
-    }
+    this.setCurrentUser(newUser);
     return true;
   }
 
@@ -64,16 +65,31 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  updateCurrentUser(data: Partial<Omit<User, 'email' | 'password'>>): void {
+  updateCurrentUser(data: Partial<Omit<User, 'email' | 'password' | 'provider'>>): void {
     const user = this.currentUserSubject.value;
-    if (user) {
-      const updated = { ...user, ...data };
-      const idx = this.users.findIndex(u => u.email === user.email);
-      if (idx > -1) this.users[idx] = updated;
-      this.currentUserSubject.next(updated);
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.setItem('currentUser', JSON.stringify(updated));
-      }
+    if (!user) return;
+    const updated = { ...user, ...data };
+    const idx = this.users.findIndex(u => u.email === user.email);
+    if (idx > -1) this.users[idx] = updated;
+    this.setCurrentUser(updated);
+  }
+
+
+ socialLogin(provider: 'google' | 'facebook', token: string): Observable<User | null> {
+
+  const user: User = { email: `${provider}@social`, provider, token };
+  this.currentUserSubject.next(user);
+  if (isPlatformBrowser(this.platformId)) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+  return of(user);
+}
+
+
+  private setCurrentUser(user: User) {
+    this.currentUserSubject.next(user);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
     }
   }
 }

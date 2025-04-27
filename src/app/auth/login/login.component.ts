@@ -1,41 +1,98 @@
-import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { AuthService } from '../../services/auth.service';
+import {
+  SocialAuthService,
+  SocialUser,
+  GoogleLoginProvider,
+  FacebookLoginProvider
+} from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone:false,
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginForm!:FormGroup;
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  loadingGoogle = false;
+  loadingFacebook = false;
 
+  constructor(
+    private authService: AuthService,
+    private socialAuth: SocialAuthService,
+    private router: Router
+  ) {}
 
-  constructor(private authService:AuthService, private router:Router){}
-
-  ngOnInit(){
-    this.loginForm=new FormGroup({
-      email: new FormControl('',[Validators.required]),
-      password: new FormControl('',[Validators.required])
+  ngOnInit() {
+    this.loginForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required])
     });
   }
 
-  login(){
-    if(this.loginForm.valid){
-      const {email,password}=this.loginForm.value;
-      console.log(this.loginForm.value);
-      const succes= this.authService.login(email,password);
-      if(succes){
-        this.router.navigate(['/home']);
-      }
-      else{
-        alert("email and password are incorrect");
-      }
+
+  login() {
+    if (!this.loginForm.valid) return;
+
+    const { email, password } = this.loginForm.value;
+    const success = this.authService.login(email, password);
+
+    if (success) {
+      this.router.navigate(['/home']);
+    } else {
+      alert('Email or password wrong!');
     }
   }
+
+  // Google ile giriş
+  signInWithGoogle(): void {
+    this.loadingGoogle = true;
+    this.socialAuth.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then((user: SocialUser) => {
+        return this.authService.socialLogin('google', user.idToken).toPromise();
+      })
+      .then((u) => {
+        this.loadingGoogle = false;
+        if (u) {
+          this.router.navigate(['/home']);
+        } else {
+          alert('Google ile giriş başarısız.');
+        }
+      })
+      .catch(err => {
+        this.loadingGoogle = false;
+        console.error(err);
+        alert('Google oturumu açılırken hata oluştu.');
+      });
+  }
+
+  // Facebook ile giriş
+  signInWithFacebook(): void {
+    this.loadingFacebook = true;
+    this.socialAuth.signIn(FacebookLoginProvider.PROVIDER_ID)
+      .then((user: SocialUser) => {
+        return this.authService.socialLogin('facebook', user.authToken).toPromise();
+      })
+      .then((u) => {
+        this.loadingFacebook = false;
+        if (u) {
+          this.router.navigate(['/home']);
+        } else {
+          alert('Facebook ile giriş başarısız.');
+        }
+      })
+      .catch(err => {
+        this.loadingFacebook = false;
+        console.error(err);
+        alert('Facebook oturumu açılırken hata oluştu.');
+      });
+  }
+
+
 
   onLogin(){
     this.router.navigate(['/home']);
