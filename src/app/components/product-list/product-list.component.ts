@@ -1,27 +1,37 @@
+// src/app/product-list/product-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Product, ProductService } from '../../services/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
-  standalone: false,
+  standalone:false,
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit{
+export class ProductListComponent implements OnInit {
+  products: Product[] = [];
 
-  products:Product[]=[];
-  constructor(private productService:ProductService){}
+  constructor(private productService: ProductService,private router:Router) {}
 
-  ngOnInit():void{
+  ngOnInit(): void {
     this.listProducts();
   }
 
-  //crossOrigin eklememiz lazım backend tarafına
-  listProducts(){
+  listProducts() {
     this.productService.getProductList().subscribe(
-      data =>{
-        this.products=data;
-      }
-    )
+      data => this.products = data,
+      err  => console.error('API hatası', err)
+    );
   }
+  toggleFavorite(p: Product) {
+    p.favorite = !p.favorite;
+
+    // Favorilere ekleyince favorites sayfasına yönlendir
+    if (p.favorite) {
+      this.router.navigate(['/favorites']);
+    }
+  }
+
+
 }

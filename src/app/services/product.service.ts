@@ -1,38 +1,24 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-export class Product{
-  constructor(
-    public name:string,
-    public description:string,
-    public unitPrice:number,
-    public imageUrl:string,
-    public unitsInStock:number,
-    public dateCreated:Date,
-    public lastUpdated:Date
-  ){}
+export interface Product {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  favorite?:boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  private baseUrl='http://localhost:8080/api/products';
+  private apiUrl = 'https://fakestoreapi.com/products';
 
+  constructor(private http: HttpClient) {}
 
-  constructor(private httpClient: HttpClient) { }
-
-  getProductList(): Observable<Product[]>{
-    return this.httpClient.get<GetResponse>(this.baseUrl).pipe(
-      map(response => response._embedded.products)
-    );
+  getProductList(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.apiUrl);
   }
-
-
 }
- interface GetResponse{
-    _embedded:{
-      products: Product[];
-    }
-  }

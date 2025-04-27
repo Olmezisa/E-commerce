@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import {MatIconModule} from '@angular/material/icon';
@@ -41,6 +42,7 @@ import { AuthService } from './services/auth.service';
     ReactiveFormsModule,
     CommonModule,
     SocialLoginModule,
+    HttpClientModule
 
   ],
   providers: [
