@@ -1,0 +1,28 @@
+<!-- src/app/ProductModule/Components/product-card/product-card.component.html -->
+
+<div class="border p-4 rounded-lg shadow hover:shadow-lg transition">
+  <!-- Resmi küçük boyutlara getiriyoruz -->
+  <img [src]="product.image" alt="{{ product.name }}" class="w-full h-48 object-cover mb-4 rounded-lg">
+
+  <h2 class="text-lg font-semibold">{{ product.name }}</h2>
+  <p class="text-gray-600">{{ product.price | currency:'USD' }}</p>
+  <p class="text-sm text-gray-500">{{ product.description }}</p>
+  <p class="text-sm text-gray-500">Stock: {{ product.stock }}</p>
+
+  <!-- View Details Butonu -->
+  <button
+    class="mt-2 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+    (click)="onViewDetails()"
+  >
+    View Details
+  </button>
+
+  <!-- Select for Compare Butonu -->
+  <button
+    class="mt-2 w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+    (click)="onSelectCompare()"
+    [disabled]="!canSelect"
+  >
+    {{ selected ? 'Selected' : 'Select for Compare' }}
+  </button>
+</div>

@@ -1,0 +1,19 @@
+<!-- src/app/ProductModule/pages/product-detail-page/product-detail-page.component.html -->
+
+<div class="p-6">
+  <!-- Detay sayfasında resim boyutunu ayarlıyoruz -->
+  <img [src]="product.image" alt="{{ product.name }}" class="w-full h-72 object-contain mb-4 rounded-lg">
+
+  <h1 class="text-3xl font-bold">{{ product.name }}</h1>
+  <p class="text-xl">{{ product.price | currency }}</p>
+  <p class="text-gray-600">{{ product.description }}</p>
+
+  <p class="text-sm text-gray-500">Category: {{ product.category }}</p>
+  <p class="text-sm text-gray-500">Stock: {{ product.stock }}</p>
+
+  <!-- Rating -->
+  <div class="mt-4">
+    <p class="font-semibold">Rating: {{ product.rating.rate }} ⭐</p>
+    <p class="text-sm text-gray-500">Reviews: {{ product.rating.count }} reviews</p>
+  </div>
+</div>

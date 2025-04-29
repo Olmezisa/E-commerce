@@ -4,7 +4,6 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 import {MatIconModule} from '@angular/material/icon';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProductListComponent } from './components/product-list/product-list.component';
 import { HeaderComponent } from './header/header/header.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
@@ -19,19 +18,36 @@ import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-s
 import { GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 import { AuthService } from './services/auth.service';
 
+import { ProductModule } from './ProductModule/product.module'; // ProductModule'i buraya ekliyoruz
+import { ProductCardComponent } from './ProductModule/Components/product-card/product-card.component';
+import { ProductDetailComponent } from './ProductModule/Components/product-detail/product-detail.component';
+import { ProductFilterComponent } from './ProductModule/Components/product-filter/product-filter.component';
+import { ReviewCardComponent } from './ProductModule/Components/review-card/review-card.component';
+import { ReviewListComponent } from './ProductModule/Components/review-list/review-list.component';
+import { ProductComparePageComponent } from './ProductModule/pages/product-compare-page/product-compare-page.component';
+import { ProductDetailPageComponent } from './ProductModule/pages/product-detail-page/product-detail-page.component';
+import { ProductListPageComponent } from './ProductModule/pages/product-list-page/product-list-page.component';
+
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProductListComponent,
     HeaderComponent,
     LoginComponent,
     RegisterComponent,
     HomeComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    ProductCardComponent,
+    ProductDetailComponent,
+    ProductFilterComponent,
+    ReviewCardComponent,
+    ReviewListComponent,
+    ProductComparePageComponent,
+    ProductDetailPageComponent,
+    ProductListPageComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +58,7 @@ import { AuthService } from './services/auth.service';
     ReactiveFormsModule,
     CommonModule,
     SocialLoginModule,
+    ProductModule,
     HttpClientModule
 
   ],
