@@ -28,6 +28,12 @@ import { ProductComparePageComponent } from './ProductModule/pages/product-compa
 import { ProductDetailPageComponent } from './ProductModule/pages/product-detail-page/product-detail-page.component';
 import { ProductListPageComponent } from './ProductModule/pages/product-list-page/product-list-page.component';
 import { CartPageComponent } from './cart/cart-page/cart-page.component';
+import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
+import { SellerComponent } from './GuardingHome/seller/seller.component';
+import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.component';
+import { AdminComponent } from './Admin/admin/admin.component';
+
+
 
 
 
@@ -49,7 +55,13 @@ import { CartPageComponent } from './cart/cart-page/cart-page.component';
     ProductComparePageComponent,
     ProductDetailPageComponent,
     ProductListPageComponent,
-    CartPageComponent
+    CartPageComponent,
+    BuyerComponent,
+    SellerComponent,
+    UnauthorizedComponent,
+    AdminComponent,
+
+
   ],
   imports: [
     BrowserModule,
@@ -61,7 +73,7 @@ import { CartPageComponent } from './cart/cart-page/cart-page.component';
     CommonModule,
     SocialLoginModule,
     ProductModule,
-    HttpClientModule
+    HttpClientModule,
 
   ],
   providers: [

@@ -1,4 +1,4 @@
-// src/app/app-routing.module.ts
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent }   from './auth/login/login.component';
@@ -10,12 +10,19 @@ import { SellerComponent } from './GuardingHome/seller/seller.component';
 import { AdminComponent } from './Admin/admin/admin.component';
 import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.component';
 import { HomeComponent } from './components/home/home.component';
+import { ProductDetailPageComponent } from './ProductModule/pages/product-detail-page/product-detail-page.component';
+import { ProductComparePageComponent } from './ProductModule/pages/product-compare-page/product-compare-page.component';
+import { CartPageComponent } from './cart/cart-page/cart-page.component';
 
 const routes: Routes = [
   { path: '',          redirectTo: 'home', pathMatch: 'full' },
-  {path:'home',component:HomeComponent },
+  { path:'home',component:HomeComponent },
   { path: 'login',     component: LoginComponent },
   { path: 'signup',    component: RegisterComponent },
+  { path: 'products/detail/:id', component: ProductDetailPageComponent },  // ProductDetailPageComponent için route ekledik
+  { path: 'products/compare', component: ProductComparePageComponent },  // ProductComparePageComponent için route ekledik
+  { path: 'cart', loadChildren: () => import('./cart/cart.module').then(m => m.CartModule) },
+
   {
     path: 'buyer',
     component: BuyerComponent,
