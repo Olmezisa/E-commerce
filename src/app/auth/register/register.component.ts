@@ -18,8 +18,7 @@ export class RegisterComponent implements OnInit{
     this.registerForm=new FormGroup({
       email:new FormControl('',[Validators.required,Validators.email]),
       password:new FormControl('',[Validators.required,this.passwordStrengthValidator(),Validators.minLength(8)]),
-      confirmPassword: new FormControl('', [Validators.required, this.passwordMatchValidator.bind(this)]),
-      city: new FormControl('',[Validators.required])
+      confirmPassword: new FormControl('', [Validators.required, this.passwordMatchValidator.bind(this)])
 
     })
   }
@@ -52,18 +51,12 @@ export class RegisterComponent implements OnInit{
       console.log(this.registerForm.value);
       const succes=this.authService.register(email,password)
       if(succes){
-
-        this.router.navigate(['/home'])
+        this.router.navigate(['/buyer'])
       }
+
       else{
         alert('Email already exists');
       }
     }
   }
-  onGoLogin() {
-    this.router.navigate(['/home']);
-  }
-    onOtherCitySelected() {
-      this.registerForm.get('otherCity')?.setValue('');
-    }
 }

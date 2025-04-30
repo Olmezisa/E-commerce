@@ -9,6 +9,8 @@ import { Product } from '../../models/product.model';
   templateUrl: './product-compare-page.component.html',
   styleUrls: ['./product-compare-page.component.css']
 })
+
+
 export class ProductComparePageComponent implements OnInit {
   product1: Product | undefined;
   product2: Product | undefined;

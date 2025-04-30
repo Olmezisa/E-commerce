@@ -16,8 +16,7 @@ export class ProductListPageComponent implements OnInit {
 
   constructor(
     private ProductService: ProductService,
-    private router: Router,
-    private cartService: CartService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +53,7 @@ export class ProductListPageComponent implements OnInit {
   }
 
   addToCart(product: Product): void {
-    this.cartService.addToCart(product);
+    //this.cartService.addToCart(product);
     console.log(`${product.title} sepete eklendi.`);
   }
 }
