@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/product.model';
 import { Router } from '@angular/router';
 import { CartService } from '../../../cart/service/cart.service';
+import { MatSnackBar } from '@angular/material/snack-bar'; // 👈 snackbar importu
 
 @Component({
   selector: 'app-product-list-page',
@@ -11,21 +12,23 @@ import { CartService } from '../../../cart/service/cart.service';
   styleUrls: ['./product-list-page.component.css']
 })
 export class ProductListPageComponent implements OnInit {
-  products: Product[] = []; // Ürünleri tutmak için
-  selectedProducts: Product[] = []; // Karşılaştırmaya eklenen ürünleri tutar
+  products: Product[] = [];
+  selectedProducts: Product[] = [];
 
   constructor(
     private ProductService: ProductService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService,
+    private snackBar: MatSnackBar // 👈 snackbar inject
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts(); // Component yüklenince ürünleri çek
+    this.loadProducts();
   }
 
   loadProducts(): void {
     this.ProductService.getProducts().subscribe((data: Product[]) => {
-      this.products = data; // API'den gelen veriyi products dizisine atıyoruz
+      this.products = data;
     });
   }
 
@@ -35,25 +38,30 @@ export class ProductListPageComponent implements OnInit {
       const product2Id = this.selectedProducts[1].id;
 
       this.router.navigate(['/products/compare'], {
-        queryParams: { product1: product1Id, product2: product2Id } // Karşılaştırmaya yönlendiriyoruz
+        queryParams: { product1: product1Id, product2: product2Id }
       });
 
-      this.selectedProducts = []; // Seçilen ürünleri sıfırla
+      this.selectedProducts = [];
     }
   }
 
   onViewDetails(productId: number): void {
-    this.router.navigate(['/products/detail', productId]); // Ürün detayına yönlendiriyoruz
+    this.router.navigate(['/products/detail', productId]);
   }
 
   addToCompare(product: Product): void {
     if (this.selectedProducts.length < 2 && !this.selectedProducts.includes(product)) {
-      this.selectedProducts.push(product); // Ürünü karşılaştırmaya ekliyoruz
+      this.selectedProducts.push(product);
     }
   }
 
   addToCart(product: Product): void {
-    //this.cartService.addToCart(product);
-    console.log(`${product.title} sepete eklendi.`);
+    this.cartService.addToCart(product);
+    this.snackBar.open(`${product.title} sepete eklendi.`, 'Kapat', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['custom-snackbar'] // opsiyonel stil
+    });
   }
 }

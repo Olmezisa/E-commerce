@@ -34,8 +34,10 @@ import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.
 import { AdminComponent } from './Admin/admin/admin.component';
 
 
+import { CheckoutPageComponent } from './checkout/checkout-page/checkout-page.component';
 
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -60,8 +62,7 @@ import { AdminComponent } from './Admin/admin/admin.component';
     SellerComponent,
     UnauthorizedComponent,
     AdminComponent,
-
-
+    CheckoutPageComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +74,9 @@ import { AdminComponent } from './Admin/admin/admin.component';
     CommonModule,
     SocialLoginModule,
     ProductModule,
-    HttpClientModule,
+    BrowserAnimationsModule,  // önemli!
+    MatSnackBarModule,
+    HttpClientModule
 
   ],
   providers: [
