@@ -3,9 +3,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
 
+export type Role = 'BUYER' | 'SELLER' | 'ADMIN';
+
 export interface User {
   email: string;
   password?: string;
+  role?:Role;
   city?: string;
   token?: string;
   provider?: 'google' | 'facebook';
@@ -31,7 +34,7 @@ export class AuthService {
   }
 
 
-  login(email: string, password: string): boolean {
+  login(email: string, password: string,role: Role): boolean {
     const user = this.users.find(u => u.email === email && u.password === password);
     if (user) {
       this.setCurrentUser(user);
@@ -41,10 +44,8 @@ export class AuthService {
   }
 
   register(email: string, password: string): boolean {
-    if (this.users.some(u => u.email === email)) {
-      return false;
-    }
-    const newUser: User = { email, password };
+    if (this.users.some(u => u.email === email)) return false;
+    const newUser: User = { email, password,role:'BUYER' };
     this.users.push(newUser);
     this.setCurrentUser(newUser);
     return true;

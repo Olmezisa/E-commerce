@@ -30,7 +30,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required])
+      password: new FormControl('', [Validators.required]),
+      role: new FormControl('',[Validators.required])
     });
   }
 
@@ -38,11 +39,17 @@ export class LoginComponent implements OnInit {
   login() {
     if (!this.loginForm.valid) return;
 
-    const { email, password } = this.loginForm.value;
-    const success = this.authService.login(email, password);
+    const { email, password,role } = this.loginForm.value;
+    const success = this.authService.login(email, password,role);
 
     if (success) {
-      this.router.navigate(['/home']);
+      const user = this.authService.getCurrentUser()!;
+
+      switch (user.role) {
+        case 'ADMIN':  this.router.navigate(['/admin']);  break;
+        case 'SELLER': this.router.navigate(['/seller']); break;
+        default:       this.router.navigate(['/buyer']);
+      }
     } else {
       alert('Email or password wrong!');
     }
@@ -92,10 +99,5 @@ export class LoginComponent implements OnInit {
       });
   }
 
-
-
-  onLogin(){
-    this.router.navigate(['/home']);
-  }
 
 }
