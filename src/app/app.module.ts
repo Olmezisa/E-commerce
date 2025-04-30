@@ -27,6 +27,7 @@ import { ReviewListComponent } from './ProductModule/Components/review-list/revi
 import { ProductComparePageComponent } from './ProductModule/pages/product-compare-page/product-compare-page.component';
 import { ProductDetailPageComponent } from './ProductModule/pages/product-detail-page/product-detail-page.component';
 import { ProductListPageComponent } from './ProductModule/pages/product-list-page/product-list-page.component';
+import { CartPageComponent } from './cart/cart-page/cart-page.component';
 
 
 
@@ -47,7 +48,8 @@ import { ProductListPageComponent } from './ProductModule/pages/product-list-pag
     ReviewListComponent,
     ProductComparePageComponent,
     ProductDetailPageComponent,
-    ProductListPageComponent
+    ProductListPageComponent,
+    CartPageComponent
   ],
   imports: [
     BrowserModule,

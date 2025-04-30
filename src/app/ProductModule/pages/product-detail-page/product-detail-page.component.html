@@ -1,10 +1,8 @@
-<!-- src/app/ProductModule/pages/product-detail-page/product-detail-page.component.html -->
-
-<div class="p-6">
+<div *ngIf="!loading; else loadingTemplate" class="p-6">
   <!-- Detay sayfasında resim boyutunu ayarlıyoruz -->
-  <img [src]="product.image" alt="{{ product.name }}" class="w-full h-72 object-contain mb-4 rounded-lg">
+  <img [src]="product.image" alt="{{ product.title }}" class="w-full h-72 object-contain mb-4 rounded-lg">
 
-  <h1 class="text-3xl font-bold">{{ product.name }}</h1>
+  <h1 class="text-3xl font-bold">{{ product.title }}</h1>
   <p class="text-xl">{{ product.price | currency }}</p>
   <p class="text-gray-600">{{ product.description }}</p>
 
@@ -17,3 +15,10 @@
     <p class="text-sm text-gray-500">Reviews: {{ product.rating.count }} reviews</p>
   </div>
 </div>
+
+<!-- Loading template -->
+<ng-template #loadingTemplate>
+  <div class="p-6 text-center">
+    <p>Loading...</p>
+  </div>
+</ng-template>

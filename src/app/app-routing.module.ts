@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'products', component: ProductListPageComponent },  // ProductListPageComponent için route ekledik
   { path: 'products/detail/:id', component: ProductDetailPageComponent },  // ProductDetailPageComponent için route ekledik
   { path: 'products/compare', component: ProductComparePageComponent },  // ProductComparePageComponent için route ekledik
+  { path: 'cart', loadChildren: () => import('./cart/cart.module').then(m => m.CartModule) },
   { path: '**', redirectTo: '' }  // Yedek yönlendirme
 ];
 

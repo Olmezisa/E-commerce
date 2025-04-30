@@ -3,8 +3,14 @@
     <thead class="bg-gray-200">
       <tr>
         <th class="px-4 py-2"></th>
-        <th class="px-4 py-2">{{ product1.name }}</th>
-        <th class="px-4 py-2">{{ product2.name }}</th>
+        <th class="px-4 py-2">
+          <img [src]="product1.image" alt="{{ product1.title }}" class="w-24 h-24 object-contain mx-auto mb-2 rounded" />
+          <div>{{ product1.title }}</div>
+        </th>
+        <th class="px-4 py-2">
+          <img [src]="product2.image" alt="{{ product2.title }}" class="w-24 h-24 object-contain mx-auto mb-2 rounded" />
+          <div>{{ product2.title }}</div>
+        </th>
       </tr>
     </thead>
     <tbody class="bg-white">

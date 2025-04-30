@@ -2,6 +2,7 @@ import { ProductService } from './../../services/product.service';
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/product.model';
 import { Router } from '@angular/router';
+import { CartService } from '../../../cart/service/cart.service';
 
 @Component({
   selector: 'app-product-list-page',
@@ -15,7 +16,8 @@ export class ProductListPageComponent implements OnInit {
 
   constructor(
     private ProductService: ProductService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class ProductListPageComponent implements OnInit {
   }
 
   addToCart(product: Product): void {
-    // Sepete eklemek için buraya bir işlev ekliyoruz
-    console.log(`${product.name} sepete eklendi.`);
+    this.cartService.addToCart(product);
+    console.log(`${product.title} sepete eklendi.`);
   }
 }

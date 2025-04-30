@@ -2,7 +2,7 @@ import { Review } from './review.model'; // Review modelini içe aktar
 
 export interface Product {
   id: number;
-  name: string;
+  title: string;
   description: string;
   price: number;
   image: string;

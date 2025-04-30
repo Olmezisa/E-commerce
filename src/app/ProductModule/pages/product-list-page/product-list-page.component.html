@@ -15,10 +15,10 @@
 <div class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
   <div *ngFor="let product of products" class="border p-4 rounded-lg shadow hover:shadow-lg transition">
     <!-- Ürün Resmi -->
-    <img [src]="product.image" alt="{{ product.name }}" class="w-full h-48 object-cover mb-4">
+    <img [src]="product.image" alt="{{ product.title }}" class="w-full h-48 object-cover mb-4">
 
     <!-- Ürün Adı -->
-    <h2 class="text-lg font-semibold">{{ product.name }}</h2>
+    <h2 class="text-lg font-semibold">{{ product.title }}</h2>
 
     <!-- Ürün Fiyatı -->
     <p class="text-gray-600">{{ product.price | currency: 'USD' }}</p>
