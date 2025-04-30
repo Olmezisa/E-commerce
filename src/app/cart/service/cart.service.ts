@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from '../../ProductModule/models/product.model';
 import { CartItem } from '../cart-item.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 @Injectable({
@@ -15,15 +17,24 @@ export class CartService {
   private cartCountSubject = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSubject.asObservable();
 
+  constructor(private snackBar: MatSnackBar) {
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      this.cartItems = JSON.parse(savedCart);
+      this.updateCart();
+    }
+  }
+
+
   addToCart(product: Product): void {
     const existingItem = this.cartItems.find(item => item.product.id === product.id);
     if (existingItem) {
-      existingItem.quantity += 1;
+      existingItem.quantity++;
     } else {
       this.cartItems.push({ product, quantity: 1 });
     }
-
     this.updateCart();
+    this.showSnackbar(`${product.title} sepete eklendi.`);
   }
 
   removeFromCart(productId: number): void {
@@ -49,7 +60,9 @@ export class CartService {
     this.cartItemsSubject.next([...this.cartItems]);
     const totalCount = this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
     this.cartCountSubject.next(totalCount);
+    this.saveToLocalStorage();
   }
+
 
   increaseQuantity(productId: number): void {
     const item = this.cartItems.find(item => item.product.id === productId);
@@ -69,5 +82,18 @@ export class CartService {
       this.updateCart();
     }
   }
+  private saveToLocalStorage(): void {
+    localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+  }
+
+  private showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Kapat', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['custom-snackbar']
+    });
+  }
+
 
 }

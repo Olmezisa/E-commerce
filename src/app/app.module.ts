@@ -28,8 +28,10 @@ import { ProductComparePageComponent } from './ProductModule/pages/product-compa
 import { ProductDetailPageComponent } from './ProductModule/pages/product-detail-page/product-detail-page.component';
 import { ProductListPageComponent } from './ProductModule/pages/product-list-page/product-list-page.component';
 import { CartPageComponent } from './cart/cart-page/cart-page.component';
+import { CheckoutPageComponent } from './checkout/checkout-page/checkout-page.component';
 
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -49,7 +51,8 @@ import { CartPageComponent } from './cart/cart-page/cart-page.component';
     ProductComparePageComponent,
     ProductDetailPageComponent,
     ProductListPageComponent,
-    CartPageComponent
+    CartPageComponent,
+    CheckoutPageComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +64,8 @@ import { CartPageComponent } from './cart/cart-page/cart-page.component';
     CommonModule,
     SocialLoginModule,
     ProductModule,
+    BrowserAnimationsModule,  // önemli!
+    MatSnackBarModule,
     HttpClientModule
 
   ],
