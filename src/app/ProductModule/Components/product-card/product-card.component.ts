@@ -8,7 +8,7 @@ import { Product } from '../../models/product.model';
   styleUrls: ['./product-card.component.css']
 })
 export class ProductCardComponent {
-  @Input() product!: Product; //kartta gösterilecek ürün bilgisi
+  @Input() product!: Product; //kartta gösterilecek ürün bilgileri
   @Input() selected: boolean = false; //daha öne seçildiyse buton disabled olur
   @Input() canSelect: boolean = true; //seçim sınırı dolduysa seçim yapamazsın
 
