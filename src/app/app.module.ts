@@ -32,6 +32,9 @@ import { CheckoutPageComponent } from './checkout/checkout-page/checkout-page.co
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
+import { SellerComponent } from './GuardingHome/seller/seller.component';
+import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.component';
 
 
 @NgModule({
@@ -52,7 +55,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ProductDetailPageComponent,
     ProductListPageComponent,
     CartPageComponent,
-    CheckoutPageComponent
+    CheckoutPageComponent,
+    BuyerComponent,
+    SellerComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
