@@ -38,6 +38,8 @@ import { CheckoutPageComponent } from './checkout/checkout-page/checkout-page.co
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SearchComponent } from './components/search/search.component';
+import { SearchPageComponent } from './search/search-page/search-page.component';
 
 
 @NgModule({
@@ -65,7 +67,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
     AdminComponent,
-    CheckoutPageComponent
+    CheckoutPageComponent,
+    SearchComponent,
+    SearchPageComponent
   ],
   imports: [
     BrowserModule,
