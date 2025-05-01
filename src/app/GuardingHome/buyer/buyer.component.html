@@ -1,4 +1,8 @@
 <!-- 1) Top Bar -->
+
+<div class="sticky top-0 z-50 bg-white shadow">
+
+
 <div class="bg-primary text-white">
   <div class="container mx-auto flex justify-end space-x-6 py-2 text-xs">
     <a routerLink="#" class="hover:text-secondary">İndirim Kuponlarım</a>
@@ -13,12 +17,16 @@
   <div class="container mx-auto flex items-center justify-between h-16 px-4">
     <!-- Logo + Menu -->
     <div class="flex items-center space-x-4">
-      <button routerLink="/home" class="text-2xl font-bold text-primary hover:text-secondary">NDNS</button>
-      <a></a>
-      <button class="flex items-center space-x-1 text-sm text-dark hover:text-primary">
-        <mat-icon class="text-secondary">menu</mat-icon>
-        <span>Menu</span>
-      </button>
+      <button
+      routerLink="/home"
+      class="text-2xl font-bold text-primary
+             animate-pulse
+             transition-all duration-300 ease-in-out
+             hover:text-secondary hover:scale-105 hover:-rotate-1"
+    >
+      NDNS
+    </button>
+
     </div>
 
     <!-- Search Box -->
@@ -80,11 +88,10 @@
     <span>My Cart</span>
     <span
       class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
-    >5</span>
+    >{{(cartCount$ | async)||0}}</span>
   </button>
   <a></a>
-
-
+</div>
 </div>
 </div>
 </div>

@@ -13,13 +13,18 @@
   <div class="container mx-auto flex items-center justify-between h-16 px-4">
     <!-- Logo + Menu -->
     <div class="flex items-center space-x-4">
-      <button routerLink="/home" class="text-2xl font-bold text-primary hover:text-secondary">NDNS</button>
-      <a></a>
-      <button class="flex items-center space-x-1 text-sm text-dark hover:text-primary">
-        <mat-icon class="text-secondary">menu</mat-icon>
-        <span>Menu</span>
-      </button>
-    </div>
+      <button
+      routerLink="/home"
+      class="!text-2xl font-bold text-primary
+             animate-pulse
+             transition-all duration-300 ease-in-out
+             hover:text-secondary hover:scale-105 hover:-rotate-1"
+    >
+      NDNS
+    </button>
+
+
+        </div>
 
     <!-- Search Box -->
     <div class="relative flex-1 mx-8">
@@ -39,12 +44,12 @@
 
     <!-- GİRİŞSİZ (MISAFİR) -->
 
-      <div class="flex items-center space-x-8 text-dark">
+      <div class="!flex items-center space-x-8 text-dark">
         <!-- Login -->
         <button
           mat-button
           [matMenuTriggerFor]="guestMenu"
-          class="flex flex-col items-center text-sm hover:text-primary"
+          class="!flex flex-col items-center text-sm hover:text-primary"
         >
           <mat-icon class="text-primary">person</mat-icon>
           <span>Login</span>
@@ -75,13 +80,17 @@
 
         <!-- My Cart -->
         <button
-          mat-button
-          routerLink="/cart"
-          class="relative flex flex-col items-center text-sm hover:text-secondary"
-        >
-          <mat-icon class="text-accent">shopping_cart</mat-icon>
-          <span>My Cart</span>
-        </button>
+    mat-button
+    routerLink="/cart"
+    class="relative flex flex-col items-center text-sm hover:text-secondary"
+  >
+    <mat-icon class="text-primary">shopping_cart</mat-icon>
+    <span>My Cart</span>
+    <span
+      class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+    >{{(cartCount$ | async)||0}}</span>
+  </button>
+  <a></a>
       </div>
   </div>
 </div>

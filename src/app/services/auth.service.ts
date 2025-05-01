@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 export type Role = 'BUYER' | 'SELLER' | 'ADMIN';
@@ -22,7 +23,7 @@ export class AuthService {
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,private router:Router
   ) {
 
     if (isPlatformBrowser(this.platformId)) {
@@ -56,6 +57,7 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('currentUser');
     }
+    this.router.navigate(['/home']);
   }
 
   isLoggedIn(): boolean {

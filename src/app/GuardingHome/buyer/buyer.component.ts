@@ -1,5 +1,7 @@
+import { CartService } from './../../cart/service/cart.service';
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-buyer',
@@ -8,8 +10,10 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './buyer.component.css'
 })
 export class BuyerComponent {
-  constructor(private authService:AuthService){
+  cartCount$: Observable<number>;
 
+  constructor(private authService:AuthService,private cartService:CartService){
+  this.cartCount$=this.cartService.cartCount$;
   }
 
   logout(){
