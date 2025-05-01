@@ -34,7 +34,7 @@ export class AuthService {
   }
 
 
-  login(email: string, password: string,role: Role): boolean {
+  login(email: string, password: string): boolean {
     const user = this.users.find(u => u.email === email && u.password === password);
     if (user) {
       this.setCurrentUser(user);

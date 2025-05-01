@@ -28,13 +28,16 @@ import { ProductComparePageComponent } from './ProductModule/pages/product-compa
 import { ProductDetailPageComponent } from './ProductModule/pages/product-detail-page/product-detail-page.component';
 import { ProductListPageComponent } from './ProductModule/pages/product-list-page/product-list-page.component';
 import { CartPageComponent } from './cart/cart-page/cart-page.component';
+import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
+import { SellerComponent } from './GuardingHome/seller/seller.component';
+import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.component';
+import { AdminComponent } from './Admin/admin/admin.component';
+
+
 import { CheckoutPageComponent } from './checkout/checkout-page/checkout-page.component';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
-import { SellerComponent } from './GuardingHome/seller/seller.component';
-import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.component';
 
 
 @NgModule({
@@ -58,7 +61,11 @@ import { UnauthorizedComponent } from './GuardingHome/unauthorized/unauthorized.
     CheckoutPageComponent,
     BuyerComponent,
     SellerComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+
+
+    AdminComponent,
+    CheckoutPageComponent
   ],
   imports: [
     BrowserModule,

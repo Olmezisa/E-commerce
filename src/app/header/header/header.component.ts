@@ -7,17 +7,11 @@ import { AuthService,User } from '../../services/auth.service';
   selector: 'app-header',
   standalone:false,
   templateUrl: './header.component.html' })
-export class HeaderComponent implements OnInit {
-  isUserMenuOpen=false;
-  user$!: Observable<User | null>;
+export class HeaderComponent  {
+
 
   constructor(private auth: AuthService) {}
 
-  ngOnInit() {
-    this.user$ = this.auth.currentUser$;
-  }
 
-  logout() {
-    this.auth.logout();
-  }
+
 }
