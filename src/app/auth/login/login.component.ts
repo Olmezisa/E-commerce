@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../services/auth.service';
+
 import {
   SocialAuthService,
   SocialUser,
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -45,8 +46,8 @@ export class LoginComponent implements OnInit {
       const user = this.authService.getCurrentUser()!;
 
       switch (user.role) {
-        case 'ADMIN':  this.router.navigate(['/admin']);  break;
-        case 'SELLER': this.router.navigate(['/seller']); break;
+        case 'admin':  this.router.navigate(['/admin']);  break;
+        case 'seller': this.router.navigate(['/seller']); break;
         default:       this.router.navigate(['/buyer']);
       }
     } else {

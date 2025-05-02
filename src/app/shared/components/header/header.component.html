@@ -1,0 +1,156 @@
+<!-- 1) Top Bar -->
+<div class="bg-primary text-white">
+  <div class="container mx-auto flex justify-end space-x-6 py-2 text-xs">
+    <a routerLink="#" class="hover:text-secondary">İndirim Kuponlarım</a>
+    <a routerLink="#" class="hover:text-secondary">NDNS'de Satış Yap</a>
+    <a routerLink="#" class="hover:text-secondary">Hakkımızda</a>
+    <a routerLink="#" class="hover:text-secondary">Yardım &amp; Destek</a>
+  </div>
+</div>
+
+<!-- 2) Main Bar -->
+<div class="bg-white shadow-md">
+  <div class="container mx-auto flex items-center justify-between h-16 px-4">
+    <!-- Logo -->
+    <div class="flex items-center space-x-4">
+      <button
+        routerLink="/home"
+        class="!text-2xl font-bold text-primary
+               animate-pulse
+               transition-all duration-300 ease-in-out
+               hover:text-secondary hover:scale-105 hover:-rotate-1"
+      >
+        NDNS
+      </button>
+    </div>
+
+    <!-- **ARAMA ÇUBUĞU** -->
+    <div class="flex-1 px-4">
+      <app-search-bar
+       (search)="onSearch($event)">
+      </app-search-bar>
+    </div>
+
+    <!-- Kullanıcı durumu: misafir vs. girişli -->
+    <ng-container *ngIf="isLoggedIn$ | async; then loggedTpl; else guestTpl"></ng-container>
+
+    <!-- Misafir Şablonu -->
+    <ng-template #guestTpl>
+      <div class="!flex items-center space-x-8 text-dark">
+        <!-- Login Menü -->
+        <button
+          mat-button
+          [matMenuTriggerFor]="guestMenu"
+          class="!flex flex-col items-center text-sm hover:text-primary"
+        >
+          <mat-icon class="text-primary">person</mat-icon>
+          <span>Login</span>
+        </button>
+        <mat-menu
+          #guestMenu="matMenu"
+          yPosition="below"
+          xPosition="after"
+          overlapTrigger="false"
+        >
+          <button
+          mat-menu-item
+          routerLink="/auth/signup">
+            <mat-icon class="text-secondary">person_add</mat-icon>
+            <span>Register</span>
+          </button>
+          <button
+          mat-menu-item
+          routerLink="/auth/login">
+            <mat-icon class="text-secondary">login</mat-icon>
+            <span>Login</span>
+          </button>
+        </mat-menu>
+        <a></a>
+        <!-- Favorites -->
+        <button
+          mat-button
+          routerLink="/favorites"
+          class="flex flex-col items-center text-sm hover:text-secondary"
+        >
+          <mat-icon class="!text-red-600">favorite</mat-icon>
+          <span>Favorites</span>
+        </button>
+        <a></a>
+
+        <!-- My Cart -->
+        <button
+          mat-button
+          routerLink="/cart"
+          class="relative flex flex-col items-center text-sm hover:text-secondary"
+        >
+          <mat-icon class="text-primary">shopping_cart</mat-icon>
+          <span>My Cart</span>
+          <span
+            class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+          >
+            {{ (cartCount$ | async) || 0 }}
+          </span>
+        </button>
+      </div>
+      <a></a>
+    </ng-template>
+
+    <!-- Girişli Kullanıcı Şablonu -->
+    <ng-template #loggedTpl>
+      <div class="!flex items-center space-x-8 text-dark">
+        <!-- Hesabım Menü -->
+        <button
+          mat-button
+          [matMenuTriggerFor]="userMenu"
+          class="!flex flex-col items-center text-sm hover:text-primary"
+        >
+          <mat-icon class="text-primary">account_circle</mat-icon>
+          <span>{{ (currentUser$ | async)?.email }}</span>
+        </button>
+        <mat-menu
+          #userMenu="matMenu"
+          yPosition="below"
+          xPosition="after"
+          overlapTrigger="false"
+        >
+          <button mat-menu-item (click)="goToAccount()">
+            <mat-icon class="text-secondary">person</mat-icon>
+            <span>Hesabım</span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon class="text-secondary">exit_to_app</mat-icon>
+            <span>Çıkış Yap</span>
+          </button>
+        </mat-menu>
+        <a></a>
+
+        <!-- Favorites -->
+        <button
+          mat-button
+          routerLink="/favorites"
+          class="flex flex-col items-center text-sm hover:text-secondary"
+        >
+          <mat-icon class="!text-red-600">favorite</mat-icon>
+          <span>Favorites</span>
+        </button>
+        <a></a>
+
+        <!-- My Cart -->
+        <button
+          mat-button
+          routerLink="/cart"
+          class="relative flex flex-col items-center text-sm hover:text-secondary"
+        >
+          <mat-icon class="text-primary">shopping_cart</mat-icon>
+          <span>My Cart</span>
+          <span
+            class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+          >
+            {{ (cartCount$ | async) || 0 }}
+          </span>
+        </button>
+        <a></a>
+      </div>
+    </ng-template>
+  </div>
+</div>

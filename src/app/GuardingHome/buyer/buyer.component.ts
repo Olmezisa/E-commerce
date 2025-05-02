@@ -1,7 +1,9 @@
-import { CartService } from './../../cart/service/cart.service';
+
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+
 import { Observable } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-buyer',
