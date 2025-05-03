@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Suggestion {
   id: number;
@@ -11,7 +12,7 @@ export interface Suggestion {
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-  private baseUrl = '/api/search';
+  private baseUrl = `${environment.apiUrl}/search`;
 
   constructor(private http: HttpClient) {}
 

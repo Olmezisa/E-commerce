@@ -4,8 +4,6 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 import {MatIconModule} from '@angular/material/icon';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import {MatMenuModule} from '@angular/material/menu';
@@ -17,17 +15,11 @@ import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-s
 import { GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 
 
-
-import { ProductComparePageComponent } from './products/product-compare-page/product-compare-page.component';
-
-
 import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-
-import { AdminComponent } from './admin/admin.component';
 import { AuthService } from './core/services/auth.service';
 import { SharedModule } from './shared/shared.module';
 import { ProductsModule } from './products/products.module';

@@ -44,29 +44,36 @@ export class LoginComponent implements OnInit {
     }
 
     const { email, password } = this.loginForm.value;
-    this.authService.login(email, password).subscribe((user: User | null) => {
-      if (user) {
-        // Başarılı login: role’a göre yönlendir
-        this.errorMessage = null;
-        switch (user.role) {
-          case 'buyer':
-            this.router.navigate(['/home/buyer']);
-            break;
-          case 'seller':
-            this.router.navigate(['/home/seller']);
-            break;
-          case 'admin':
-            this.router.navigate(['/home/admin']);
-            break;
-          default:
-            this.router.navigate(['/home']);
+
+    this.authService.login(email, password).subscribe({
+      next: (user: User | null) => {
+        if (user) {
+          this.errorMessage = null;
+          switch (user.role) {
+            case 'BUYER':
+              console.log('Buyer role detected');
+              this.router.navigate(['/home']);
+              break;
+            case 'SELLER':
+              this.router.navigate(['/home/seller']);
+              break;
+            case 'ADMIN':
+              this.router.navigate(['/home/admin']);
+              break;
+            default:
+              this.router.navigate(['/home']);
+          }
+        } else {
+          this.errorMessage = 'Email veya şifre hatalı.';
         }
-      } else {
-        // Geçersiz kimlik bilgisi
-        this.errorMessage = 'Email veya şifre hatalı.';
+      },
+      error: err => {
+        console.error(err);
+        this.errorMessage = 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
       }
     });
   }
+
 
   // Google ile giriş
   signInWithGoogle(): void {
