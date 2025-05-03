@@ -62,4 +62,8 @@ public class AuthServiceImpl implements AuthService {
                 jwtToken
         );
     }
+    @Override
+    public long countUsers() {
+        return userRepository.count();
+    }  
 }

@@ -15,13 +15,22 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  // Tüm ürünleri almak için API'yi çağırıyoruz
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/products`);
   }
 
-  // ID'ye göre tek ürün almak için API'yi çağırıyoruz
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
+  }
+  getPendingProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/pending`);
+  }
+
+  approveProduct(id: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}/approve`, {});
+  }
+
+  rejectProduct(id: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}/reject`, {});
   }
 }

@@ -1,4 +1,4 @@
-import { Product } from './../products/models/product.model';
+import { Product } from '../products/models/product.model';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';

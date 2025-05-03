@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import {MatIconModule} from '@angular/material/icon';
@@ -15,7 +15,6 @@ import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-s
 import { GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 
 
-import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,12 +22,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from './core/services/auth.service';
 import { SharedModule } from './shared/shared.module';
 import { ProductsModule } from './products/products.module';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    BuyerComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -68,6 +67,11 @@ import { ProductsModule } from './products/products.module';
           }
         ]
       } as SocialAuthServiceConfig
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

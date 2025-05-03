@@ -2,6 +2,7 @@ package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,4 +58,14 @@ public class ProductController {
     public ResponseEntity<Product> rejectProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.rejectProduct(id));
     }
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Product>> getPendingProducts() {
+        return ResponseEntity.ok(productService.getProductsByStatus(ProductStatus.PENDING));
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getProductCount() {
+        return ResponseEntity.ok(productService.countProducts());
+    }
+
 }

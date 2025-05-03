@@ -1,1 +1,20 @@
-<p>product-management works!</p>
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4">Bekleyen Ürünler</h2>
+
+  <div *ngIf="loading">Yükleniyor...</div>
+
+  <div *ngIf="!loading && pendingProducts.length === 0">
+    Bekleyen ürün yok.
+  </div>
+
+  <div *ngFor="let product of pendingProducts" class="border p-4 rounded shadow mb-4">
+    <h3 class="text-lg font-semibold">{{ product.title }}</h3>
+    <p>{{ product.description }}</p>
+    <p class="text-sm text-gray-500">Fiyat: {{ product.price }} ₺</p>
+
+    <div class="mt-2 space-x-2">
+      <button (click)="approve(product.id)" class="bg-green-600 text-white px-3 py-1 rounded">Onayla</button>
+      <button (click)="reject(product.id)" class="bg-red-600 text-white px-3 py-1 rounded">Reddet</button>
+    </div>
+  </div>
+</div>

@@ -3,15 +3,25 @@ import { CommonModule } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { OrderManagementComponent } from './order-management/order-management.component';
+import { ProductManagementComponent } from './product-management/product-management.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
   declarations: [
-    AdminComponent
+    AdminComponent,
+    DashboardComponent,
+    OrderManagementComponent,
+    ProductManagementComponent,
+    UserManagementComponent
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    RouterModule
   ]
 })
 export class AdminModule { }
