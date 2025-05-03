@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Product } from '../models/product.model';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-product-list-page',
@@ -28,7 +29,8 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     private productService: ProductService,
     private cartService: CartService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private wishlist:WishlistService
   ) {}
 
   ngOnInit(): void {
@@ -83,5 +85,13 @@ export class ProductListPageComponent implements OnInit, OnChanges {
 
   viewDetails(product: Product): void {
     this.router.navigate(['/products/detail', product.id]);
+  }
+
+  isWishlisted(p: Product): boolean {
+    return this.wishlist.isInWishlist(p.id);
+  }
+
+  toggleWishlist(p: Product): void {
+    this.wishlist.toggle(p);
   }
 }
