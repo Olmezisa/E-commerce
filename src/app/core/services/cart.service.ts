@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from '../../products/models/product.model';
 import { CartItem } from '../../cart/cart-item.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +16,22 @@ export class CartService {
   private cartCountSubject = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSubject.asObservable();
 
-  constructor(private snackBar: MatSnackBar) {
-    const savedCart = localStorage.getItem('cartItems');
-    if (savedCart) {
-      this.cartItems = JSON.parse(savedCart);
-      this.updateCart();
+  private isBrowser: boolean;
+
+  constructor(
+    private snackBar: MatSnackBar,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      const savedCart = localStorage.getItem('cartItems');
+      if (savedCart) {
+        this.cartItems = JSON.parse(savedCart);
+        this.updateCart();
+      }
     }
   }
-
 
   addToCart(product: Product): void {
     const existingItem = this.cartItems.find(item => item.product.id === product.id);
@@ -41,7 +48,6 @@ export class CartService {
     this.cartItems = this.cartItems.filter(item => item.product.id !== productId);
     this.updateCart();
   }
-
 
   getCartItems(): CartItem[] {
     return [...this.cartItems];
@@ -63,7 +69,6 @@ export class CartService {
     this.saveToLocalStorage();
   }
 
-
   increaseQuantity(productId: number): void {
     const item = this.cartItems.find(item => item.product.id === productId);
     if (item) {
@@ -82,8 +87,11 @@ export class CartService {
       this.updateCart();
     }
   }
+
   private saveToLocalStorage(): void {
-    localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+    if (this.isBrowser) {
+      localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+    }
   }
 
   private showSnackbar(message: string): void {
@@ -94,6 +102,4 @@ export class CartService {
       panelClass: ['custom-snackbar']
     });
   }
-
-
 }

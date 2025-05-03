@@ -7,6 +7,7 @@ import { Router }                          from '@angular/router';
 export type Role = 'buyer' | 'seller' | 'admin';
 
 export interface User {
+  fullName?:String;
   email: string;
   password?: string;
   role?: Role;

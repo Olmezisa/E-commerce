@@ -6,6 +6,7 @@ import { CartListComponent } from './cart-list/cart-list.component';
 import { CartItemComponent } from './cart-item/cart-item.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { CartComponent } from './cart.component';
+import { SharedModule } from "../shared/shared.module";
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { CartComponent } from './cart.component';
   imports: [
     CommonModule,
     CartRoutingModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    SharedModule
+]
 })
 export class CartModule { }

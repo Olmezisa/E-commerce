@@ -10,9 +10,13 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class HomeComponent {
   isLoggedIn$: Observable<boolean>;
+  selectedCategory ='';
 
 
   constructor(private auth:AuthService){
     this.isLoggedIn$=this.auth.isLoggedIn$;
+  }
+  onCategorySelected(cat:string){
+    this.selectedCategory=cat;
   }
 }

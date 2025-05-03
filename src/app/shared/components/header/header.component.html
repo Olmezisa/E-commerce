@@ -104,8 +104,8 @@
           [matMenuTriggerFor]="userMenu"
           class="!flex flex-col items-center text-sm hover:text-primary"
         >
-          <mat-icon class="text-primary">account_circle</mat-icon>
-          <span>{{ (currentUser$ | async)?.email }}</span>
+          <mat-icon class="text-primary">person</mat-icon>
+          <span>My Account</span>
         </button>
         <mat-menu
           #userMenu="matMenu"
@@ -113,13 +113,26 @@
           xPosition="after"
           overlapTrigger="false"
         >
+        <div class="px-4 py-2 border-b">
+          <mat-icon>person</mat-icon>
+          <span class="ml-2 font-medium">
+            {{ (currentUser$ | async)?.fullName}}
+          </span>
+        </div>
+
+
+          <button mat-menu-item (click)="goToOrders()">
+            <mat-icon class="text-secondary">inventory_2</mat-icon>
+            <span>My Orders</span>
+
+          </button>
           <button mat-menu-item (click)="goToAccount()">
             <mat-icon class="text-secondary">person</mat-icon>
-            <span>Hesabım</span>
+            <span>Account Information</span>
           </button>
           <button mat-menu-item (click)="logout()">
             <mat-icon class="text-secondary">exit_to_app</mat-icon>
-            <span>Çıkış Yap</span>
+            <span>Logout</span>
           </button>
         </mat-menu>
         <a></a>
@@ -127,7 +140,7 @@
         <!-- Favorites -->
         <button
           mat-button
-          routerLink="/favorites"
+          routerLink="/wishlist"
           class="flex flex-col items-center text-sm hover:text-secondary"
         >
           <mat-icon class="!text-red-600">favorite</mat-icon>

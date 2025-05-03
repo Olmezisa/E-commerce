@@ -9,7 +9,7 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService, User } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loadingGoogle = false;
   loadingFacebook = false;
+  errorMessage: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -36,23 +37,35 @@ export class LoginComponent implements OnInit {
   }
 
 
-  login() {
-    if (!this.loginForm.valid) return;
+  login(): void {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
     const { email, password } = this.loginForm.value;
-    const success = this.authService.login(email, password);
-
-    if (success) {
-      const user = this.authService.getCurrentUser()!;
-
-      switch (user.role) {
-        case 'admin':  this.router.navigate(['/admin']);  break;
-        case 'seller': this.router.navigate(['/seller']); break;
-        default:       this.router.navigate(['/buyer']);
+    this.authService.login(email, password).subscribe((user: User | null) => {
+      if (user) {
+        // Başarılı login: role’a göre yönlendir
+        this.errorMessage = null;
+        switch (user.role) {
+          case 'buyer':
+            this.router.navigate(['/home/buyer']);
+            break;
+          case 'seller':
+            this.router.navigate(['/home/seller']);
+            break;
+          case 'admin':
+            this.router.navigate(['/home/admin']);
+            break;
+          default:
+            this.router.navigate(['/home']);
+        }
+      } else {
+        // Geçersiz kimlik bilgisi
+        this.errorMessage = 'Email veya şifre hatalı.';
       }
-    } else {
-      alert('Email or password wrong!');
-    }
+    });
   }
 
   // Google ile giriş

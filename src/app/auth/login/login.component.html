@@ -80,11 +80,19 @@
     </button>
   </div>
 
+  <!-- Hata Mesajı -->
+  <div *ngIf="errorMessage" class="text-red-600 text-center">
+    {{ errorMessage }}
+  </div>
+
+
+
+
   <!-- Signup Link -->
   <p class="mt-6 text-center text-sm">
     Don't have an account?
     <a
-      routerLink="/signup"
+      routerLink="/auth/signup"
       class="text-blue-600 hover:underline"
     >
       Signup

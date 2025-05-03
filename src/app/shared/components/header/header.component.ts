@@ -32,6 +32,10 @@ export class HeaderComponent implements OnInit {
     this.auth.logout();
   }
 
+  goToOrders():void{
+    this.router.navigate(['/orders']);
+  }
+
   goToAccount(): void {
     this.router.navigate(['/account/profile']);
   }
