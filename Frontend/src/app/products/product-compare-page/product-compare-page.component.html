@@ -1,0 +1,48 @@
+<app-header></app-header>
+<app-navbar></app-navbar>
+<main class="container mx-auto p-4">
+<div *ngIf="product1 && product2; else loadingOrMissing" class="overflow-x-auto">
+  <table class="min-w-full border border-gray-300">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="px-4 py-2"></th>
+        <th class="px-4 py-2">
+          <img [src]="product1.image" alt="{{ product1.title }}" class="w-24 h-24 object-contain mx-auto mb-2 rounded" />
+          <div>{{ product1.title }}</div>
+        </th>
+        <th class="px-4 py-2">
+          <img [src]="product2.image" alt="{{ product2.title }}" class="w-24 h-24 object-contain mx-auto mb-2 rounded" />
+          <div>{{ product2.title }}</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr class="border-t">
+        <td class="px-4 py-2 font-semibold text-left">Price</td>
+        <td class="px-4 py-2">{{ product1.price | currency:'USD' }}</td>
+        <td class="px-4 py-2">{{ product2.price | currency:'USD' }}</td>
+      </tr>
+      <tr class="border-t">
+        <td class="px-4 py-2 font-semibold text-left">Description</td>
+        <td class="px-4 py-2">{{ product1.description }}</td>
+        <td class="px-4 py-2">{{ product2.description }}</td>
+      </tr>
+      <tr class="border-t">
+        <td class="px-4 py-2 font-semibold text-left">Stock</td>
+        <td class="px-4 py-2">{{ product1.stock }}</td>
+        <td class="px-4 py-2">{{ product2.stock }}</td>
+      </tr>
+      <tr class="border-t">
+        <td class="px-4 py-2 font-semibold text-left">Rating</td>
+        <td class="px-4 py-2">{{ product1.rating.rate }} ⭐</td>
+        <td class="px-4 py-2">{{ product2.rating.rate }} ⭐</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #loadingOrMissing>
+  <p class="text-red-500 text-xl">One or both products not found for comparison!</p>
+</ng-template>
+</main>
+<app-footer></app-footer>
