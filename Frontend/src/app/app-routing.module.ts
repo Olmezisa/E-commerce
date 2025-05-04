@@ -24,6 +24,7 @@ const routes: Routes = [
     data: { roles: ['ADMIN'] }
   },
   { path:'search', loadChildren:() => import('./products/products.module').then(m=>m.ProductsModule)},
+  { path: 'seller', loadChildren: () => import('./seller/seller.module').then(m => m.SellerModule) },
 
   { path: '**',        redirectTo: 'home' }
 ];

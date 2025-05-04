@@ -5,9 +5,13 @@ import { CartComponent } from './cart.component';
 
 
 const routes: Routes = [
-  { path: '', component: CartComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'cart', component:CartComponent} // /cart için bu component
+  { path: '', component: CartComponent,
+    children:[
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'cart', component:CartComponent} // /cart için bu component
+    ]
+  },
+
 ];
 
 @NgModule({
