@@ -35,6 +35,8 @@ export class ProductService {
   }
 
   addProduct(productData:any): Observable<any>{
-    return this.http.post('${this.apiUrl}/add-products',productData);
+    return this.http.post(`${this.apiUrl}/products`,
+      productData
+    );
   }
 }
