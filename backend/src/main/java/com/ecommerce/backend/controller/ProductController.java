@@ -4,6 +4,10 @@ import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
+import com.ecommerce.backend.service.UserService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +23,7 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+    
 
     @PostMapping
     @PreAuthorize("hasRole('SELLER')")
@@ -67,5 +72,7 @@ public class ProductController {
     public ResponseEntity<Long> getProductCount() {
         return ResponseEntity.ok(productService.countProducts());
     }
+   
+
 
 }

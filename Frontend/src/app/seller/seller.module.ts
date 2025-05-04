@@ -6,6 +6,8 @@ import { SellerComponent } from './seller.component';
 import { SellerDashboardComponent } from './seller-dashboard/seller-dashboard.component';
 import { SellerAnalyticsComponent } from './seller-analytics/seller-analytics.component';
 import { AddProductsComponent } from './add-products/add-products.component';
+import { MyProductsComponent } from './my-products/my-products.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,11 +15,14 @@ import { AddProductsComponent } from './add-products/add-products.component';
     SellerComponent,
     SellerDashboardComponent,
     SellerAnalyticsComponent,
-    AddProductsComponent
+    AddProductsComponent,
+    MyProductsComponent
   ],
   imports: [
     CommonModule,
-    SellerRoutingModule
+    SellerRoutingModule,
+    ReactiveFormsModule,
+
   ]
 })
 export class SellerModule { }

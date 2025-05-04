@@ -33,4 +33,8 @@ export class ProductService {
   rejectProduct(id: number): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}/reject`, {});
   }
+
+  addProduct(productData:any): Observable<any>{
+    return this.http.post('${this.apiUrl}/add-products',productData);
+  }
 }
