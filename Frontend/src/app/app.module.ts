@@ -15,7 +15,6 @@ import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-s
 import { GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 
 
-import { BuyerComponent } from './GuardingHome/buyer/buyer.component';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,10 +24,10 @@ import { SharedModule } from './shared/shared.module';
 import { ProductsModule } from './products/products.module';
 
 
+
 @NgModule({
   declarations: [
-    AppComponent,
-    BuyerComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

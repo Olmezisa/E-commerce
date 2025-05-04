@@ -10,10 +10,14 @@ import { SearchPageComponent } from './search-page/search-page.component';
 
 
 const routes: Routes = [
-  { path: '', component: ProductListPageComponent },            // /products
-  { path: 'detail/:id', component: ProductDetailPageComponent },// /products/detail/:id
+  { path: '', component: ProductListPageComponent,
+    children:[
+      { path: 'detail/:id', component: ProductDetailPageComponent },// /products/detail/:id
   { path: 'compare', component: ProductComparePageComponent },
   { path: '', component:SearchPageComponent}  // /products/compare
+    ]
+  }      // /products
+
 ];
 
 @NgModule({

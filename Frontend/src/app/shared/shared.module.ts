@@ -13,6 +13,8 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
+import { MatRippleModule } from '@angular/material/core';
+
 
 
 @NgModule({
@@ -31,7 +33,8 @@ import { RouterModule } from '@angular/router';
     MatMenuModule,
     RouterModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatRippleModule
 
   ],
   exports: [
