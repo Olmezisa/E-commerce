@@ -3,8 +3,12 @@ package com.ecommerce.backend.service.impl;
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
+import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.ProductRepository;
+import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.ProductService;
+import com.ecommerce.backend.service.UserService;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +17,11 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final UserService userService;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserService userService) {
         this.productRepository = productRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -27,6 +33,9 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
         product.setStatus(ProductStatus.PENDING); // varsayılan olarak onay bekliyor
+
+        User seller = userService.getCurrentUser();
+        product.setSeller(seller);
 
         return productRepository.save(product);
     }

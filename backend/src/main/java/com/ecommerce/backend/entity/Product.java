@@ -27,6 +27,10 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
+    @ManyToOne
+    @JoinColumn(name="seller_id")
+    private User seller;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +85,11 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
+    public User getSeller() {
+        return seller;
     }
 }

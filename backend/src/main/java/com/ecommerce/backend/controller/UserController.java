@@ -67,7 +67,7 @@ public class UserController {
                 u.getEmail(),
                 u.getRole().name(),
                 null,
-                u.getActive() // ✅ burası eklendi
+                u.getActive()
             ))
             .toList();
          return ResponseEntity.ok(response);

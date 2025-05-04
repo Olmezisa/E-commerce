@@ -16,5 +16,6 @@ public interface ProductService {
     Product rejectProduct(Long productId);
     List<Product> getProductsByStatus(ProductStatus status);
     Long countProducts();
+    
 
 }
