@@ -3,7 +3,6 @@ package com.ecommerce.backend.service.impl;
 import com.ecommerce.backend.dto.LoginRequest;
 import com.ecommerce.backend.dto.RegisterRequest;
 import com.ecommerce.backend.dto.UserResponse;
-import com.ecommerce.backend.entity.Role;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.security.JwtService;
@@ -37,10 +36,12 @@ public class AuthServiceImpl implements AuthService {
         String jwtToken = jwtService.generateToken(user);
 
         return new UserResponse(
+            user.getId(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getRole().name(),
-                jwtToken
+                jwtToken,
+                user.getActive()
         );
     }
 
@@ -56,10 +57,12 @@ public class AuthServiceImpl implements AuthService {
         String jwtToken = jwtService.generateToken(user);
 
         return new UserResponse(
+            user.getId(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getRole().name(),
-                jwtToken
+                jwtToken,
+                user.getActive()
         );
     }
     @Override

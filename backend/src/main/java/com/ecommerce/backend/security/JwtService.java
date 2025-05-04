@@ -5,13 +5,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 import java.util.Date;
 
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "c2VjdXJlLXNwcmluZy1iYXNlNjQtc2VjcmV0LWtleS0xMjM0NTY3ODkwMTIzNDU2Nzg5"; // .env'e alabilirsin
+    private final String SECRET_KEY = "c2VjdXJlLXNwcmluZy1iYXNlNjQtc2VjcmV0LWtleS0xMjM0NTY3ODkwMTIzNDU2Nzg5";
     private final long EXPIRATION = 1000 * 60 * 60 * 24; // 24 saat
 
     public String generateToken(User user) {

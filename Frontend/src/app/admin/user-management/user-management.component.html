@@ -1,1 +1,26 @@
-<p>user-management works!</p>
+<h2 class="text-xl font-bold mb-4">Kullanıcı Listesi</h2>
+<table class="table-auto w-full border">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="p-2">Ad Soyad</th>
+      <th class="p-2">Email</th>
+      <th class="p-2">Rol</th>
+      <th class="p-2">Aktif mi?</th>
+      <th class="p-2">İşlemler</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users; let i = index" class="border-t">
+      <td class="p-2">{{ user.fullName }}</td>
+      <td class="p-2">{{ user.email }}</td>
+      <td class="p-2">{{ user.role }}</td>
+      <td class="p-2">{{ user.active ? 'Evet' : 'Hayır' }}</td>
+      <td class="p-2 space-x-2">
+        <button class="bg-red-500 text-white px-2 py-1 rounded" (click)="deleteUser(user.id!)">Sil</button>
+        <button class="bg-blue-500 text-white px-2 py-1 rounded" (click)="toggleStatus(user, i)">
+          {{ user.active ? 'Banla' : 'Aktifleştir' }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

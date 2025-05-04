@@ -25,8 +25,6 @@ public class User {
     @Column(nullable = false)
     private Boolean active = true;
 
-    // Getter/Setter
-
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
