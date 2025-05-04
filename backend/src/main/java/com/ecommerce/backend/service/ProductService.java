@@ -2,6 +2,7 @@ package com.ecommerce.backend.service;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.entity.ProductStatus;
 
 import java.util.List;
 
@@ -13,4 +14,7 @@ public interface ProductService {
     void deleteProduct(Long id);
     Product approveProduct(Long productId);
     Product rejectProduct(Long productId);
+    List<Product> getProductsByStatus(ProductStatus status);
+    Long countProducts();
+
 }

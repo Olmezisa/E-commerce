@@ -4,6 +4,8 @@ import com.ecommerce.backend.dto.UserResponse;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.UserService;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +46,9 @@ public class UserController {
                 user.getRole().name(),
                 null 
         ));
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getUserCount() {
+        return ResponseEntity.ok(userService.countUsers());
     }
 }

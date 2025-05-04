@@ -7,4 +7,6 @@ import com.ecommerce.backend.dto.UserResponse;
 public interface AuthService {
     UserResponse register(RegisterRequest request);
     UserResponse login(LoginRequest request);
+    long countUsers();
+
 }

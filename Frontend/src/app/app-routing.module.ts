@@ -1,6 +1,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RoleGuard } from './core/guards/role.guard';
 
 const routes: Routes = [
   { path: '',          redirectTo: 'home', pathMatch: 'full' },
@@ -16,7 +17,12 @@ const routes: Routes = [
   { path: 'orders',    loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
   { path: 'wishlist',  loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule) },
   { path: 'account',   loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
-  { path: 'admin',     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+    canActivate: [RoleGuard],
+    data: { roles: ['ADMIN'] }
+  },
   { path:'search', loadChildren:() => import('./products/products.module').then(m=>m.ProductsModule)},
   { path: 'seller', loadChildren: () => import('./seller/seller.module').then(m => m.SellerModule) },
 

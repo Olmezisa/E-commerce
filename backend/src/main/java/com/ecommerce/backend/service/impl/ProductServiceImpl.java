@@ -77,4 +77,14 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(ProductStatus.BANNED);
         return productRepository.save(product);
     }
+    @Override
+    public List<Product> getProductsByStatus(ProductStatus status) {
+        return productRepository.findByStatus(status);
+    }
+    @Override
+    public Long countProducts() {
+        return productRepository.count();
+    }
+
+    
 }
