@@ -16,6 +16,8 @@ public interface ProductService {
     Product rejectProduct(Long productId);
     List<Product> getProductsByStatus(ProductStatus status);
     Long countProducts();
+    long countProductsBySellerUsername(String username);
+    List<Product> getProductsBySellerUsername(String username);
     
 
 }

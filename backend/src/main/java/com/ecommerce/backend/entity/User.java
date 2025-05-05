@@ -25,6 +25,11 @@ public class User {
     @Column(nullable = false)
     private Boolean active = true;
 
+    @Column(nullable=false)
+    private boolean corporate=false;
+
+    private String brandName;
+
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
@@ -62,5 +67,18 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
+    public String getBrandName() {
+        return brandName;
+    }
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+    public void setCorporate(boolean corporate) {
+        this.corporate = corporate;
+    }
+    public boolean getCorporate() {
+        return corporate;
+    }
+    
 }
 

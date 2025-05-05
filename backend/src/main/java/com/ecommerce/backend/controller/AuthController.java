@@ -2,9 +2,13 @@ package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.LoginRequest;
 import com.ecommerce.backend.dto.RegisterRequest;
+import com.ecommerce.backend.dto.SellerRegistrationRequest;
 import com.ecommerce.backend.dto.UserResponse;
 import com.ecommerce.backend.service.AuthService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
-        UserResponse response = authService.register(request);  // UserResponse içinde email, role, token vs.
+        UserResponse response = authService.register(request); 
         return ResponseEntity.ok(response);
     }
 
@@ -29,5 +33,13 @@ public class AuthController {
         UserResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
+       @PostMapping("/register-seller")
+    public ResponseEntity<UserResponse> registerSeller(@RequestBody @Validated SellerRegistrationRequest request) {
+        UserResponse response = authService.registerSeller(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+   
+
+    
 }
 

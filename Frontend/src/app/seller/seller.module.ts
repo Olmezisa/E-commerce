@@ -8,6 +8,7 @@ import { SellerAnalyticsComponent } from './seller-analytics/seller-analytics.co
 import { AddProductsComponent } from './add-products/add-products.component';
 import { MyProductsComponent } from './my-products/my-products.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SellerRegisterComponent } from './seller-register/seller-register.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SellerDashboardComponent,
     SellerAnalyticsComponent,
     AddProductsComponent,
-    MyProductsComponent
+    MyProductsComponent,
+    SellerRegisterComponent
   ],
   imports: [
     CommonModule,
