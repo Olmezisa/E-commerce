@@ -3,6 +3,8 @@ package com.ecommerce.backend.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "products")
 public class Product {
@@ -26,10 +28,13 @@ public class Product {
     private int stock;
 
     @Enumerated(EnumType.STRING)
-    private ProductStatus status;
+    @Column(nullable = false)
+    private ProductStatus status = ProductStatus.PENDING;
+
 
     @ManyToOne
     @JoinColumn(name="seller_id")
+    @JsonIgnoreProperties({"password", "email", "role"})
     private User seller;
 
     public Long getId() {

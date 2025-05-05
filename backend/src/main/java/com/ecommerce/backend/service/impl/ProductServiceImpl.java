@@ -1,6 +1,7 @@
 package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ProductRequest;
+import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.entity.User;
@@ -9,7 +10,9 @@ import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.ProductService;
 import com.ecommerce.backend.service.UserService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,6 +25,18 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceImpl(ProductRepository productRepository, UserService userService) {
         this.productRepository = productRepository;
         this.userService = userService;
+    }
+    private ProductResponse toResponse(Product p) {
+        return new ProductResponse(
+            p.getId(),
+            p.getName(),
+            p.getDescription(),
+            p.getPrice(),
+            p.getStock(),
+            p.getImageUrl(),
+            p.getStatus(),
+            p.getSeller() != null ? p.getSeller().getFullName() : "Bilinmiyor"
+        );
     }
 
     @Override
@@ -48,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
     }
 
     @Override

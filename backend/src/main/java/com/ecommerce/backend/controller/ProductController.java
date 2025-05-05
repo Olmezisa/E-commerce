@@ -1,13 +1,11 @@
 package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.ProductRequest;
+import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
-import com.ecommerce.backend.service.UserService;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,15 +45,16 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(id, request));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Product> approveProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.approveProduct(id));
+    public ResponseEntity<?> approveProduct(@PathVariable Long id) {
+        productService.approveProduct(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}/reject")
@@ -65,12 +64,30 @@ public class ProductController {
     }
     @GetMapping("/pending")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Product>> getPendingProducts() {
-        return ResponseEntity.ok(productService.getProductsByStatus(ProductStatus.PENDING));
+    public ResponseEntity<List<ProductResponse>> getPendingProducts() {
+        List<ProductResponse> response = productService.getProductsByStatus(ProductStatus.PENDING)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+
+        return ResponseEntity.ok(response);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> getProductCount() {
         return ResponseEntity.ok(productService.countProducts());
+    }
+    private ProductResponse toResponse(Product p) {
+        return new ProductResponse(
+            p.getId(),
+            p.getName(),
+            p.getDescription(),
+            p.getPrice(),
+            p.getStock(),
+            p.getImageUrl(),
+            p.getStatus(),
+            p.getSeller() != null ? p.getSeller().getFullName() : "Bilinmiyor"
+        );
     }
    
 

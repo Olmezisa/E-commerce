@@ -23,15 +23,15 @@ export class ProductService {
     return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
   }
   getPendingProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/pending`);
+    return this.http.get<Product[]>(`${this.apiUrl}/products/pending`);
   }
 
   approveProduct(id: number): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}/approve`, {});
+    return this.http.put<Product>(`${this.apiUrl}/products/${id}/approve`, {});
   }
 
   rejectProduct(id: number): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}/reject`, {});
+    return this.http.put<Product>(`${this.apiUrl}/products/${id}/reject`, {});
   }
 
   addProduct(productData:any): Observable<any>{

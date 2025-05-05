@@ -1,20 +1,33 @@
-<div class="p-4">
-  <h2 class="text-xl font-bold mb-4">Bekleyen Ürünler</h2>
+<h2 class="text-xl font-bold mb-4">Onay Bekleyen Ürünler</h2>
 
-  <div *ngIf="loading">Yükleniyor...</div>
+<div *ngIf="loading" class="text-center text-gray-500 py-6">Yükleniyor...</div>
 
-  <div *ngIf="!loading && pendingProducts.length === 0">
-    Bekleyen ürün yok.
-  </div>
+<table *ngIf="!loading && pendingProducts.length > 0" class="table-auto w-full border">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="p-2">ID</th>
+      <th class="p-2">İsim</th>
+      <th class="p-2">Satıcı</th>
+      <th class="p-2">Stok</th>
+      <th class="p-2">Fiyat</th>
+      <th class="p-2">İşlem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of pendingProducts" class="border-t">
+      <td class="p-2">{{ p.id }}</td>
+      <td class="p-2">{{ p.title }}</td>
+      <td class="p-2">{{ p.seller }}</td>
+      <td class="p-2">{{ p.stock }}</td>
+      <td class="p-2">{{ p.price | currency }}</td>
+      <td class="p-2 space-x-2">
+        <button class="bg-green-500 text-white px-2 py-1 rounded" (click)="approve(p.id)">Onayla</button>
+        <button class="bg-red-500 text-white px-2 py-1 rounded" (click)="reject(p.id)">Banla</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-  <div *ngFor="let product of pendingProducts" class="border p-4 rounded shadow mb-4">
-    <h3 class="text-lg font-semibold">{{ product.title }}</h3>
-    <p>{{ product.description }}</p>
-    <p class="text-sm text-gray-500">Fiyat: {{ product.price }} ₺</p>
-
-    <div class="mt-2 space-x-2">
-      <button (click)="approve(product.id)" class="bg-green-600 text-white px-3 py-1 rounded">Onayla</button>
-      <button (click)="reject(product.id)" class="bg-red-600 text-white px-3 py-1 rounded">Reddet</button>
-    </div>
-  </div>
+<div *ngIf="!loading && pendingProducts.length === 0" class="text-center text-gray-500 py-6">
+  Onay bekleyen ürün bulunamadı.
 </div>
