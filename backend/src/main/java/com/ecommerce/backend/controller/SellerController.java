@@ -33,11 +33,6 @@ public class SellerController {
         this.orderService=orderService;
     }
 
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> sellerHome(){
-        return ResponseEntity.ok("works");
-    }    
-
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping("/add-products")
     public ResponseEntity<Product> addProduct(@RequestBody ProductRequest request){

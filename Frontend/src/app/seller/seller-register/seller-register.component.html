@@ -1,0 +1,58 @@
+<div class="max-w-md mx-auto mt-8">
+  <h2 class="text-2xl font-bold mb-4">Satıcı Ol</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div>
+      <label>Ad Soyad</label>
+      <input formControlName="fullName" class="border p-2 w-full" />
+      <div *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.hasError('required')" class="text-red-500 text-sm">
+        Ad Soyad gereklidir.
+      </div>
+    </div>
+
+    <div>
+      <label>Email</label>
+      <input formControlName="email" type="email" class="border p-2 w-full" />
+      <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors" class="text-red-500 text-sm">
+        <div *ngIf="registerForm.get('email')?.hasError('required')">E-posta gereklidir.</div>
+        <div *ngIf="registerForm.get('email')?.hasError('email')">Geçerli bir e-posta girin.</div>
+      </div>
+    </div>
+
+    <div>
+      <label>Password</label>
+      <input formControlName="password" type="password" class="border p-2 w-full" />
+      <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors" class="text-red-500 text-sm">
+        <div *ngIf="registerForm.get('password')?.hasError('required')">Şifre gereklidir.</div>
+        <div *ngIf="registerForm.get('password')?.hasError('minlength')">Şifre en az 8 karakter olmalı.</div>
+        <div *ngIf="registerForm.get('password')?.hasError('passwordStrength')">Şifre en az bir büyük, bir küçük harf ve bir rakam içermelidir.</div>
+      </div>
+    </div>
+
+    <div>
+      <label>Confirm Password</label>
+      <input formControlName="confirmPassword" type="password" class="border p-2 w-full" />
+      <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('passwordMismatch')" class="text-red-500 text-sm">
+        Şifreler eşleşmiyor.
+      </div>
+    </div>
+
+    <div class="flex items-center">
+      <input type="checkbox" formControlName="corporate" class="mr-2" />
+      <label>Marka adına satış</label>
+    </div>
+
+    <div *ngIf="registerForm.get('corporate')?.value">
+      <label>Brand Name</label>
+      <input formControlName="brandName" class="border p-2 w-full" />
+      <div *ngIf="registerForm.get('brandName')?.touched && registerForm.get('brandName')?.hasError('required')" class="text-red-500 text-sm">
+        Marka adı gereklidir.
+      </div>
+    </div>
+
+    <div *ngIf="error" class="text-red-600">{{ error }}</div>
+
+    <button
+    type="submit"
+    class="bg-blue-600 text-white px-4 py-2 rounded w-full">Kaydol</button>
+  </form>
+</div>
