@@ -24,6 +24,7 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   products: Product[] = [];
   filtered: Product[] = [];
   selectedProducts: Product[] = [];
+  searchTerm = '';
 
   constructor(
     private productService: ProductService,
@@ -47,12 +48,18 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   }
 
   private applyFilter(): void {
+    this.filtered = this.products;
+
     if (this.categoryFilter) {
-      this.filtered = this.products.filter(
+      this.filtered = this.filtered.filter(
         p => p.category.toLowerCase() === this.categoryFilter.toLowerCase()
       );
-    } else {
-      this.filtered = [...this.products];
+    }
+
+    if (this.searchTerm) {
+      this.filtered = this.filtered.filter(
+        p => p.title.toLowerCase().includes(this.searchTerm)
+      );
     }
   }
 
@@ -94,4 +101,12 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   toggleWishlist(p: Product): void {
     this.wishlist.toggle(p);
   }
+
+
+  onSearch(term: string): void {
+    this.searchTerm = term.trim().toLowerCase();
+    this.applyFilter();
+  }
+
+
 }

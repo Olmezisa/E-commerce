@@ -11,6 +11,7 @@ public class ProductRequest {
     private BigDecimal price;
     private int stock;
     private ProductStatus status;
+    private double rating;
 
     public String getName() {
         return name;
@@ -58,5 +59,11 @@ public class ProductRequest {
 
     public void setStatus(ProductStatus status) {
         this.status = status;
+    }
+    public double getRating() {
+        return rating;
+    }
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

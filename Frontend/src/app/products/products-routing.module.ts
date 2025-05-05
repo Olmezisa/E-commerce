@@ -6,18 +6,21 @@ import { ProductListPageComponent } from './product-list-page/product-list-page.
 import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
 import { ProductComparePageComponent } from './product-compare-page/product-compare-page.component';
 import { SearchPageComponent } from './search-page/search-page.component';
+import { ProductsComponent } from './products.component';
 
 
 
 const routes: Routes = [
-  { path: '', component: ProductListPageComponent,
-    children:[
-      { path: 'detail/:id', component: ProductDetailPageComponent },// /products/detail/:id
-  { path: 'compare', component: ProductComparePageComponent },
-  { path: '', component:SearchPageComponent}  // /products/compare
+  {
+    path: '',
+    component: ProductsComponent,
+    children: [
+      { path: 'products', component: ProductListPageComponent },
+      { path: 'detail/:id', component: ProductDetailPageComponent },
+      { path: 'compare', component: ProductComparePageComponent },
+      { path: 'search', component: SearchPageComponent }
     ]
-  }      // /products
-
+  }
 ];
 
 @NgModule({
