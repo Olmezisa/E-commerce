@@ -17,6 +17,7 @@ public class Product {
     private String description;
 
     private String imageUrl;
+    private double rating;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -91,5 +92,11 @@ public class Product {
     }
     public User getSeller() {
         return seller;
+    }
+    public double getRating() {
+        return rating;
+    }
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

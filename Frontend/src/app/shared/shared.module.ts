@@ -38,7 +38,7 @@ import { MatRippleModule } from '@angular/material/core';
 
   ],
   exports: [
-    CommonModule,      // ngIf/ngFor gibi yapılar
+    CommonModule,
     MatIconModule,
     MatMenuModule,
 

@@ -39,7 +39,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
 
 ],
   providers: [
-    ProductService, // Service burada sağlanıyor
+    ProductService,
   ],
   exports:[
     ProductListPageComponent,
