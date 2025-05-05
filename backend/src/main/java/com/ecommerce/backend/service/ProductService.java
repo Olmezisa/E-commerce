@@ -18,6 +18,7 @@ public interface ProductService {
     Long countProducts();
     long countProductsBySellerUsername(String username);
     List<Product> getProductsBySellerUsername(String username);
+    Product unbanProduct(Long id);
     
 
 }

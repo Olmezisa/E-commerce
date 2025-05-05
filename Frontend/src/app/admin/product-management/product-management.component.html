@@ -1,8 +1,78 @@
-<h2 class="text-xl font-bold mb-4">Onay Bekleyen Ürünler</h2>
+<h2 class="text-xl font-bold mb-4">Ürün Yönetimi</h2>
+
+<div class="mb-4 flex gap-2">
+  <button
+    (click)="switchTab('ALL')"
+    class="px-4 py-2 rounded"
+    [class.bg-blue-500]="activeTab === 'ALL'"
+    [class.bg-gray-200]="activeTab !== 'ALL'"
+  >
+    Tüm Ürünler
+  </button>
+  <button
+    (click)="switchTab('PENDING')"
+    class="px-4 py-2 rounded"
+    [class.bg-blue-500]="activeTab === 'PENDING'"
+    [class.bg-gray-200]="activeTab !== 'PENDING'"
+  >
+    Onay Bekleyenler
+  </button>
+</div>
 
 <div *ngIf="loading" class="text-center text-gray-500 py-6">Yükleniyor...</div>
 
-<table *ngIf="!loading && pendingProducts.length > 0" class="table-auto w-full border">
+<!-- Tüm Ürünler -->
+<table *ngIf="!loading && activeTab === 'ALL'" class="table-auto w-full border">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="p-2">ID</th>
+      <th class="p-2">İsim</th>
+      <th class="p-2">Satıcı</th>
+      <th class="p-2">Stok</th>
+      <th class="p-2">Fiyat</th>
+      <th class="p-2">Durum</th>
+      <th class="p-2">İşlem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of allProducts" class="border-t">
+      <td class="p-2">{{ p.id }}</td>
+      <td class="p-2">{{ p.title }}</td>
+      <td class="p-2">{{ p.seller }}</td>
+      <td class="p-2">{{ p.stock }}</td>
+      <td class="p-2">{{ p.price | currency }}</td>
+      <td class="p-2">{{ p.status }}</td>
+      <td class="p-2 space-x-2">
+        <!-- Banla -->
+        <button
+          *ngIf="p.status !== 'BANNED'"
+          class="bg-red-500 text-white px-2 py-1 rounded"
+          (click)="reject(p.id)"
+        >
+          Banla
+        </button>
+        <!-- Unban -->
+        <button
+          *ngIf="p.status === 'BANNED'"
+          class="bg-green-500 text-white px-2 py-1 rounded"
+          (click)="unban(p.id)"
+        >
+          Unban
+        </button>
+        <!-- Sil -->
+        <button
+          class="bg-gray-600 text-white px-2 py-1 rounded"
+          (click)="delete(p.id)"
+        >
+          Sil
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Pending Ürünler -->
+<table *ngIf="!loading && activeTab === 'PENDING'" class="table-auto w-full border">
   <thead>
     <tr class="bg-gray-100">
       <th class="p-2">ID</th>
@@ -21,13 +91,27 @@
       <td class="p-2">{{ p.stock }}</td>
       <td class="p-2">{{ p.price | currency }}</td>
       <td class="p-2 space-x-2">
-        <button class="bg-green-500 text-white px-2 py-1 rounded" (click)="approve(p.id)">Onayla</button>
-        <button class="bg-red-500 text-white px-2 py-1 rounded" (click)="reject(p.id)">Banla</button>
+        <button
+          class="bg-green-500 text-white px-2 py-1 rounded"
+          (click)="approve(p.id)"
+        >
+          Onayla
+        </button>
+        <button
+          class="bg-red-500 text-white px-2 py-1 rounded"
+          (click)="reject(p.id)"
+        >
+          Banla
+        </button>
       </td>
     </tr>
   </tbody>
 </table>
 
-<div *ngIf="!loading && pendingProducts.length === 0" class="text-center text-gray-500 py-6">
+<div *ngIf="!loading && activeTab === 'PENDING' && pendingProducts.length === 0" class="text-center text-gray-500 py-6">
   Onay bekleyen ürün bulunamadı.
+</div>
+
+<div *ngIf="!loading && activeTab === 'ALL' && allProducts.length === 0" class="text-center text-gray-500 py-6">
+  Hiç ürün bulunamadı.
 </div>

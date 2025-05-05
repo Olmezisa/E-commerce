@@ -1,57 +1,62 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-  <div *ngFor="let p of filtered" class="border rounded shadow p-4">
+  <div
+    *ngFor="let p of filtered"
+    class="border rounded shadow p-4 hover:shadow-lg transition cursor-pointer relative"
+    (click)="viewDetails(p)"
+  >
+    <!-- Wishlist kalp ikonu -->
     <button
-      (click)="toggleWishlist(p)"
-      class="absolute top-2 right-2 focus:outline-none transition-transform duration-200"
+      class="absolute top-2 right-2 text-2xl focus:outline-none transition-transform duration-200 z-10"
+      (click)="toggleWishlist(p, $event)"
       [ngClass]="{
         'opacity-100 scale-110': isWishlisted(p),
         'opacity-50 hover:opacity-100 hover:scale-110': !isWishlisted(p)
       }"
     >
-      <mat-icon
-        class="text-3xl transition-colors duration-200"
-        [ngClass]="{
+      <mat-icon [ngClass]="{
           'text-red-500': isWishlisted(p),
           'text-gray-400': !isWishlisted(p)
-        }"
-      >
+        }">
         {{ isWishlisted(p) ? 'favorite' : 'favorite_border' }}
       </mat-icon>
     </button>
 
-
-
+    <!-- Ürün resmi -->
     <img
       [src]="p.image"
       [alt]="p.title"
-      class="w-full h-40 object-cover rounded"
+      class="w-full h-40 object-cover rounded mb-4"
     />
+
     <h3 class="mt-2 font-semibold">{{ p.title }}</h3>
     <p class="text-lg mb-2">{{ p.price | currency:'$' }}</p>
 
     <div class="flex space-x-2">
-      <button (click)="viewDetails(p)" class="flex-1 py-1 rounded border">
-        Detay
-      </button>
-      <button (click)="addToCart(p)" class="flex-1 py-1 rounded bg-green-500 text-white">
+      <!-- Sepete Ekle -->
+      <button
+        class="flex-1 py-1 rounded bg-green-500 text-white"
+        (click)="addToCart(p, $event)"
+      >
         Sepete Ekle
       </button>
+
+      <!-- Karşılaştır -->
       <button
-        (click)="addToCompare(p)"
-        [disabled]="selectedProducts.length >= 2"
         class="flex-1 py-1 rounded bg-yellow-300"
+        [disabled]="selectedProducts.length >= 2"
+        (click)="addToCompare(p, $event)"
       >
-        Karşılaştır
+        {{ selectedProducts.includes(p) ? 'Seçildi' : 'Karşılaştır' }}
       </button>
     </div>
   </div>
 </div>
 
-<div class="mt-4">
+<div class="mt-4 text-right">
   <button
-    (click)="compareSelected()"
-    [disabled]="selectedProducts.length !== 2"
     class="px-4 py-2 rounded bg-blue-600 text-white"
+    [disabled]="selectedProducts.length !== 2"
+    (click)="compareSelected($event)"
   >
     Seçilenleri Karşılaştır ({{ selectedProducts.length }}/2)
   </button>
