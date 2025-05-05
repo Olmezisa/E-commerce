@@ -94,6 +94,15 @@ public class ProductServiceImpl implements ProductService {
     public Long countProducts() {
         return productRepository.count();
     }
+    @Override
+    public List<Product> getProductsBySellerUsername(String username) {
+        return productRepository.findAllBySellerEmail(username);
+    }
+
+    @Override
+    public long countProductsBySellerUsername(String username) {
+        return productRepository.countBySellerEmail(username);
+    }
 
     
 }
