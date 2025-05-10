@@ -1,28 +1,156 @@
+<main class="max-w-7xl mx-auto p-6">
+  <div *ngIf="!loading && product; else loadingTemplate" class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-<main class="container mx-auto p-4">
-<div *ngIf="!loading; else loadingTemplate" class="p-6">
-  <!-- Detay sayfasında resim boyutunu ayarlıyoruz -->
-  <img [src]="product.imageUrl" alt="{{ product.name }}" class="w-full h-72 object-contain mb-4 rounded-lg">
+    <!-- Sol: Ürün Görselleri -->
+    <div>
+      <img [src]="product?.imageUrl" [alt]="product?.name"
+           class="w-full h-[400px] object-contain rounded-xl border border-gray-200 shadow mb-4" />
+      <div class="flex space-x-2">
+        <img *ngFor="let i of [1,2,3,4]" [src]="product?.imageUrl" class="w-16 h-16 object-cover rounded border border-gray-300 cursor-pointer" />
+      </div>
+    </div>
 
-  <h1 class="text-3xl font-bold">{{ product.name }}</h1>
-  <p class="text-xl">{{ product.price | currency }}</p>
-  <p class="text-gray-600">{{ product.description }}</p>
+    <!-- Sağ: Ürün Bilgi ve Seçimler -->
+    <div class="space-y-6">
+      <h1 class="text-3xl font-bold text-gray-800">{{ product?.name }}</h1>
 
-  <p class="text-sm text-gray-500">Category: {{ product.category }}</p>
-  <p class="text-sm text-gray-500">Stock: {{ product.stock }}</p>
+      <div class="flex items-center space-x-4">
+        <span class="text-2xl font-bold text-red-600">{{ product?.price | currency:'TRY':'symbol' }}</span>
+        <span class="text-sm line-through text-gray-500">₺{{ product?.price }}</span>
+        <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">-50%</span>
+      </div>
 
-  <!-- Rating -->
-  <div class="mt-4">
-    <p class="font-semibold">Rating: {{ product.rating.rate }} ⭐</p>
-    <p class="text-sm text-gray-500">Reviews: {{ product.rating.count }} reviews</p>
+      <!-- Renk seçimi -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Renk</label>
+        <div class="flex items-center space-x-3">
+          <div class="w-6 h-6 rounded-full bg-red-300 border-2 border-gray-300 cursor-pointer"></div>
+          <div class="w-6 h-6 rounded-full bg-yellow-300 border-2 border-gray-300 cursor-pointer"></div>
+          <div class="w-6 h-6 rounded-full bg-blue-300 border-2 border-gray-300 cursor-pointer"></div>
+        </div>
+      </div>
+
+      <!-- Beden seçimi -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Beden</label>
+        <select class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200 p-2">
+          <option disabled selected>Lütfen seçin</option>
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+          <option>XL</option>
+        </select>
+      </div>
+
+      <!-- Adet -->
+      <div class="flex items-center space-x-3">
+        <label class="text-sm font-medium text-gray-700">Adet</label>
+        <input type="number" min="1" value="1"
+               class="w-16 border border-gray-300 rounded p-2 text-center" />
+      </div>
+
+      <!-- Sepete Ekle / Favori -->
+      <div class="flex space-x-3">
+        <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Sepete Ekle</button>
+        <button class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition">Favori</button>
+      </div>
+
+      <!-- Rating -->
+      <div class="mt-4 space-y-1">
+        <p class="text-yellow-500 text-lg font-medium">⭐ {{ product?.rating?.rate }} / 5</p>
+        <p class="text-sm text-gray-500">{{ reviews.length }} kullanıcı yorumu</p>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Loading template -->
-<ng-template #loadingTemplate>
-  <div class="p-6 text-center">
-    <p>Loading...</p>
+  <!-- SEKME NAVİGASYONU -->
+  <div class="mt-12" *ngIf="product">
+    <nav class="border-b border-gray-200 mb-6 flex space-x-6 text-sm font-medium">
+      <a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-2">Genel Bilgi</a>
+      <a href="#" class="text-gray-600 hover:text-blue-600 pb-2">Ürün Detayları</a>
+      <a href="#" class="text-gray-600 hover:text-blue-600 pb-2">Yorumlar ({{ reviews.length }})</a>
+    </nav>
+
+    <!-- GENEL BİLGİ -->
+    <section class="space-y-4">
+      <p class="text-gray-700 leading-relaxed">{{ product?.description }}</p>
+
+      <div class="text-sm text-gray-600">
+        <p><strong>Kategori:</strong> {{ product?.category }}</p>
+        <p><strong>Stok:</strong> {{ product?.stock }}</p>
+        <p><strong>Durum:</strong>
+          <span class="text-green-600" *ngIf="product?.status === 'ACTIVE'">Aktif</span>
+          <span class="text-yellow-600" *ngIf="product?.status === 'PENDING'">Onay Bekliyor</span>
+          <span class="text-red-600" *ngIf="product?.status === 'BANNED'">Yasaklı</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ÜRÜN DETAYLARI -->
+    <section class="mt-10 space-y-2 text-sm text-gray-700">
+      <h3 class="font-semibold text-gray-800">Teslimat Bilgisi</h3>
+      <ul class="list-disc ml-5 space-y-1">
+        <li>Standart kargo (1-4 iş günü): ₺4.50</li>
+        <li>Ekspres teslimat (1 iş günü): ₺10.00</li>
+        <li>Mağazadan teslim alma (1-3 iş günü): Ücretsiz</li>
+      </ul>
+
+      <h3 class="font-semibold mt-6 text-gray-800">İade Politikası</h3>
+      <ul class="list-disc ml-5 space-y-1">
+        <li>60 gün içinde iade imkanı</li>
+        <li>Mağazadan ya da kargo ile ücretsiz iade</li>
+      </ul>
+    </section>
+
+    <!-- YORUMLAR -->
+    <section class="mt-10 space-y-6">
+      <h3 class="text-lg font-semibold text-gray-800">Kullanıcı Yorumları</h3>
+
+      <!-- Yorum Listesi -->
+      <div class="border-t border-gray-200 pt-4 space-y-4">
+        <div *ngFor="let r of reviews" class="text-sm space-y-1 border-b pb-4">
+          <p class="font-semibold text-gray-800">{{ r.userName }}
+            <span class="text-gray-500 text-xs">· {{ r.date }}</span>
+          </p>
+          <p class="text-yellow-500">
+            <ng-container *ngFor="let i of [1,2,3,4,5]; let idx = index">
+              <span [ngClass]="{ 'text-yellow-500': idx < r.rating, 'text-gray-300': idx >= r.rating }">★</span>
+            </ng-container>
+          </p>
+          <p class="text-gray-700">{{ r.comment }}</p>
+        </div>
+      </div>
+
+      <!-- Yorum Formu -->
+      <div *ngIf="isLoggedIn" class="mt-10 border-t pt-6">
+        <h3 class="text-lg font-semibold mb-2">Yorum Yap</h3>
+        <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="space-y-4">
+          <div>
+            <label class="block text-sm text-gray-700">Puan</label>
+            <select formControlName="rating" class="w-24 border p-2 rounded">
+              <option value="5">5 ★</option>
+              <option value="4">4 ★</option>
+              <option value="3">3 ★</option>
+              <option value="2">2 ★</option>
+              <option value="1">1 ★</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-700">Yorum</label>
+            <textarea formControlName="comment" rows="3" class="w-full border p-2 rounded"></textarea>
+          </div>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Gönder
+          </button>
+        </form>
+      </div>
+    </section>
   </div>
-</ng-template>
+
+  <!-- Loading Template -->
+  <ng-template #loadingTemplate>
+    <div class="p-10 text-center text-gray-600">
+      <p>Yükleniyor...</p>
+    </div>
+  </ng-template>
 </main>
-

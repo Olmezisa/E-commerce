@@ -77,9 +77,10 @@ export class AuthService {
     return !!this.currentUserSubject.value;
   }
 
-  public getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
-  }
+  public getCurrentUser(): Observable<User | null> {
+  return this.currentUser$;
+}
+
 
   updateCurrentUser(data: Partial<Omit<User, 'email' | 'password' | 'provider'>>): void {
     const user = this.currentUserSubject.value;
@@ -105,4 +106,9 @@ export class AuthService {
       localStorage.setItem('currentUser', JSON.stringify(user));
     }
   }
+  public isAuthenticated(): boolean {
+  return !!this.currentUserSubject.value?.token;
+}
+
+
 }
