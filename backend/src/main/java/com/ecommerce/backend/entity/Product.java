@@ -37,6 +37,10 @@ public class Product {
     @JsonIgnoreProperties({"password", "email", "role"})
     private User seller;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "previous_status")
+    private ProductStatus previousStatus;
+
     public Long getId() {
         return id;
     }
@@ -103,5 +107,11 @@ public class Product {
     }
     public void setRating(double rating) {
         this.rating = rating;
+    }
+    public ProductStatus getPreviousStatus() {
+        return previousStatus;
+    }
+    public void setPreviousStatus(ProductStatus previousStatus) {
+        this.previousStatus = previousStatus;
     }
 }

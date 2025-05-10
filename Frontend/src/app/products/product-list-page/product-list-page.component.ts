@@ -14,12 +14,13 @@ import { WishlistService } from '../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-product-list-page',
-  standalone:false,
+  standalone: false,
   templateUrl: './product-list-page.component.html',
   styleUrls: ['./product-list-page.component.css']
 })
 export class ProductListPageComponent implements OnInit, OnChanges {
   @Input() categoryFilter = '';
+  @Input() statusFilter: 'PENDING' | 'ACTIVE' | 'BANNED' = 'ACTIVE';
 
   products: Product[] = [];
   filtered: Product[] = [];
@@ -31,18 +32,18 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     private cartService: CartService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private wishlist:WishlistService
+    private wishlist: WishlistService
   ) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe(list => {
+    this.productService.getProducts(this.statusFilter).subscribe(list => {
       this.products = list;
       this.applyFilter();
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['categoryFilter']) {
+    if (changes['categoryFilter'] || changes['statusFilter']) {
       this.applyFilter();
     }
   }
@@ -63,7 +64,13 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     }
   }
 
-  addToCart(product: Product): void {
+  // Kartın tamamına tıklanınca
+  viewDetails(product: Product): void {
+    this.router.navigate(['/products/detail', product.id]);
+  }
+
+  addToCart(product: Product, event: MouseEvent): void {
+    event.stopPropagation();
     this.cartService.addToCart(product);
     this.snackBar.open(`${product.title} sepete eklendi.`, 'Kapat', {
       duration: 3000,
@@ -72,13 +79,15 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     });
   }
 
-  addToCompare(product: Product): void {
+  addToCompare(product: Product, event: MouseEvent): void {
+    event.stopPropagation();
     if (!this.selectedProducts.includes(product) && this.selectedProducts.length < 2) {
       this.selectedProducts.push(product);
     }
   }
 
-  compareSelected(): void {
+  compareSelected(event: MouseEvent): void {
+    event.stopPropagation();
     if (this.selectedProducts.length === 2) {
       this.router.navigate(['/products/compare'], {
         queryParams: {
@@ -90,23 +99,17 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     }
   }
 
-  viewDetails(product: Product): void {
-    this.router.navigate(['/products/detail', product.id]);
+  toggleWishlist(product: Product, event: MouseEvent): void {
+    event.stopPropagation();
+    this.wishlist.toggle(product);
   }
 
   isWishlisted(p: Product): boolean {
     return this.wishlist.isInWishlist(p.id);
   }
 
-  toggleWishlist(p: Product): void {
-    this.wishlist.toggle(p);
-  }
-
-
   onSearch(term: string): void {
     this.searchTerm = term.trim().toLowerCase();
     this.applyFilter();
   }
-
-
 }

@@ -15,15 +15,15 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
+  getProducts(status?: string): Observable<Product[]> {
+    if (status) {
+      return this.http.get<Product[]>(`${this.apiUrl}/products?status=${status}`);
+    }
     return this.http.get<Product[]>(`${this.apiUrl}/products`);
   }
 
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
-  }
-  getPendingProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/products/pending`);
   }
 
   approveProduct(id: number): Observable<Product> {
@@ -34,9 +34,16 @@ export class ProductService {
     return this.http.put<Product>(`${this.apiUrl}/products/${id}/reject`, {});
   }
 
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/products/admin/${id}`);
+  }
+
   addProduct(productData:any): Observable<any>{
     return this.http.post(`${this.apiUrl}/products`,
       productData
     );
+  }
+  unbanProduct(id: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/products/${id}/unban`, {});
   }
 }

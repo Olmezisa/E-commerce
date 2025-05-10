@@ -30,9 +30,20 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> getProducts(
+            @RequestParam(value = "status", required = false) ProductStatus status) {
+    
+        List<Product> products = (status == null)
+            ? productService.getAllProducts()
+            : productService.getProductsByStatus(status);
+
+        List<ProductResponse> response = products.stream()
+            .map(this::toResponse)
+            .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -62,17 +73,8 @@ public class ProductController {
     public ResponseEntity<Product> rejectProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.rejectProduct(id));
     }
-    @GetMapping("/pending")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ProductResponse>> getPendingProducts() {
-        List<ProductResponse> response = productService.getProductsByStatus(ProductStatus.PENDING)
-            .stream()
-            .map(this::toResponse)
-            .toList();
 
-        return ResponseEntity.ok(response);
-    }
-
+    @GetMapping("/count")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> getProductCount() {
         return ResponseEntity.ok(productService.countProducts());
@@ -88,6 +90,12 @@ public class ProductController {
             p.getStatus(),
             p.getSeller() != null ? p.getSeller().getFullName() : "Bilinmiyor"
         );
+    }
+    @PutMapping("/{id}/unban")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductResponse> unbanProduct(@PathVariable Long id) {
+        Product updated = productService.unbanProduct(id);
+        return ResponseEntity.ok(toResponse(updated));
     }
    
 

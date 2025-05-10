@@ -9,24 +9,40 @@ import { ProductService } from '../../core/services/product.service';
   styleUrl: './product-management.component.css'
 })
 export class ProductManagementComponent implements OnInit {
+  allProducts: Product[] = [];
   pendingProducts: Product[] = [];
   loading = false;
+  activeTab: 'ALL' | 'PENDING' = 'ALL';
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
+    this.fetchAllProducts();
     this.fetchPendingProducts();
+  }
+  fetchAllProducts() {
+    this.loading = true;
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        this.allProducts = products;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Tüm ürünler alınamadı', err);
+        this.loading = false;
+      }
+    });
   }
 
   fetchPendingProducts() {
     this.loading = true;
-    this.productService.getPendingProducts().subscribe({
+    this.productService.getProducts('PENDING').subscribe({
       next: (products) => {
         this.pendingProducts = products;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Ürünler alınamadı', err);
+        console.error('Onay bekleyen ürünler alınamadı', err);
         this.loading = false;
       }
     });
@@ -38,9 +54,31 @@ export class ProductManagementComponent implements OnInit {
     });
   }
 
-  reject(id: number) {
-    this.productService.rejectProduct(id).subscribe(() => {
-      this.pendingProducts = this.pendingProducts.filter(p => p.id !== id);
+reject(id: number) {
+  this.productService.rejectProduct(id).subscribe(() => {
+    if (this.activeTab === 'ALL') {
+      this.allProducts = this.allProducts.map(p =>
+        p.id === id ? { ...p, status: 'BANNED' as any } : p
+      );
+    }
+    this.pendingProducts = this.pendingProducts.filter(p => p.id !== id);
+  });
+}
+
+  delete(id: number) {
+    this.productService.deleteProduct(id).subscribe(() => {
+      this.allProducts = this.allProducts.filter(p => p.id !== id);
+    });
+  }
+
+  switchTab(tab: 'ALL' | 'PENDING') {
+    this.activeTab = tab;
+  }
+  unban(id: number) {
+    this.productService.unbanProduct(id).subscribe(() => {
+      this.allProducts = this.allProducts.map(p =>
+        p.id === id ? { ...p, status: 'ACTIVE' as any } : p
+      );
     });
   }
 }

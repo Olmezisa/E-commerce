@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
         product.setImageUrl(request.getImageUrl());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
-        product.setStatus(ProductStatus.PENDING); // varsayılan olarak onay bekliyor
+        product.setStatus(ProductStatus.PENDING); 
 
         User seller = userService.getCurrentUser();
         product.setSeller(seller);
@@ -96,8 +96,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product rejectProduct(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        product.setPreviousStatus(product.getStatus());
         product.setStatus(ProductStatus.BANNED);
         return productRepository.save(product);
     }
@@ -117,6 +117,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countProductsBySellerUsername(String username) {
         return productRepository.countBySellerEmail(username);
+    }
+    @Override
+    public Product unbanProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        ProductStatus target = product.getPreviousStatus() != null
+            ? product.getPreviousStatus()
+            : ProductStatus.ACTIVE;
+        product.setStatus(target);
+        product.setPreviousStatus(null);
+        return productRepository.save(product);
     }
 
     
