@@ -2,6 +2,7 @@ package com.ecommerce.backend.controller;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,13 @@ public class SellerController {
         BigDecimal revenue   = orderService.sumRevenueBySellerEmail(email);
         SellerDashboardDto dto = new SellerDashboardDto(totalProducts, totalOrders, pendingOrders, revenue);
         return ResponseEntity.ok(dto);
-}
+    }
+    @GetMapping("/my-products")
+    public ResponseEntity<List<Product>> getMyProducts(Principal principal) {
+        String email = principal.getName();
+        List<Product> products = productService.getProductsBySellerUsername(email);
+        return ResponseEntity.ok(products);
+    }
+
 
 }

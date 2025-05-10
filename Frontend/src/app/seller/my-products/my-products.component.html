@@ -1,1 +1,24 @@
-<p>my-products works!</p>
+<!-- src/app/seller/my-products/my-products.component.html -->
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4">Ürünlerim</h2>
+
+  <div *ngIf="loading">Yükleniyor...</div>
+  <div *ngIf="error" class="text-red-600">{{ error }}</div>
+
+  <table *ngIf="!loading && !error" class="w-full table-auto">
+    <thead>
+      <tr>
+        <th>ID</th><th>Ad</th><th>Fiyat</th><th>Stok</th><th>Durum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td>{{ p.id }}</td>
+        <td>{{ p.title }}</td>
+        <td>{{ p.price | currency:'TRY':'symbol' }}</td>
+        <td>{{ p.stock }}</td>
+        <td>{{ p.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
