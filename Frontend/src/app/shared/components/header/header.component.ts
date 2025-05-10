@@ -1,8 +1,8 @@
 import { Component, OnInit }      from '@angular/core';
-import { Observable }             from 'rxjs';
+import { map, Observable }             from 'rxjs';
 
 import { Router }                 from '@angular/router';
-import { AuthService, User } from '../../../core/services/auth.service';
+import { AuthService, Role, User } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
 
 @Component({
@@ -15,6 +15,10 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   currentUser$: Observable<User | null>;
   cartCount$: Observable<number>;
+  isSeller$:Observable<boolean>;
+  isBuyer$:Observable<boolean>;
+  userRole$:Observable<Role|null>;
+  isAdmin$:Observable<boolean>;
 
   constructor(
     private auth: AuthService,
@@ -24,6 +28,10 @@ export class HeaderComponent implements OnInit {
     this.isLoggedIn$   = this.auth.isLoggedIn$;
     this.currentUser$  = this.auth.currentUser$;
     this.cartCount$    = this.cartService.cartCount$;
+    this.userRole$   = this.auth.userRole$;
+    this.isSeller$   = this.userRole$.pipe(map(r => r === 'SELLER'));
+    this.isBuyer$    = this.userRole$.pipe(map(r => r === 'BUYER'));
+    this.isAdmin$ = this.userRole$.pipe(map(r=> r =='ADMIN'));
   }
 
   ngOnInit(): void {}
