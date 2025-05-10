@@ -1,7 +1,7 @@
 import { Component, OnInit }      from '@angular/core';
-import { map, Observable }             from 'rxjs';
+import { filter, map, Observable }             from 'rxjs';
 
-import { Router }                 from '@angular/router';
+import { NavigationEnd, Router }                 from '@angular/router';
 import { AuthService, Role, User } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
 
@@ -34,7 +34,16 @@ export class HeaderComponent implements OnInit {
     this.isAdmin$ = this.userRole$.pipe(map(r=> r =='ADMIN'));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+     this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (this.auth.isLoggedInSnapshot()) {
+        this.cartService['loadCount']();
+      }
+    });
+  }
+
 
   logout(): void {
     this.auth.logout();
@@ -48,8 +57,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/account/profile']);
   }
 
-  /** SearchBar’dan gelen terimle arama sayfasına yönlendir */
-  // header.component.ts içinde
+
+
 onSearch(term: string): void {
   if (term.trim()) {
     this.router.navigate(['/products/search'], {
