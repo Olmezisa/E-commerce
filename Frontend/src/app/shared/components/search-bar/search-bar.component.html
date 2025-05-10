@@ -25,12 +25,12 @@
       class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
     >
       <img
-        [src]="p.image"
-        alt="{{ p.title }}"
+        [src]="p.imageUrl"
+        alt="{{ p.name }}"
         class="w-8 h-8 object-cover rounded mr-3"
       />
       <div class="flex-1">
-        <div class="font-medium text-sm">{{ p.title }}</div>
+        <div class="font-medium text-sm">{{ p.name }}</div>
         <div class="text-xs text-gray-500">${{ p.price }}</div>
       </div>
     </li>

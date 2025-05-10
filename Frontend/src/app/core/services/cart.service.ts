@@ -41,7 +41,7 @@ export class CartService {
       this.cartItems.push({ product, quantity: 1 });
     }
     this.updateCart();
-    this.showSnackbar(`${product.title} sepete eklendi.`);
+    this.showSnackbar(`${product.name} sepete eklendi.`);
   }
 
   removeFromCart(productId: number): void {

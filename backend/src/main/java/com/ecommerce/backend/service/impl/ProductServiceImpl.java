@@ -2,10 +2,13 @@ package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
+import com.ecommerce.backend.dto.VariantRequest;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
+import com.ecommerce.backend.entity.ProductVariant;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.ProductRepository;
+import com.ecommerce.backend.repository.ProductVariantRepository;
 import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.ProductService;
 import com.ecommerce.backend.service.UserService;
@@ -21,10 +24,15 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final ProductVariantRepository variantRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, UserService userService) {
+
+    public ProductServiceImpl(ProductRepository productRepository, UserService userService,
+    ProductVariantRepository variantRepository) {
         this.productRepository = productRepository;
         this.userService = userService;
+        this.variantRepository = variantRepository;
+
     }
     private ProductResponse toResponse(Product p) {
         return new ProductResponse(
@@ -128,6 +136,54 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(target);
         product.setPreviousStatus(null);
         return productRepository.save(product);
+    }
+    @Override
+    public List<ProductVariant> getVariantsForProduct(Long productId) {
+        // Ürünün var olduğundan emin olalım
+        if (!productRepository.existsById(productId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
+        return variantRepository.findByProductId(productId);
+    }
+
+    @Override
+    public ProductVariant createVariant(Long productId, VariantRequest dto) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        ProductVariant v = new ProductVariant();
+        v.setProduct(product);
+        v.setSku(dto.getSku());
+        v.setOptionName(dto.getOptionName());
+        v.setOptionValue(dto.getOptionValue());
+        v.setPrice(dto.getPrice());
+        v.setStock(dto.getStock());
+        v.setImageUrl(dto.getImageUrl());
+
+        return variantRepository.save(v);
+    }
+
+    @Override
+    public ProductVariant updateVariant(Long variantId, VariantRequest dto) {
+        ProductVariant v = variantRepository.findById(variantId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Variant not found"));
+
+        v.setSku(dto.getSku());
+        v.setOptionName(dto.getOptionName());
+        v.setOptionValue(dto.getOptionValue());
+        v.setPrice(dto.getPrice());
+        v.setStock(dto.getStock());
+        v.setImageUrl(dto.getImageUrl());
+
+        return variantRepository.save(v);
+    }
+
+    @Override
+    public void deleteVariant(Long variantId) {
+        if (!variantRepository.existsById(variantId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Variant not found");
+        }
+        variantRepository.deleteById(variantId);
     }
 
     

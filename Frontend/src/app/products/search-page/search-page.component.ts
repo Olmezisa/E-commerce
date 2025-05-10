@@ -34,7 +34,7 @@ export class SearchPageComponent implements OnInit {
       if (this.query) {
         const lower = this.query.toLowerCase();
         this.results = list.filter(p =>
-          p.title.toLowerCase().includes(lower)
+          p.name.toLowerCase().includes(lower)
         );
       } else {
         this.results = [];

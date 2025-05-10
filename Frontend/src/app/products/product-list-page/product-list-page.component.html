@@ -23,12 +23,12 @@
 
     <!-- Ürün resmi -->
     <img
-      [src]="p.image"
-      [alt]="p.title"
+      [src]="p.imageUrl"
+      [alt]="p.name"
       class="w-full h-40 object-cover rounded mb-4"
     />
 
-    <h3 class="mt-2 font-semibold">{{ p.title }}</h3>
+    <h3 class="mt-2 font-semibold">{{ p.name }}</h3>
     <p class="text-lg mb-2">{{ p.price | currency:'$' }}</p>
 
     <div class="flex space-x-2">

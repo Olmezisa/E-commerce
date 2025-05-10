@@ -59,7 +59,7 @@ export class ProductListPageComponent implements OnInit, OnChanges {
 
     if (this.searchTerm) {
       this.filtered = this.filtered.filter(
-        p => p.title.toLowerCase().includes(this.searchTerm)
+        p => p.name.toLowerCase().includes(this.searchTerm)
       );
     }
   }
@@ -72,7 +72,7 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   addToCart(product: Product, event: MouseEvent): void {
     event.stopPropagation();
     this.cartService.addToCart(product);
-    this.snackBar.open(`${product.title} sepete eklendi.`, 'Kapat', {
+    this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
       duration: 3000,
       horizontalPosition: 'end',
       verticalPosition: 'bottom'

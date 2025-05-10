@@ -7,6 +7,7 @@ import { SellerRegisterComponent } from './seller-register/seller-register.compo
 import { MyProductsComponent } from './my-products/my-products.component';
 import { RoleGuard } from '../core/guards/role.guard';
 import { AuthGuard } from '../core/guards/auth.guard';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 const routes: Routes = [
   { path: '', component: SellerComponent,
@@ -18,6 +19,8 @@ const routes: Routes = [
     { path: 'seller-register', component:SellerRegisterComponent },
     { path: 'add-products', component:AddProductsComponent },
     { path: 'my-products',component:MyProductsComponent},
+    { path: 'my-products/:id/edit', component: EditProductComponent },
+
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
   ]
 }];

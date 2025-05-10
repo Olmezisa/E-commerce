@@ -1,0 +1,103 @@
+import { Component, OnInit } from '@angular/core';
+import { Product } from '../../products/models/product.model';
+import { ProductVariant } from '../../products/models/variant.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../../core/services/product.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-edit-product',
+  standalone: false,
+  templateUrl: './edit-product.component.html',
+  styleUrl: './edit-product.component.css'
+})
+export class EditProductComponent implements OnInit {
+  product!: Product;
+  variants: ProductVariant[] = [];
+  editingVariant?: ProductVariant;
+  productForm!: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private svc: ProductService
+  ) {}
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) {
+      this.router.navigate(['/seller/my-products']);
+      return;
+    }
+
+    this.productForm = this.fb.group({
+      name:        ['', Validators.required],
+      description: [''],
+      price:       [0, [Validators.required, Validators.min(0)]],
+      stock:       [0, [Validators.required, Validators.min(0)]],
+      imageUrl:    [''],
+      status:      ['', Validators.required]
+    });
+
+    this.svc.getProductById(id).subscribe(p => {
+      this.product = p;
+      this.productForm.patchValue({
+        name:        p.name,
+        description: p.description,
+        price:       p.price,
+        stock:       p.stock,
+        imageUrl:    p.imageUrl,
+        status:      p.status
+      });
+    });
+
+    this.loadVariants(id);
+  }
+
+  loadVariants(productId: number): void {
+    this.svc.getVariants(productId).subscribe(list => this.variants = list);
+  }
+
+  onProductSubmit(): void {
+    console.log('SUBMIT tıklandı – form.valid:', this.productForm.valid, this.productForm.value);
+    if (this.productForm.invalid) {
+      console.warn('Form geçersiz, geri dönülüyor');
+      return;
+    }
+
+    // *** BURADA HTTP çağrısını geri ekliyoruz ***
+    const body = {
+      name:        this.productForm.value.name,
+      description: this.productForm.value.description,
+      price:       this.productForm.value.price,
+      stock:       this.productForm.value.stock,
+      imageUrl:    this.productForm.value.imageUrl,
+      status:      this.productForm.value.status
+    };
+
+    this.svc.updateProduct(this.product.id, body).subscribe({
+      next: updated => {
+        console.log('PUT başarılı', updated);
+        alert('Ürün başarıyla güncellendi!');
+      },
+      error: err => {
+        console.error('PUT hatası:', err);
+        alert(`Güncelleme hatası: ${err.status} ${err.message}`);
+      }
+    });
+  }
+
+  onEditVariant(v: ProductVariant): void {
+    this.editingVariant = v;
+  }
+
+  onDeleteVariant(id: number): void {
+    this.svc.deleteVariant(id).subscribe(() => this.loadVariants(this.product.id));
+  }
+
+  onVariantSaved(): void {
+    this.editingVariant = undefined;
+    this.loadVariants(this.product.id);
+  }
+}

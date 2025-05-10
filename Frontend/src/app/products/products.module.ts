@@ -14,6 +14,9 @@ import { ProductDetailPageComponent } from './product-detail-page/product-detail
 import { ProductComparePageComponent } from './product-compare-page/product-compare-page.component';
 import { SharedModule } from '../shared/shared.module';
 import { SearchPageComponent } from './search-page/search-page.component';
+import { VariantListComponent } from '../variant/variant-list/variant-list.component';
+import { VariantFormComponent } from '../variant/variant-form/variant-form.component';
+import { VariantModule } from '../variant/variant.module';
 
 
 
@@ -26,7 +29,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
     ReviewCardComponent,
     ProductDetailPageComponent,
     ProductComparePageComponent,
-    SearchPageComponent
+    SearchPageComponent,
 
   ],
   imports: [
@@ -36,6 +39,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
     ProductsRoutingModule,
     SharedModule,
     ReactiveFormsModule,
+    VariantModule,
 
 ],
   providers: [

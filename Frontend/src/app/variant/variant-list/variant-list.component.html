@@ -1,0 +1,16 @@
+<!-- variant-list.component.html -->
+<div *ngIf="loading">Yükleniyor…</div>
+<table *ngIf="!loading" class="min-w-full divide-y divide-gray-200">
+  <!-- başlık -->
+  <tbody>
+    <tr *ngFor="let v of variants">
+      <td>{{ v.optionName }}: {{ v.optionValue }}</td>
+      <td>{{ v.price | currency }}</td>
+      <td>{{ v.stock }}</td>
+      <td class="space-x-2">
+        <button (click)="onEdit(v)">Düzenle</button>
+        <button (click)="onDelete(v.id)">Sil</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

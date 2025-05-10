@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 public class ProductResponse {
     private Long id;
-    private String title;
+    private String name;
     private String description;
     private BigDecimal price;
     private int stock;
@@ -13,10 +13,10 @@ public class ProductResponse {
     private ProductStatus status;
     private String sellerName;
 
-    public ProductResponse(Long id, String title, String description, BigDecimal price, int stock,
+    public ProductResponse(Long id, String name, String description, BigDecimal price, int stock,
                            String imageUrl, ProductStatus status, String sellerName) {
         this.id = id;
-        this.title = title;
+        this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
@@ -26,7 +26,7 @@ public class ProductResponse {
     }
 
     public Long getId() { return id; }
-    public String getTitle() { return title; }
+    public String getName() { return name; }
     public String getDescription() { return description; }
     public BigDecimal getPrice() { return price; }
     public int getStock() { return stock; }

@@ -2,6 +2,8 @@ package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,6 +42,9 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(name = "previous_status")
     private ProductStatus previousStatus;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductVariant> variants = new ArrayList<>();
 
     public Long getId() {
         return id;

@@ -2,9 +2,9 @@
 <main class="container mx-auto p-4">
 <div *ngIf="!loading; else loadingTemplate" class="p-6">
   <!-- Detay sayfasında resim boyutunu ayarlıyoruz -->
-  <img [src]="product.image" alt="{{ product.title }}" class="w-full h-72 object-contain mb-4 rounded-lg">
+  <img [src]="product.imageUrl" alt="{{ product.name }}" class="w-full h-72 object-contain mb-4 rounded-lg">
 
-  <h1 class="text-3xl font-bold">{{ product.title }}</h1>
+  <h1 class="text-3xl font-bold">{{ product.name }}</h1>
   <p class="text-xl">{{ product.price | currency }}</p>
   <p class="text-gray-600">{{ product.description }}</p>
 

@@ -1,0 +1,5 @@
+<!-- variant-form.component.html -->
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+  <!-- inputlar: sku, optionName, optionValue, price, stock, imageUrl -->
+  <button type="submit">{{ variant ? 'Güncelle' : 'Ekle' }}</button>
+</form>

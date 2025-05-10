@@ -9,6 +9,8 @@ import { AddProductsComponent } from './add-products/add-products.component';
 import { MyProductsComponent } from './my-products/my-products.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SellerRegisterComponent } from './seller-register/seller-register.component';
+import { EditProductComponent } from './edit-product/edit-product.component';
+import { VariantModule } from '../variant/variant.module';
 
 
 @NgModule({
@@ -18,12 +20,14 @@ import { SellerRegisterComponent } from './seller-register/seller-register.compo
     SellerAnalyticsComponent,
     AddProductsComponent,
     MyProductsComponent,
-    SellerRegisterComponent
+    SellerRegisterComponent,
+    EditProductComponent
   ],
   imports: [
     CommonModule,
     SellerRoutingModule,
     ReactiveFormsModule,
+    VariantModule
 
   ]
 })

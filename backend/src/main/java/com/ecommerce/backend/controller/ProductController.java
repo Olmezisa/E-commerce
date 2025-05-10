@@ -97,6 +97,7 @@ public class ProductController {
         Product updated = productService.unbanProduct(id);
         return ResponseEntity.ok(toResponse(updated));
     }
+    
    
 
 

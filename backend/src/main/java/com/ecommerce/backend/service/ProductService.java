@@ -1,8 +1,10 @@
 package com.ecommerce.backend.service;
 
 import com.ecommerce.backend.dto.ProductRequest;
+import com.ecommerce.backend.dto.VariantRequest;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
+import com.ecommerce.backend.entity.ProductVariant;
 
 import java.util.List;
 
@@ -19,6 +21,11 @@ public interface ProductService {
     long countProductsBySellerUsername(String username);
     List<Product> getProductsBySellerUsername(String username);
     Product unbanProduct(Long id);
+    List<ProductVariant> getVariantsForProduct(Long productId);
+    ProductVariant createVariant(Long productId, VariantRequest dto);
+    ProductVariant updateVariant(Long variantId, VariantRequest dto);
+    void deleteVariant(Long variantId);
+
     
 
 }

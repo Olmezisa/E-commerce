@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SellerService } from '../../core/services/seller.service';
 import { Product } from '../../products/models/product.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-products',
@@ -13,7 +14,9 @@ export class MyProductsComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private sellerService: SellerService) {}
+  constructor(private sellerService: SellerService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.sellerService.getMyProducts().subscribe({
@@ -28,4 +31,7 @@ export class MyProductsComponent implements OnInit {
       }
     });
   }
+  onEdit(id: number) {
+  this.router.navigate(['/seller/my-products', id, 'edit']);
+}
 }
