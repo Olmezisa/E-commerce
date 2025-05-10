@@ -1,31 +1,27 @@
 <div class="p-6 max-w-3xl mx-auto">
   <h2 class="text-2xl font-bold mb-6">Checkout</h2>
 
-  <!-- Sipariş Özeti -->
   <div *ngIf="cartItems.length > 0; else emptyCart">
     <div class="space-y-4 mb-6">
       <div *ngFor="let item of cartItems" class="flex justify-between items-center border p-4 rounded shadow">
         <div class="flex items-center space-x-4">
-          <img [src]="item.product.imageUrl" alt="{{ item.product.name }}" class="w-16 h-16 object-contain rounded" />
+          <!-- Eğer product resmi varsa ekleyebilirsiniz -->
           <div>
-            <p class="font-semibold">{{ item.product.name }}</p>
+            <p class="font-semibold">{{ item.productName }}</p>
             <p class="text-sm text-gray-600">x{{ item.quantity }}</p>
           </div>
         </div>
         <div>
-          <p>{{ item.product.price * item.quantity | currency }}</p>
+          <p>{{ item.price * item.quantity | currency }}</p>
         </div>
       </div>
     </div>
 
-    <!-- Toplam -->
     <div class="text-right text-xl font-semibold mb-6">
       Total: {{ totalPrice | currency }}
     </div>
 
-    <!-- Kullanıcı Bilgileri Formu -->
     <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-4">
-
       <div>
         <label class="block font-medium">Ad Soyad</label>
         <input type="text" formControlName="name" class="w-full p-2 border rounded" />

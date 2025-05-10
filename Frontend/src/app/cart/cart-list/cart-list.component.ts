@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart-list',
-  standalone: false,
+  standalone:false,
   templateUrl: './cart-list.component.html',
   styleUrl: './cart-list.component.css'
 })
@@ -23,30 +23,28 @@ export class CartListComponent implements OnInit {
   }
 
   refreshCart(): void {
-    this.cartItems = this.cartService.getCartItems();
-    this.totalPrice = this.cartService.getTotalPrice();
+    this.cartService.getCart().subscribe(items => {
+      this.cartItems = items;
+      this.totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    });
   }
 
-  // Kartın tamamına tıklandığında detaya gider
   viewDetails(productId: number): void {
     this.router.navigate(['/products/detail', productId]);
   }
 
-  removeItem(id: number, event: MouseEvent): void {
+  removeItem( event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.removeFromCart(id);
-    this.refreshCart();
+    this.cartService.clearCart().subscribe(() => this.refreshCart());
   }
 
-  increaseQty(id: number, event: MouseEvent): void {
+  increaseQty(productId: number, event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.increaseQuantity(id);
-    this.refreshCart();
+    this.cartService.addToCart(productId, 1).subscribe(() => this.refreshCart());
   }
 
-  decreaseQty(id: number, event: MouseEvent): void {
+  decreaseQty(productId: number, event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.decreaseQuantity(id);
-    this.refreshCart();
+    this.cartService.addToCart(productId, -1).subscribe(() => this.refreshCart());
   }
 }

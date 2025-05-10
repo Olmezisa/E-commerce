@@ -12,6 +12,7 @@ const routes: Routes = [
   {
     path: '', component: AdminComponent,
     canActivate:[AuthGuard,RoleGuard],
+     data:{roles:['ADMIN']},
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'products/pending', component: ProductManagementComponent },

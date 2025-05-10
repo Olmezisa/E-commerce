@@ -88,7 +88,7 @@
           <span
             class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
           >
-            {{ (cartCount$ | async) || 0 }}
+            {{ (cartCount$ | async) ||0}}
           </span>
         </button>
       </div>
@@ -97,73 +97,142 @@
 
     <!-- Girişli Kullanıcı Şablonu -->
     <ng-template #loggedTpl>
-      <div class="!flex items-center space-x-8 text-dark">
-        <!-- Hesabım Menü -->
-        <button
-          mat-button
-          [matMenuTriggerFor]="userMenu"
-          class="!flex flex-col items-center text-sm hover:text-primary"
-        >
-          <mat-icon class="text-primary">person</mat-icon>
-          <span>My Account</span>
-        </button>
-        <mat-menu
-          #userMenu="matMenu"
-          yPosition="below"
-          xPosition="after"
-          overlapTrigger="false"
-        >
-        <div class="px-4 py-2 border-b">
-          <mat-icon>person</mat-icon>
-          <span class="ml-2 font-medium">
-            {{ (currentUser$ | async)?.fullName}}
-          </span>
-        </div>
+  <div class="flex items-center space-x-8 text-dark">
+ <ng-container *ngIf="isAdmin$ | async">
+    <!-- 1) ADMIN için Dashboard -->
+    <button
+      *ngIf="isAdmin$ | async"
+      mat-button
+      routerLink="/admin"
+      class="!flex flex-col items-center text-sm hover:text-primary"
+    >
+      <mat-icon class="text-secondary">admin_panel_settings</mat-icon>
+      <span>Admin</span>
+    </button>
+    <a></a>
 
-
-          <button mat-menu-item (click)="goToOrders()">
-            <mat-icon class="text-secondary">inventory_2</mat-icon>
-            <span>My Orders</span>
-
-          </button>
-          <button mat-menu-item (click)="goToAccount()">
-            <mat-icon class="text-secondary">person</mat-icon>
-            <span>Account Information</span>
-          </button>
-          <button mat-menu-item (click)="logout()">
-            <mat-icon class="text-secondary">exit_to_app</mat-icon>
-            <span>Logout</span>
-          </button>
-        </mat-menu>
-        <a></a>
-
-        <!-- Favorites -->
-        <button
-          mat-button
-          routerLink="/wishlist"
-          class="flex flex-col items-center text-sm hover:text-secondary"
-        >
-          <mat-icon class="!text-red-600">favorite</mat-icon>
-          <span>Favorites</span>
-        </button>
-        <a></a>
-
-        <!-- My Cart -->
-        <button
-          mat-button
-          routerLink="/cart/cartlist"
-          class="relative flex flex-col items-center text-sm hover:text-secondary"
-        >
-          <mat-icon class="text-primary">shopping_cart</mat-icon>
-          <span>My Cart</span>
-          <span
-            class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
-          >
-            {{ (cartCount$ | async) || 0 }}
-          </span>
-        </button>
-        <a></a>
+      <button
+      mat-button
+      [matMenuTriggerFor]="userMenu"
+      class="!flex flex-col items-center text-sm hover:text-primary"
+    >
+      <mat-icon class="text-primary">person</mat-icon>
+      <span>My Account</span>
+    </button>
+    <mat-menu
+      #userMenu="matMenu"
+      yPosition="below"
+      xPosition="after"
+      overlapTrigger="false"
+    >
+      <div class="px-4 py-2 border-b">
+        <mat-icon>person</mat-icon>
+        <span class="ml-2 font-medium">
+          {{ (currentUser$ | async)?.fullName }}
+        </span>
       </div>
-    </ng-template>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon class="text-secondary">exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+ </ng-container>
+
+    <!-- 2) SELLER için Dashboard -->
+    <ng-container *ngIf="isSeller$ | async">
+    <button
+      *ngIf="isSeller$ | async"
+      mat-button
+      routerLink="/seller/dashboard"
+      class="!flex flex-col items-center text-sm hover:text-primary"
+    >
+      <mat-icon class="text-secondary">dashboard</mat-icon>
+      <span>Seller Dashboard</span>
+    </button>
+    <a></a>
+
+      <button
+      mat-button
+      [matMenuTriggerFor]="userMenu"
+      class="!flex flex-col items-center text-sm hover:text-primary"
+    >
+      <mat-icon class="text-primary">person</mat-icon>
+      <span>My Account</span>
+    </button>
+    <mat-menu
+      #userMenu="matMenu"
+      yPosition="below"
+      xPosition="after"
+      overlapTrigger="false"
+    >
+      <div class="px-4 py-2 border-b">
+        <mat-icon>person</mat-icon>
+        <span class="ml-2 font-medium">
+          {{ (currentUser$ | async)?.fullName }}
+        </span>
+      </div>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon class="text-secondary">exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+    </ng-container>
+
+
+
+    <!-- 4) BUYER için Favorites & Cart -->
+    <ng-container *ngIf="isBuyer$ | async">
+      <button
+      mat-button
+      [matMenuTriggerFor]="userMenu"
+      class="!flex flex-col items-center text-sm hover:text-primary"
+    >
+      <mat-icon class="text-primary">person</mat-icon>
+      <span>My Account</span>
+    </button>
+    <a></a>
+    <mat-menu
+      #userMenu="matMenu"
+      yPosition="below"
+      xPosition="after"
+      overlapTrigger="false"
+    >
+      <div class="px-4 py-2 border-b">
+        <mat-icon>person</mat-icon>
+        <span class="ml-2 font-medium">
+          {{ (currentUser$ | async)?.fullName }}
+        </span>
+      </div>
+      <button mat-menu-item (click)="goToOrders()">
+        <mat-icon class="text-secondary">inventory_2</mat-icon>
+        <span>My Orders</span>
+      </button>
+      <button mat-menu-item (click)="goToAccount()">
+        <mat-icon class="text-secondary">person</mat-icon>
+        <span>Account Information</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon class="text-secondary">exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+
+      <button mat-button routerLink="/wishlist" class="flex flex-col items-center text-sm hover:text-secondary">
+        <mat-icon class="!text-red-600">favorite</mat-icon>
+        <span>Favorites</span>
+      </button>
+      <a></a>
+
+      <button mat-button routerLink="/cart/cartlist" class="relative flex flex-col items-center text-sm hover:text-secondary">
+        <mat-icon class="text-primary">shopping_cart</mat-icon>
+        <span>My Cart</span>
+        <span class="absolute -top-1 -right-1 bg-accent text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+          {{ (cartCount$ | async)}}
+        </span>
+      </button>
+    </ng-container>
+  </div>
+</ng-template>
+
   </div>
 </div>

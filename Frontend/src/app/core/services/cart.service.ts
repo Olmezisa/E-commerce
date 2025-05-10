@@ -1,105 +1,62 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient }   from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { Product } from '../../products/models/product.model';
-import { CartItem } from '../../cart/cart-item.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { isPlatformBrowser } from '@angular/common';
+import { filter, tap }       from 'rxjs/operators';
+import { Router, NavigationEnd } from '@angular/router';
+import { AuthService }  from './auth.service';
+import { CartItem }     from '../../cart/cart-item.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
+
 export class CartService {
-  private cartItems: CartItem[] = [];
-  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
-  cartItems$ = this.cartItemsSubject.asObservable();
-
+  private api = 'http://localhost:8080/api/cart';
   private cartCountSubject = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSubject.asObservable();
 
-  private isBrowser: boolean;
-
   constructor(
-    private snackBar: MatSnackBar,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private http: HttpClient,
+    private auth: AuthService,
+    private router: Router
   ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
 
-    if (this.isBrowser) {
-      const savedCart = localStorage.getItem('cartItems');
-      if (savedCart) {
-        this.cartItems = JSON.parse(savedCart);
-        this.updateCart();
-      }
-    }
+    this.auth.currentUser$.subscribe(user => {
+      if (user) this.loadCount();
+      else     this.cartCountSubject.next(0);
+    });
+
+
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.auth.isLoggedInSnapshot()) {
+          this.loadCount();
+        }
+      });
   }
 
-  addToCart(product: Product): void {
-    const existingItem = this.cartItems.find(item => item.product.id === product.id);
-    if (existingItem) {
-      existingItem.quantity++;
-    } else {
-      this.cartItems.push({ product, quantity: 1 });
-    }
-    this.updateCart();
-    this.showSnackbar(`${product.name} sepete eklendi.`);
+  getCart() {
+    return this.http.get<CartItem[]>(this.api);
+  }
+  addToCart(id: number, qty: number) {
+    return this.http.post<void>(`${this.api}/add`, null, {
+      params: { productId: id.toString(), quantity: qty.toString() }
+    }).pipe(tap(() => this.loadCount()));
+  }
+  removeFromCart(id: number) {
+    return this.http.delete<void>(`${this.api}/remove`, {
+      params: { productId: id.toString() }
+    }).pipe(tap(() => this.loadCount()));
+  }
+  clearCart() {
+    return this.http.delete<void>(`${this.api}/clear`).pipe(
+      tap(() => this.cartCountSubject.next(0))
+    );
   }
 
-  removeFromCart(productId: number): void {
-    this.cartItems = this.cartItems.filter(item => item.product.id !== productId);
-    this.updateCart();
-  }
-
-  getCartItems(): CartItem[] {
-    return [...this.cartItems];
-  }
-
-  getTotalPrice(): number {
-    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
-  }
-
-  clearCart(): void {
-    this.cartItems = [];
-    this.updateCart();
-  }
-
-  private updateCart(): void {
-    this.cartItemsSubject.next([...this.cartItems]);
-    const totalCount = this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    this.cartCountSubject.next(totalCount);
-    this.saveToLocalStorage();
-  }
-
-  increaseQuantity(productId: number): void {
-    const item = this.cartItems.find(item => item.product.id === productId);
-    if (item) {
-      item.quantity++;
-      this.updateCart();
-    }
-  }
-
-  decreaseQuantity(productId: number): void {
-    const item = this.cartItems.find(item => item.product.id === productId);
-    if (item) {
-      item.quantity--;
-      if (item.quantity <= 0) {
-        this.cartItems = this.cartItems.filter(i => i.product.id !== productId);
-      }
-      this.updateCart();
-    }
-  }
-
-  private saveToLocalStorage(): void {
-    if (this.isBrowser) {
-      localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
-    }
-  }
-
-  private showSnackbar(message: string): void {
-    this.snackBar.open(message, 'Kapat', {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom',
-      panelClass: ['custom-snackbar']
+  private loadCount() {
+    this.getCart().subscribe(items => {
+      const total = items.reduce((s, i) => s + i.quantity, 0);
+      this.cartCountSubject.next(total);
     });
   }
 }

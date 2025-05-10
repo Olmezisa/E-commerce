@@ -70,14 +70,25 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   }
 
   addToCart(product: Product, event: MouseEvent): void {
-    event.stopPropagation();
-    this.cartService.addToCart(product);
-    this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom'
+  event.stopPropagation();
+  this.cartService.addToCart(product.id, 1)
+    .subscribe({
+      next: () => {
+        this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      },
+      error: err => {
+        this.snackBar.open(`Sepete eklenemedi: ${err.message}`, 'Kapat', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      }
     });
-  }
+}
 
   addToCompare(product: Product, event: MouseEvent): void {
     event.stopPropagation();
