@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../core/services/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-products',
@@ -9,10 +10,11 @@ import { ProductService } from '../../core/services/product.service';
   styleUrl: './add-products.component.css'
 })
 export class AddProductsComponent {
-  productForm: FormGroup;
+  productForm!: FormGroup;
 
   constructor(private fb:FormBuilder,
-    private productService:ProductService){
+    private productService:ProductService,
+    private router:Router){
       this.productForm=this.fb.group({
         name:['', Validators.required],
         description:[''],
@@ -25,7 +27,10 @@ export class AddProductsComponent {
     onSubmit(){
       if(this.productForm.valid){
         this.productService.addProduct(this.productForm.value).subscribe({
-          next:() => alert('ürün eklendi!'),
+          next:() => {
+            alert('ürün eklendi!'),
+            this.router.navigate(['/seller/seller-dashboard'])
+          },
           error: err => {
             console.error('Ürün ekleme hatası', err);
             alert(`Hata! ${err.status} - ${err.message}`);

@@ -26,6 +26,12 @@ public class AdminProductController {
         return ResponseEntity.ok(productRepository.findAll());
     }
 
+    @GetMapping("/pending")
+    public ResponseEntity<List<Product>> getPendingProducts() {
+        List<Product> pending = productRepository.findByStatus(ProductStatus.PENDING);
+        return ResponseEntity.ok(pending);
+    }
+
     @PutMapping("/{id}/approve")
     public ResponseEntity<String> approveProduct(@PathVariable Long id) {
         Product p = productRepository.findById(id)

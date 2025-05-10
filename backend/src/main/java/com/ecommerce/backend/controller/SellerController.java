@@ -33,13 +33,7 @@ public class SellerController {
         this.productService=productService;
         this.orderService=orderService;
     }
-
-    @PreAuthorize("hasRole('SELLER')")
-    @PostMapping("/add-products")
-    public ResponseEntity<Product> addProduct(@RequestBody ProductRequest request){
-        Product created = productService.createProduct(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
+    
     @GetMapping("/dashboard")
     public ResponseEntity<SellerDashboardDto> getDashboard(Principal principal) {
         String email = principal.getName();
