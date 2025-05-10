@@ -1,23 +1,27 @@
-<h2 class="text-xl font-bold mb-4">Admin Panel</h2>
-<nav class="flex space-x-4 mb-4">
-  <a routerLink="/admin/dashboard" routerLinkActive="font-bold">Dashboard</a>
-  <a routerLink="/admin/products/pending" routerLinkActive="font-bold">Product Management</a>
-  <a routerLink="/admin/orders" routerLinkActive="font-bold">Order Management</a>
-  <a routerLink="/admin/users" routerLinkActive="font-bold">Kullanıcı Yönetimi</a>
+<!-- src/app/admin/dashboard/dashboard.component.html -->
+<div class="container mx-auto px-4 py-6">
+  <!-- Başlık -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-semibold text-gray-800">Dashboard</h1>
+    <!-- opsiyonel: avatar, arama, notif ikonları -->
+  </div>
 
-</nav>
-<h2 class="text-xl font-bold mb-4">İstatistikler</h2>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-  <div class="p-4 bg-gray-100 rounded shadow">
-    <h3 class="text-lg font-semibold">Kullanıcı Sayısı</h3>
-    <p class="text-2xl">{{ userCount }}</p>
-  </div>
-  <div class="p-4 bg-gray-100 rounded shadow">
-    <h3 class="text-lg font-semibold">Ürün Sayısı</h3>
-    <p class="text-2xl">{{ productCount }}</p>
-  </div>
-  <div class="p-4 bg-gray-100 rounded shadow">
-    <h3 class="text-lg font-semibold">Sipariş Sayısı</h3>
-    <p class="text-2xl">{{ orderCount }}</p>
+  <!-- İstatistik Kartları -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Kullanıcı Sayısı -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Kullanıcı Sayısı</h3>
+      <p class="mt-2 text-4xl font-bold text-gray-800">{{ userCount }}</p>
+    </div>
+    <!-- Ürün Sayısı -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Ürün Sayısı</h3>
+      <p class="mt-2 text-4xl font-bold text-gray-800">{{ productCount }}</p>
+    </div>
+    <!-- Sipariş Sayısı -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Sipariş Sayısı</h3>
+      <p class="mt-2 text-4xl font-bold text-gray-800">{{ orderCount }}</p>
+    </div>
   </div>
 </div>

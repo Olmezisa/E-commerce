@@ -56,14 +56,16 @@ export class ProductManagementComponent implements OnInit {
 
 reject(id: number) {
   this.productService.rejectProduct(id).subscribe(() => {
-    if (this.activeTab === 'ALL') {
-      this.allProducts = this.allProducts.map(p =>
-        p.id === id ? { ...p, status: 'BANNED' as any } : p
-      );
-    }
     this.pendingProducts = this.pendingProducts.filter(p => p.id !== id);
+
+    this.allProducts = this.allProducts.map(p =>
+      p.id === id
+        ? { ...p, status: 'BANNED' as any }
+        : p
+    );
   });
 }
+
 
   delete(id: number) {
     this.productService.deleteProduct(id).subscribe(() => {
@@ -75,10 +77,19 @@ reject(id: number) {
     this.activeTab = tab;
   }
   unban(id: number) {
-    this.productService.unbanProduct(id).subscribe(() => {
-      this.allProducts = this.allProducts.map(p =>
-        p.id === id ? { ...p, status: 'ACTIVE' as any } : p
-      );
-    });
-  }
+  this.productService.unbanProduct(id).subscribe(updatedProduct => {
+    this.allProducts = this.allProducts.map(p =>
+      p.id === id ? updatedProduct : p
+    );
+
+    this.pendingProducts = [
+      updatedProduct,
+      ...this.pendingProducts.filter(p => p.id !== id)
+    ];
+
+  });
+}
+
+
+
 }
