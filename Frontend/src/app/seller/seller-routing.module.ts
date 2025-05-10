@@ -18,8 +18,9 @@ const routes: Routes = [
     { path: 'dashboard', component:SellerDashboardComponent },
     { path: 'seller-register', component:SellerRegisterComponent },
     { path: 'add-products', component:AddProductsComponent },
-    { path: 'my-products',component:MyProductsComponent},
     { path: 'my-products/:id/edit', component: EditProductComponent },
+    { path: 'my-products',component:MyProductsComponent},
+
 
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
   ]

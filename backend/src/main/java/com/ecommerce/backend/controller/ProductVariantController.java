@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
+@PreAuthorize("hasRole('SELLER')")
+
 public class ProductVariantController {
 
     private final ProductService productService;
@@ -33,7 +35,6 @@ public class ProductVariantController {
     }
 
     @PostMapping("/{productId}/variants")
-    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<VariantResponse> createVariant(
             @PathVariable Long productId,
             @Valid @RequestBody VariantRequest dto) {
@@ -42,7 +43,6 @@ public class ProductVariantController {
     }
 
     @PutMapping("/variants/{variantId}")
-    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<VariantResponse> updateVariant(
             @PathVariable Long variantId,
             @Valid @RequestBody VariantRequest dto) {
@@ -51,7 +51,6 @@ public class ProductVariantController {
     }
 
     @DeleteMapping("/variants/{variantId}")
-    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<Void> deleteVariant(@PathVariable Long variantId) {
         productService.deleteVariant(variantId);
         return ResponseEntity.noContent().build();

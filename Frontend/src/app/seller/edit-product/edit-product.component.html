@@ -1,59 +1,62 @@
-<!-- src/app/seller/edit-product/edit-product.component.html -->
-<div class="container mx-auto px-4 py-6 space-y-8">
+<div class="max-w-5xl mx-auto px-4 py-10 space-y-12">
 
-  <!-- Ürün Düzenle Formu -->
+  <!-- Ürün Düzenle Başlık -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-gray-800">Ürünü Düzenle</h1>
+  </div>
+
+  <!-- Ürün Düzenleme Formu -->
   <form
     *ngIf="productForm"
     [formGroup]="productForm"
     (ngSubmit)="onProductSubmit()"
-    class="space-y-4 bg-white p-6 rounded shadow"
+    class="bg-white shadow-md rounded-xl p-8 space-y-6 border border-gray-200"
   >
-    <h2 class="text-2xl font-semibold mb-4">Ürünü Düzenle</h2>
-
-    <div>
-      <label class="block mb-1 font-medium">Ad</label>
-      <input formControlName="name" class="border rounded p-2 w-full"/>
-    </div>
-
-    <div>
-      <label class="block mb-1 font-medium">Açıklama</label>
-      <textarea formControlName="description" class="border rounded p-2 w-full"></textarea>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <div>
-        <label class="block mb-1 font-medium">Fiyat</label>
-        <input type="number" formControlName="price" class="border rounded p-2 w-full"/>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Ürün Adı</label>
+        <input formControlName="name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"/>
       </div>
+
       <div>
-        <label class="block mb-1 font-medium">Stok</label>
-        <input type="number" formControlName="stock" class="border rounded p-2 w-full"/>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Görsel URL</label>
+        <input formControlName="imageUrl" class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"/>
       </div>
     </div>
 
     <div>
-      <label class="block mb-1 font-medium">Görsel URL</label>
-      <input formControlName="imageUrl" class="border rounded p-2 w-full"/>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Açıklama</label>
+      <textarea formControlName="description" rows="3" class="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring focus:ring-blue-200"></textarea>
     </div>
 
-    <!-- Gizli status input -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Fiyat (₺)</label>
+        <input type="number" formControlName="price" class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Stok</label>
+        <input type="number" formControlName="stock" class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"/>
+      </div>
+    </div>
+
     <input type="hidden" formControlName="status"/>
 
-    <!-- debug için geçici (click) eklendi -->
-    <button
-      type="submit"
-      (click)="onProductSubmit()"
-      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-      [disabled]="productForm.invalid"
-    >
-      Kaydet
-    </button>
+    <div class="pt-4">
+      <button
+        type="submit"
+        [disabled]="productForm.invalid"
+        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Kaydet
+      </button>
+    </div>
   </form>
 
-  <!-- Varyantlar -->
+  <!-- Varyantlar Listesi -->
   <ng-container *ngIf="product">
-    <section class="bg-white p-6 rounded shadow mt-8">
-      <h2 class="text-2xl font-semibold mb-4">Varyantlar</h2>
+    <section class="bg-white shadow-md rounded-xl p-8 border border-gray-200">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Varyantlar</h2>
       <app-variant-list
         [productId]="product.id"
         (edit)="onEditVariant($event)"
@@ -61,9 +64,9 @@
       ></app-variant-list>
     </section>
 
-    <!-- Yeni Varyant / Düzenle -->
-    <section class="bg-white p-6 rounded shadow mt-8">
-      <h2 class="text-2xl font-semibold mb-4">
+    <!-- Varyant Formu -->
+    <section class="bg-white shadow-md rounded-xl p-8 border border-gray-200">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">
         {{ editingVariant ? 'Varyantı Düzenle' : 'Yeni Varyant Ekle' }}
       </h2>
       <app-variant-form
@@ -73,5 +76,4 @@
       ></app-variant-form>
     </section>
   </ng-container>
-
 </div>

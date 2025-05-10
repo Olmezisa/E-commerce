@@ -23,7 +23,7 @@ export class VariantFormComponent implements OnChanges {
       optionValue: ['', Validators.required],
       price:    [0, Validators.required],
       stock:    [0, Validators.required],
-      image: ['']
+      imageUrl: ['']
     });
   }
 

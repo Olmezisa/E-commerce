@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../products/models/product.model';
 import { ProductVariant } from '../../products/models/variant.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { VariantListComponent } from '../../variant/variant-list/variant-list.component';
 
 @Component({
   selector: 'app-edit-product',
@@ -16,6 +17,8 @@ export class EditProductComponent implements OnInit {
   variants: ProductVariant[] = [];
   editingVariant?: ProductVariant;
   productForm!: FormGroup;
+
+  @ViewChild(VariantListComponent) variantListComponent!: VariantListComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -66,7 +69,6 @@ export class EditProductComponent implements OnInit {
       return;
     }
 
-    // *** BURADA HTTP çağrısını geri ekliyoruz ***
     const body = {
       name:        this.productForm.value.name,
       description: this.productForm.value.description,
@@ -93,11 +95,13 @@ export class EditProductComponent implements OnInit {
   }
 
   onDeleteVariant(id: number): void {
-    this.svc.deleteVariant(id).subscribe(() => this.loadVariants(this.product.id));
+    this.svc.deleteVariant(id).subscribe(() => {
+      this.variantListComponent.load();
+    });
   }
 
   onVariantSaved(): void {
     this.editingVariant = undefined;
-    this.loadVariants(this.product.id);
+    this.variantListComponent.load();
   }
 }

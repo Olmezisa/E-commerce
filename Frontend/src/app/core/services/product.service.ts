@@ -53,7 +53,7 @@ export class ProductService {
   // --- Variant metodları ---
   getVariants(productId: number): Observable<ProductVariant[]> {
     return this.http.get<ProductVariant[]>(
-      `${this.apiUrl}/${productId}/variants`
+      `${environment.apiUrl}/products/${productId}/variants`
     );
   }
 
@@ -62,7 +62,7 @@ export class ProductService {
     dto: VariantRequest
   ): Observable<ProductVariant> {
     return this.http.post<ProductVariant>(
-      `${this.apiUrl}/${productId}/variants`,
+      `${environment.apiUrl}/products/${productId}/variants`,
       dto
     );
   }
@@ -72,12 +72,12 @@ export class ProductService {
     dto: VariantRequest
   ): Observable<ProductVariant> {
     return this.http.put<ProductVariant>(
-      `${this.apiUrl}/variants/${variantId}`,
+      `${environment.apiUrl}/products/variants/${variantId}`,
       dto
     );
   }
 
   deleteVariant(variantId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/variants/${variantId}`);
+    return this.http.delete<void>(`${environment.apiUrl}/products/variants/${variantId}`);
   }
 }

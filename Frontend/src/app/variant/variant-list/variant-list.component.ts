@@ -24,7 +24,7 @@ export class VariantListComponent implements OnChanges {
     }
   }
 
-  private load(): void {
+  load(): void {
     this.loading = true;
     this.svc.getVariants(this.productId).subscribe({
       next: list => {
