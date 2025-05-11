@@ -48,8 +48,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
           .requestMatchers("/api/user/**").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/cart/add").permitAll()
 
-          .requestMatchers("/api/cart/**").authenticated()
+          .requestMatchers("/api/cart/**").permitAll()
 
           .anyRequest().authenticated()
       )

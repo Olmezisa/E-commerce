@@ -10,7 +10,7 @@ import { CartService } from '../../core/services/cart.service';
   styleUrls: ['./cart-list.component.css']
 })
 export class CartListComponent implements OnInit {
-  cartItems:   CartItem[] = [];
+  cartItems: (CartItem & { isUpdating?: boolean })[] = [];
   totalPrice = 0;
 
   constructor(

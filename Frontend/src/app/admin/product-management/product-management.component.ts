@@ -82,10 +82,19 @@ reject(id: number) {
       p.id === id ? updatedProduct : p
     );
 
-    this.pendingProducts = [
-      updatedProduct,
-      ...this.pendingProducts.filter(p => p.id !== id)
-    ];
+    this.allProducts = this.allProducts.map(p =>
+  p.id === id ? updatedProduct : p
+);
+
+// Sadece ürün hala 'PENDING' ise listeye ekle
+if (updatedProduct.status === 'PENDING') {
+  this.pendingProducts = [
+    updatedProduct,
+    ...this.pendingProducts.filter(p => p.id !== id)
+  ];
+} else {
+  this.pendingProducts = this.pendingProducts.filter(p => p.id !== id);
+}
 
   });
 }

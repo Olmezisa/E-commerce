@@ -1,62 +1,94 @@
 <div class="p-6 max-w-3xl mx-auto">
-  <h2 class="text-2xl font-bold mb-6">Checkout</h2>
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">💳 Checkout</h2>
 
   <div *ngIf="cartItems.length > 0; else emptyCart">
+    <!-- 🛍️ Ürün Listesi -->
     <div class="space-y-4 mb-6">
-      <div *ngFor="let item of cartItems" class="flex justify-between items-center border p-4 rounded shadow">
-        <div class="flex items-center space-x-4">
-          <!-- Eğer product resmi varsa ekleyebilirsiniz -->
+      <div
+        *ngFor="let item of cartItems"
+        class="flex justify-between items-center border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition"
+      >
+        <div class="flex items-center gap-4">
           <div>
-            <p class="font-semibold">{{ item.productName }}</p>
-            <p class="text-sm text-gray-600">x{{ item.quantity }}</p>
+            <p class="font-semibold text-gray-800">{{ item.productName }}</p>
+            <p class="text-sm text-gray-500">x{{ item.quantity }}</p>
           </div>
         </div>
         <div>
-          <p>{{ item.price * item.quantity | currency }}</p>
+          <p class="text-gray-800 font-medium">
+            {{ item.price * item.quantity | currency:'TRY':'symbol' }}
+          </p>
         </div>
       </div>
     </div>
 
-    <div class="text-right text-xl font-semibold mb-6">
-      Total: {{ totalPrice | currency }}
+    <!-- 💰 Toplam Fiyat -->
+    <div class="text-right text-2xl font-semibold text-gray-800 mb-6">
+      Total: {{ totalPrice | currency:'TRY':'symbol' }}
     </div>
 
-    <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-4">
+    <!-- 📋 Form Alanı -->
+    <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-5 bg-gray-50 p-6 rounded-xl shadow-lg">
       <div>
-        <label class="block font-medium">Ad Soyad</label>
-        <input type="text" formControlName="name" class="w-full p-2 border rounded" />
-        <div *ngIf="checkoutForm.get('name')?.touched && checkoutForm.get('name')?.invalid" class="text-red-600 text-sm">
+        <label class="block text-gray-700 font-medium mb-1">👤 Ad Soyad</label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Adınızı ve soyadınızı girin"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <div *ngIf="checkoutForm.get('name')?.touched && checkoutForm.get('name')?.invalid" class="text-red-600 text-sm mt-1">
           Zorunlu alan
         </div>
       </div>
 
       <div>
-        <label class="block font-medium">Email</label>
-        <input type="email" formControlName="email" class="w-full p-2 border rounded" />
-        <div *ngIf="checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid" class="text-red-600 text-sm">
+        <label class="block text-gray-700 font-medium mb-1">📧 Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="ornek@eposta.com"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <div *ngIf="checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid" class="text-red-600 text-sm mt-1">
           Geçerli bir email giriniz
         </div>
       </div>
 
       <div>
-        <label class="block font-medium">Adres</label>
-        <textarea formControlName="address" class="w-full p-2 border rounded"></textarea>
-        <div *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid" class="text-red-600 text-sm">
+        <label class="block text-gray-700 font-medium mb-1">📍 Adres</label>
+        <textarea
+          formControlName="address"
+          rows="3"
+          placeholder="Teslimat adresinizi girin"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        ></textarea>
+        <div *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid" class="text-red-600 text-sm mt-1">
           Zorunlu alan
         </div>
       </div>
 
-      <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 w-full">
-        Siparişi Tamamla
+      <!-- 🟩 Submit Butonu -->
+      <button
+        type="submit"
+        [disabled]="checkoutForm.invalid"
+        class="w-full bg-green-600 hover:bg-green-700 transition text-white font-semibold py-3 rounded-md disabled:opacity-50"
+      >
+        ✅ Siparişi Tamamla
       </button>
     </form>
 
+    <!-- ✅ Başarı Mesajı -->
     <p *ngIf="successMessage" class="text-green-600 font-medium mt-6 text-center text-lg">
       {{ successMessage }}
     </p>
   </div>
 
+  <!-- 🔴 Sepet Boş -->
   <ng-template #emptyCart>
-    <p class="text-gray-500 text-center">Sepetiniz boş. Lütfen ürün ekleyin.</p>
+    <p class="text-gray-500 text-center text-lg">🛒 Sepetiniz boş. Lütfen ürün ekleyin.</p>
+    <div class="text-center mt-4">
+      <a routerLink="/" class="text-blue-600 hover:underline font-medium">Ürünlere göz at</a>
+    </div>
   </ng-template>
 </div>

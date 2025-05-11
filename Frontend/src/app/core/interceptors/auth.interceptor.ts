@@ -10,24 +10,31 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let authReq = req;
+  let authReq = req;
 
-    if (isPlatformBrowser(this.platformId)) {
-      const raw = localStorage.getItem('currentUser');
-      let token: string|null = null;
-      try {
-        token = raw ? JSON.parse(raw).token : null;
-      } catch {
-        token = null;
+  if (isPlatformBrowser(this.platformId)) {
+    const raw = localStorage.getItem('currentUser');
+    let token: string | null = null;
+
+    try {
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (parsed?.token && typeof parsed.token === 'string' && parsed.token.length > 0) {
+        token = parsed.token;
       }
-      console.log(`>> HTTP ${req.method} ${req.urlWithParams} — token:`, token);
-      if (token) {
-        authReq = req.clone({
-          setHeaders: { Authorization: `Bearer ${token}` }
-        });
-      }
+    } catch {
+      token = null;
     }
 
-    return next.handle(authReq);
+    console.log(`>> HTTP ${req.method} ${req.urlWithParams} — token:`, token);
+
+    if (token) {
+      authReq = req.clone({
+        setHeaders: { Authorization: `Bearer ${token}` }
+      });
+    }
   }
+
+  return next.handle(authReq);
+}
+
 }

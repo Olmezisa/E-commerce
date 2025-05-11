@@ -116,17 +116,17 @@ public class ProductServiceImpl implements ProductService {
     public long countProductsBySellerUsername(String username) {
         return productRepository.countBySellerEmail(username);
     }
-    @Override
-    public Product unbanProduct(Long productId) {
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        ProductStatus target = product.getPreviousStatus() != null
-            ? product.getPreviousStatus()
-            : ProductStatus.ACTIVE;
-        product.setStatus(target);
-        product.setPreviousStatus(null);
-        return productRepository.save(product);
-    }
+@Override
+public Product unbanProduct(Long productId) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+    product.setStatus(ProductStatus.ACTIVE);
+    product.setPreviousStatus(null);
+
+    return productRepository.save(product);
+}
+
     @Override
     public List<ProductVariant> getVariantsForProduct(Long productId) {
         // Ürünün var olduğundan emin olalım
