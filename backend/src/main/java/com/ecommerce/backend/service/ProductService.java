@@ -25,6 +25,7 @@ public interface ProductService {
     ProductVariant createVariant(Long productId, VariantRequest dto);
     ProductVariant updateVariant(Long variantId, VariantRequest dto);
     void deleteVariant(Long variantId);
+    ProductVariant getVariantById(Long variantId);
 
     
 

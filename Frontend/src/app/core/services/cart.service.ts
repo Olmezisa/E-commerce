@@ -1,15 +1,18 @@
+// src/app/core/services/cart.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient }   from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
-import { filter, tap }       from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
-import { AuthService }  from './auth.service';
-import { CartItem }     from '../../cart/cart-item.model';
+import { AuthService } from './auth.service';
+import { CartItem } from '../../cart/cart-item.model';
+import { environment } from '../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
-
+@Injectable({
+  providedIn: 'root'
+})
 export class CartService {
-  private api = 'http://localhost:8080/api/cart';
+  private api = `${environment.apiUrl}/cart`;
   private cartCountSubject = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSubject.asObservable();
 
@@ -18,13 +21,16 @@ export class CartService {
     private auth: AuthService,
     private router: Router
   ) {
-
+    // Kullanıcı değiştiğinde sepet sayısını güncelle
     this.auth.currentUser$.subscribe(user => {
-      if (user) this.loadCount();
-      else     this.cartCountSubject.next(0);
+      if (user) {
+        this.loadCount();
+      } else {
+        this.cartCountSubject.next(0);
+      }
     });
 
-
+    // Her navigation sonunda sepet sayısını güncelle
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => {
@@ -34,28 +40,55 @@ export class CartService {
       });
   }
 
-  getCart() {
+  /** Sepeti al */
+  getCart(): Observable<CartItem[]> {
     return this.http.get<CartItem[]>(this.api);
   }
-  addToCart(id: number, qty: number) {
-    return this.http.post<void>(`${this.api}/add`, null, {
-      params: { productId: id.toString(), quantity: qty.toString() }
-    }).pipe(tap(() => this.loadCount()));
-  }
-  removeFromCart(id: number) {
-    return this.http.delete<void>(`${this.api}/remove`, {
-      params: { productId: id.toString() }
-    }).pipe(tap(() => this.loadCount()));
-  }
-  clearCart() {
-    return this.http.delete<void>(`${this.api}/clear`).pipe(
-      tap(() => this.cartCountSubject.next(0))
-    );
+
+  /**
+   * Ürünü sepete ekle veya çıkart
+   * @param productId  Ürün ID
+   * @param quantity   Eklenecek (pozitif) veya çıkarılacak (negatif) adet
+   * @param variantId  (Opsiyonel) Varyant ID
+   */
+  addToCart(
+    productId: number,
+    quantity: number,
+    variantId?: number
+  ): Observable<void> {
+    let params = new HttpParams()
+      .set('productId', productId.toString())
+      .set('quantity', quantity.toString());
+    if (variantId != null) {
+      params = params.set('variantId', variantId.toString());
+    }
+    return this.http
+      .post<void>(`${this.api}/add`, null, { params })
+      .pipe(tap(() => this.loadCount()));
   }
 
-  private loadCount() {
+  /**
+   * Sepetten tek bir ürünü tamamen çıkarır
+   * @param productId  Ürün ID
+   */
+  removeFromCart(productId: number): Observable<void> {
+    const params = new HttpParams().set('productId', productId.toString());
+    return this.http
+      .delete<void>(`${this.api}/remove`, { params })
+      .pipe(tap(() => this.loadCount()));
+  }
+
+  /** Sepeti tamamen temizler */
+  clearCart(): Observable<void> {
+    return this.http
+      .delete<void>(`${this.api}/clear`)
+      .pipe(tap(() => this.cartCountSubject.next(0)));
+  }
+
+  /** İçsel: sepet toplam adetini hesaplayıp BehaviorSubject’e yayınlar */
+  private loadCount(): void {
     this.getCart().subscribe(items => {
-      const total = items.reduce((s, i) => s + i.quantity, 0);
+      const total = items.reduce((sum, item) => sum + item.quantity, 0);
       this.cartCountSubject.next(total);
     });
   }

@@ -21,7 +21,8 @@ public class Product {
     private String description;
 
     private String imageUrl;
-    private double rating;
+    private int rating;
+    private String comment;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -45,6 +46,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants = new ArrayList<>();
+
+    @Column(nullable = true)
+    private String category;
 
     public Long getId() {
         return id;
@@ -107,16 +111,49 @@ public class Product {
     public User getSeller() {
         return seller;
     }
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
     public ProductStatus getPreviousStatus() {
         return previousStatus;
     }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
     public void setPreviousStatus(ProductStatus previousStatus) {
         this.previousStatus = previousStatus;
     }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+public void setReviews(List<Review> reviews) {
+    this.reviews = reviews;
+}
+    public List<ProductVariant> getVariants() {
+        return variants;
+    }
+    public void setVariants(List<ProductVariant> variants) {
+        this.variants = variants;
+    }
+    public void addVariant(ProductVariant variant) {
+        variants.add(variant);
+        variant.setProduct(this);
+    }
+    public void removeVariant(ProductVariant variant) {
+        variants.remove(variant);
+        variant.setProduct(null);
+    }
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 }

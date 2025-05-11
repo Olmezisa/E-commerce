@@ -11,10 +11,14 @@ public class ProductResponse {
     private int stock;
     private String imageUrl;
     private ProductStatus status;
-    private String sellerName;
+    private SellerDto seller; 
+    private String category;
+    private double rating;
+    private int ratingCount;
 
     public ProductResponse(Long id, String name, String description, BigDecimal price, int stock,
-                           String imageUrl, ProductStatus status, String sellerName) {
+                           String imageUrl, ProductStatus status, SellerDto seller,
+                           String category, double rating, int ratingCount) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -22,7 +26,10 @@ public class ProductResponse {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.status = status;
-        this.sellerName = sellerName;
+        this.seller = seller;
+        this.category = category;
+        this.rating = rating;
+        this.ratingCount = ratingCount;
     }
 
     public Long getId() { return id; }
@@ -32,5 +39,8 @@ public class ProductResponse {
     public int getStock() { return stock; }
     public String getImageUrl() { return imageUrl; }
     public ProductStatus getStatus() { return status; }
-    public String getSellerName() { return sellerName; }
+    public SellerDto getSeller() { return seller; }
+    public String getCategory() { return category; }
+    public double getRating() { return rating; }
+    public int getRatingCount() { return ratingCount; }
 }

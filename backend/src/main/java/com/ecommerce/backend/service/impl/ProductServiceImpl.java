@@ -2,6 +2,7 @@ package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
+import com.ecommerce.backend.dto.SellerDto;
 import com.ecommerce.backend.dto.VariantRequest;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
@@ -34,18 +35,7 @@ public class ProductServiceImpl implements ProductService {
         this.variantRepository = variantRepository;
 
     }
-    private ProductResponse toResponse(Product p) {
-        return new ProductResponse(
-            p.getId(),
-            p.getName(),
-            p.getDescription(),
-            p.getPrice(),
-            p.getStock(),
-            p.getImageUrl(),
-            p.getStatus(),
-            p.getSeller() != null ? p.getSeller().getFullName() : "Bilinmiyor"
-        );
-    }
+
 
     @Override
     public Product createProduct(ProductRequest request) {
@@ -186,5 +176,9 @@ public class ProductServiceImpl implements ProductService {
         variantRepository.deleteById(variantId);
     }
 
-    
+    @Override
+    public ProductVariant getVariantById(Long variantId) {
+        return variantRepository.findById(variantId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Variant not found"));
+    }
 }

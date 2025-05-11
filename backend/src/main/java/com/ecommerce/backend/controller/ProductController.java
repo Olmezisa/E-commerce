@@ -2,6 +2,7 @@ package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
+import com.ecommerce.backend.dto.SellerDto;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
@@ -47,10 +48,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        Product p = productService.getProductById(id);
+        return ResponseEntity.ok(toResponse(p));
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(id, request));
@@ -79,18 +80,30 @@ public class ProductController {
     public ResponseEntity<Long> getProductCount() {
         return ResponseEntity.ok(productService.countProducts());
     }
-    private ProductResponse toResponse(Product p) {
-        return new ProductResponse(
-            p.getId(),
-            p.getName(),
-            p.getDescription(),
-            p.getPrice(),
-            p.getStock(),
-            p.getImageUrl(),
-            p.getStatus(),
-            p.getSeller() != null ? p.getSeller().getFullName() : "Bilinmiyor"
+private ProductResponse toResponse(Product p) {
+    SellerDto sellerDto = null;
+    if (p.getSeller() != null) {
+        sellerDto = new SellerDto(
+            p.getSeller().getId(),
+            p.getSeller().getFullName(),
+            p.getSeller().getEmail()
         );
     }
+
+    return new ProductResponse(
+        p.getId(),
+        p.getName(),
+        p.getDescription(),
+        p.getPrice(),
+        p.getStock(),
+        p.getImageUrl(),
+        p.getStatus(),
+        sellerDto,
+        p.getCategory(),
+        p.getRating(),
+        p.getReviews().size()
+    );
+}
     @PutMapping("/{id}/unban")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> unbanProduct(@PathVariable Long id) {

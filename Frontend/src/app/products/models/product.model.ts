@@ -6,6 +6,7 @@ export interface Seller {
   fullName: string;
   email: string;
 }
+
 export interface Product {
   id: number;
   name: string;
@@ -13,12 +14,9 @@ export interface Product {
   price: number;
   imageUrl: string;
   stock: number;
-  category: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-
+  category?: string;  // Optional hale getirilirse daha güvenli
+  rating?: number;    // Optional
+  ratingCount?: number; // Optional
   status: 'PENDING' | 'ACTIVE' | 'BANNED';
-  seller: User;
+  seller?: Seller; // Optional (?)
 }

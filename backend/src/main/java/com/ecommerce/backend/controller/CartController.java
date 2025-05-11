@@ -1,17 +1,17 @@
+// src/main/java/com/ecommerce/backend/controller/CartController.java
 package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.CartItemDto;
 import com.ecommerce.backend.service.CartService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/cart")
-@PreAuthorize("isAuthenticated()")
 public class CartController {
 
     private final CartService cartService;
@@ -20,32 +20,47 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /**
+     * Sepete ürün ekler veya miktarını günceller.
+     * quantity pozitifse ekler, negatifse azaltır.
+     */
     @PostMapping("/add")
-    public ResponseEntity<Void> addToCart(@RequestParam Long productId,
-                                          @RequestParam int quantity,
-                                          Principal principal) {
-        cartService.addToCart(productId, quantity, principal);
+    public ResponseEntity<Void> addToCart(
+            @RequestParam Long productId,
+            @RequestParam int quantity,
+            @RequestParam(required = false) Long variantId,
+            Principal principal  // null olursa guest olarak işleyin
+    ) {
+        cartService.addToCart(productId, quantity, variantId, principal);
         return ResponseEntity.ok().build();
     }
 
+    /** Kullanıcının (veya guest’in) sepetini listeler */
     @GetMapping
     public ResponseEntity<List<CartItemDto>> listCart(Principal principal) {
         List<CartItemDto> items = cartService.getCartItems(principal)
-                                    .stream()
-                                    .map(CartItemDto::fromEntity)
-                                    .toList();
+                .stream()
+                .map(CartItemDto::fromEntity)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(items);
     }
 
+    /**
+     * Sepetten tek bir ürünü (ve isteğe bağlı varyantı) tamamen çıkarır
+     */
     @DeleteMapping("/remove")
-    public ResponseEntity<Void> remove(@RequestParam Long productId,
-                                       Principal principal) {
-        cartService.removeFromCart(productId, principal);
+    public ResponseEntity<Void> removeFromCart(
+            @RequestParam Long productId,
+            @RequestParam(required = false) Long variantId,
+            Principal principal
+    ) {
+        cartService.removeFromCart(productId, variantId, principal);
         return ResponseEntity.noContent().build();
     }
 
+    /** Sepeti tamamen temizler */
     @DeleteMapping("/clear")
-    public ResponseEntity<Void> clear(Principal principal) {
+    public ResponseEntity<Void> clearCart(Principal principal) {
         cartService.clearCart(principal);
         return ResponseEntity.noContent().build();
     }

@@ -1,3 +1,4 @@
+// src/main/java/com/ecommerce/backend/entity/Review.java
 package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
@@ -15,14 +16,14 @@ public class Review {
     private String date;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // --- GETTERS & SETTERS ---
+    // --- Getters & Setters ---
     public Long getId() {
         return id;
     }
@@ -30,7 +31,6 @@ public class Review {
     public String getComment() {
         return comment;
     }
-
     public void setComment(String comment) {
         this.comment = comment;
     }
@@ -38,7 +38,6 @@ public class Review {
     public int getRating() {
         return rating;
     }
-
     public void setRating(int rating) {
         this.rating = rating;
     }
@@ -46,7 +45,6 @@ public class Review {
     public String getDate() {
         return date;
     }
-
     public void setDate(String date) {
         this.date = date;
     }
@@ -54,7 +52,6 @@ public class Review {
     public Product getProduct() {
         return product;
     }
-
     public void setProduct(Product product) {
         this.product = product;
     }
@@ -62,7 +59,6 @@ public class Review {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }

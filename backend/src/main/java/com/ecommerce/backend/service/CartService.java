@@ -5,8 +5,9 @@ import java.security.Principal;
 import java.util.List;
 
 public interface CartService {
-    void addToCart(Long productId, int quantity, Principal principal);
+    void addToCart(Long productId, int quantity, Long variantId, Principal principal);
     List<CartItem> getCartItems(Principal principal);
-    void removeFromCart(Long productId, Principal principal);
+    void removeFromCart(Long productId, Long variantId, Principal principal);
     void clearCart(Principal principal);
+
 }

@@ -30,19 +30,54 @@
       />
 
       <!-- Ürün Bilgi -->
-      <div class="p-4">
-        <h3 class="text-sm font-medium text-gray-800 truncate mb-1">{{ p.name }}</h3>
-        <p class="text-blue-600 text-lg font-semibold">{{ p.price | currency:'TRY':'symbol' }}</p>
-        <p class="text-xs text-gray-500 line-through">₺{{ p.price * 1.4 | number:'1.0-0' }}</p>
+      <div class="p-4 space-y-2">
+        <h3 class="text-sm font-medium text-gray-800 truncate">{{ p.name }}</h3>
+        <p class="text-blue-600 text-lg font-semibold">
+          {{ p.price | currency:'TRY':'symbol' }}
+        </p>
+        <p class="text-xs text-gray-500 line-through">
+          ₺{{ (p.price * 1.4) | number:'1.0-0' }}
+        </p>
+
+        <!-- Varyant Seçimi -->
+        <div *ngIf="variantOptions[p.id]?.length" class="mt-2">
+          <label
+            [for]="'variant-' + p.id"
+            class="block text-xs font-medium text-gray-600 mb-1"
+          >
+            Seçenek
+          </label>
+          <select
+            [id]="'variant-' + p.id"
+            [(ngModel)]="selectedVariant[p.id]"
+            name="variant-{{ p.id }}"
+            (click)="$event.stopPropagation()"
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200 p-2 text-sm"
+          >
+            <option
+              *ngFor="let v of variantOptions[p.id]"
+              [value]="v.id"
+            >
+              {{ v.optionName }}: {{ v.optionValue }}
+            </option>
+          </select>
+        </div>
 
         <!-- Rating -->
-        <div class="flex items-center text-yellow-400 text-xs mt-1 mb-3">
+        <div class="flex items-center text-yellow-400 text-xs mt-2 mb-3">
           <ng-container *ngFor="let i of [1,2,3,4,5]; let idx = index">
-            <mat-icon [ngClass]="{ 'text-yellow-400': idx < (p.rating?.rate ?? 0), 'text-gray-300': idx >= (p.rating?.rate ?? 0) }">
+            <mat-icon
+              [ngClass]="{
+                'text-yellow-400': idx < (p.rating ?? 0),
+                'text-gray-300': idx >= (p.rating ?? 0)
+              }"
+            >
               star
             </mat-icon>
           </ng-container>
-          <span class="ml-1 text-gray-400">({{ p.rating?.count ?? 0 }})</span>
+          <span class="ml-1 text-gray-400">
+            ({{ p.ratingCount ?? 0 }})
+          </span>
         </div>
 
         <!-- Butonlar -->

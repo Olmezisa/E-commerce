@@ -30,12 +30,12 @@ export class CartListComponent implements OnInit {
   }
 
   viewDetails(productId: number): void {
-    this.router.navigate(['/products/detail', productId]);
+    this.router.navigate(['/products', productId]);
   }
 
-  removeItem( event: MouseEvent): void {
+  removeItem(productId: number, event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.clearCart().subscribe(() => this.refreshCart());
+    this.cartService.removeFromCart(productId).subscribe(() => this.refreshCart());
   }
 
   increaseQty(productId: number, event: MouseEvent): void {

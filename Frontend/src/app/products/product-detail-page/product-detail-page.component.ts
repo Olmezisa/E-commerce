@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../core/services/product.service';
-import { Product } from '../models/product.model';
-import { ActivatedRoute } from '@angular/router';  // ActivatedRoute import ediyoruz
-import { Review } from '../models/review.model';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin, of, Observable } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { ProductService } from '../../core/services/product.service';
 import { ReviewService } from '../../core/services/review.service';
+import { CartService } from '../../core/services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
+
+import { Product } from '../models/product.model';
+import { ProductVariant } from '../models/variant.model';
+import { Review } from '../models/review.model';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -14,76 +21,99 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./product-detail-page.component.css']
 })
 export class ProductDetailPageComponent implements OnInit {
-  product!: Product;
-  loading: boolean = true;
+  product: Product | null = null;
+  variants: ProductVariant[] = [];
+  selectedVariant: ProductVariant | null = null;
+  quantity = 1;
 
   reviews: Review[] = [];
   reviewForm!: FormGroup;
-  isLoggedIn: boolean = false;
+  isLoggedIn$: Observable<boolean>;
+  loading = true;
 
   constructor(
-    private productService: ProductService,
     private route: ActivatedRoute,
+    private productService: ProductService,
     private reviewService: ReviewService,
+    private authService: AuthService,
     private fb: FormBuilder,
-    private authService: AuthService
-  ) {}
+    private cartService: CartService,
+    private snackBar: MatSnackBar
+  ) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+  }
 
   ngOnInit(): void {
-  this.authService.getCurrentUser().subscribe({
-    next: (user) => {
-      this.isLoggedIn = !!user;
-    },
-    error: () => {
-      this.isLoggedIn = false;
-    }
-  });
+    console.log('▶️ ngOnInit OK, şimdi forkJoin öncesi');
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-  this.reviewForm = this.fb.group({
-    rating: [5, Validators.required],
-    comment: ['', Validators.required]
-  });
+    forkJoin({
+      product: this.productService.getProductById(id).pipe(
+        tap(() => console.log('🔍 product isteği yapıldı')),
+        catchError(err => {
+          console.error('Ürün hatası', err);
+          return of(null);
+        })
+      ),
+      variants: this.productService.getVariants(id).pipe(
+        tap(() => console.log('🔍 variants isteği yapıldı')),
+        catchError(err => {
+          console.error('Varyant hatası', err);
+          return of([] as ProductVariant[]);
+        })
+      ),
+      reviews: this.reviewService.getReviews(id).pipe(
+        tap(() => console.log('🔍 reviews isteği yapıldı')),
+        catchError(err => {
+          console.error('Yorum hatası', err);
+          return of([] as Review[]);
+        })
+      )
+    }).subscribe({
+      next: ({ product, variants, reviews }) => {
+        console.log('✅ forkJoin next:', { product, variants, reviews });
+        this.product = product;
+        this.variants = variants;
+        this.selectedVariant = variants.length > 0 ? variants[0] : null;
+        this.reviews = reviews;
 
-  const productId = this.route.snapshot.paramMap.get('id');
-  if (productId) {
-    this.productService.getProductById(Number(productId)).subscribe({
-      next: (data: Product) => {
-        this.product = data;
+        this.reviewForm = this.fb.group({
+          rating: [5, Validators.required],
+          comment: ['', Validators.required]
+        });
+
         this.loading = false;
-        this.loadReviews();
       },
-      error: () => {
+      error: err => {
+        console.error('❌ forkJoin error:', err);
         this.loading = false;
-        console.error('Ürün verisi alınırken hata oluştu.');
       }
     });
   }
-}
 
-  loadReviews(): void {
-    if (this.product?.id) {
-      this.reviewService.getReviews(this.product.id).subscribe({
-        next: (res) => {
-          this.reviews = res;
-        },
-        error: () => {
-          console.error('Yorumlar alınırken hata oluştu.');
-        }
+  addToCart(): void {
+    if (!this.product) return;
+    this.cartService
+      .addToCart(this.product.id, this.quantity, this.selectedVariant?.id)
+      .subscribe({
+        next: () =>
+          this.snackBar.open('Ürün sepete eklendi!', 'Kapat', { duration: 2000 }),
+        error: err =>
+          this.snackBar.open(`Hata: ${err.message}`, 'Kapat', { duration: 2000 })
       });
-    }
   }
 
   submitReview(): void {
-    if (this.reviewForm.invalid) return;
-
+    if (!this.product || this.reviewForm.invalid) return;
     this.reviewService.postReview(this.product.id, this.reviewForm.value).subscribe({
       next: () => {
+        this.snackBar.open('Yorumunuz kaydedildi!', 'Kapat', { duration: 2000 });
+        this.reviewService.getReviews(this.product!.id)
+          .subscribe(r => (this.reviews = r));
         this.reviewForm.reset({ rating: 5, comment: '' });
-        this.loadReviews();
       },
-      error: () => {
-        console.error('Yorum gönderilirken hata oluştu.');
-      }
+      error: () =>
+        this.snackBar.open('Yorum gönderilirken hata oluştu.', 'Kapat', { duration: 2000 })
     });
   }
 }

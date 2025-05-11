@@ -14,24 +14,27 @@ export class MyProductsComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private sellerService: SellerService,
+  constructor(
+    private sellerService: SellerService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.sellerService.getMyProducts().subscribe({
       next: prods => {
+        console.log('Satıcı ürünleri geldi:', prods);
         this.products = prods;
         this.loading = false;
       },
       error: err => {
-        console.error(err);
-        this.error = 'Ürünler yüklenirken hata oluştu';
+        console.error('Satıcı ürünleri yüklenemedi', err);
+        this.error = 'Ürünler yüklenirken hata oluştu.';
         this.loading = false;
       }
     });
   }
+
   onEdit(id: number) {
-  this.router.navigate(['/seller/my-products', id, 'edit']);
-}
+    this.router.navigate(['/seller/my-products', id, 'edit']);
+  }
 }

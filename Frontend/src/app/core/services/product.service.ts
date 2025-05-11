@@ -1,7 +1,7 @@
 // src/app/core/services/product.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { Product } from '../../products/models/product.model';
 import { environment } from '../../environments/environment';
 import { ProductVariant } from '../../products/models/variant.model';
@@ -23,7 +23,13 @@ export class ProductService {
   }
 
   getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}/${id}`).pipe(
+      tap(product => console.log('✅ Ürün verisi geldi:', product)),
+      catchError(err => {
+        console.error('❌ Ürün getirme hatası:', err);
+        return throwError(() => err);
+      })
+    );
   }
 
   addProduct(productData: any): Observable<Product> {
@@ -54,6 +60,12 @@ export class ProductService {
   getVariants(productId: number): Observable<ProductVariant[]> {
     return this.http.get<ProductVariant[]>(
       `${environment.apiUrl}/products/${productId}/variants`
+    ).pipe(
+      tap(vars => console.log(`✅ ${productId} için varyantlar:`, vars)),
+      catchError(err => {
+        console.error(`❌ Varyant çekme hatası (Ürün ID: ${productId}):`, err);
+        return throwError(() => err);
+      })
     );
   }
 

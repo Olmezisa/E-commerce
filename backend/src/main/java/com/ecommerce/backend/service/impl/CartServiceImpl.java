@@ -2,6 +2,7 @@ package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.entity.CartItem;
 import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.entity.ProductVariant;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.CartItemRepository;
 import com.ecommerce.backend.service.CartService;
@@ -27,35 +28,63 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addToCart(Long productId, int quantity, Principal principal) {
-        
+    public void addToCart(Long productId, int quantity, Long variantId, Principal principal) {
         User user = userService.getCurrentUser();
         Product product = productService.getProductById(productId);
 
-        String email = user.getEmail();
-        CartItem item = cartRepo.findByUserEmailAndProductId(email, productId)
-                .orElseGet(() -> {
-                    CartItem ci = new CartItem();
-                    ci.setUser(user);
-                    ci.setProduct(product);
-                    ci.setQuantity(0);
-                    return ci;
-                });
+        ProductVariant variant = null;
+        if (variantId != null) {
+            variant = productService.getVariantById(variantId);
+        }
+
+        CartItem item;
+        if (variant != null) {
+            var opt = cartRepo.findByUserEmailAndProductIdAndVariantId(
+                user.getEmail(), productId, variantId);
+
+            if (opt.isPresent()) {
+                item = opt.get();
+            } else {
+                item = new CartItem();
+                item.setUser(user);
+                item.setProduct(product);
+                item.setVariant(variant);
+                item.setQuantity(0);
+            }
+        } else {
+            var opt = cartRepo.findByUserEmailAndProductId(
+                user.getEmail(), productId);
+
+            if (opt.isPresent()) {
+                item = opt.get();
+            } else {
+                item = new CartItem();
+                item.setUser(user);
+                item.setProduct(product);
+                item.setQuantity(0);
+            }
+        }
+
         item.setQuantity(item.getQuantity() + quantity);
         cartRepo.save(item);
     }
 
     @Override
     public List<CartItem> getCartItems(Principal principal) {
-        
         User user = userService.getCurrentUser();
         return cartRepo.findByUserEmail(user.getEmail());
     }
 
     @Override
-    public void removeFromCart(Long productId, Principal principal) {
+    public void removeFromCart(Long productId, Long variantId, Principal principal) {
         User user = userService.getCurrentUser();
-        cartRepo.deleteByUserEmailAndProductId(user.getEmail(), productId);
+        if (variantId != null) {
+            cartRepo.findByUserEmailAndProductIdAndVariantId(
+                user.getEmail(), productId, variantId)
+                .ifPresent(cartRepo::delete);
+        } else {
+            cartRepo.deleteByUserEmailAndProductId(user.getEmail(), productId);
+        }
     }
 
     @Override

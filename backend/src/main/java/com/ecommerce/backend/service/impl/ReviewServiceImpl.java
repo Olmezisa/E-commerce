@@ -1,3 +1,4 @@
+// src/main/java/com/ecommerce/backend/service/impl/ReviewServiceImpl.java
 package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ReviewRequest;
@@ -28,18 +29,18 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewServiceImpl(ReviewRepository reviewRepository,
                              ProductRepository productRepository,
                              UserRepository userRepository) {
-        this.reviewRepository = reviewRepository;
+        this.reviewRepository  = reviewRepository;
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
+        this.userRepository    = userRepository;
     }
 
     @Override
     public void saveReview(ReviewRequest request, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Kullanıcı bulunamadı"));
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Kullanıcı bulunamadı"));
 
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Ürün bulunamadı"));
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Ürün bulunamadı"));
 
         Review review = new Review();
         review.setComment(request.getComment());
@@ -54,11 +55,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewResponse> getReviewsByProductId(Long productId) {
         return reviewRepository.findByProductId(productId).stream()
-                .map(r -> new ReviewResponse(
-                        r.getUser().getFullName(),
-                        r.getDate(),
-                        r.getRating(),
-                        r.getComment()
-                )).collect(Collectors.toList());
+            .map(r -> new ReviewResponse(
+                r.getUser().getFullName(),
+                r.getDate(),
+                r.getRating(),
+                r.getComment()
+            ))
+            .collect(Collectors.toList());
     }
 }

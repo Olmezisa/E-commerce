@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-//hangi sayfa hangi component açılacak url leri ayarlama
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProductListPageComponent } from './product-list-page/product-list-page.component';
@@ -15,8 +14,8 @@ const routes: Routes = [
     path: '',
     component: ProductsComponent,
     children: [
-      { path: 'products', component: ProductListPageComponent },
-      { path: 'detail/:id', component: ProductDetailPageComponent },
+      { path: '', component: ProductListPageComponent },
+      { path: ':id', component: ProductDetailPageComponent },
       { path: 'compare', component: ProductComparePageComponent },
       { path: 'search', component: SearchPageComponent }
     ]

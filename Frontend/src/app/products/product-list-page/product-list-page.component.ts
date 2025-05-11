@@ -1,13 +1,8 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Product } from '../models/product.model';
+import { ProductVariant } from '../models/variant.model';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
@@ -27,6 +22,10 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   selectedProducts: Product[] = [];
   searchTerm = '';
 
+  // Ürün bazlı varyant listesi ve seçili varyant id'leri
+  variantOptions: Record<number, ProductVariant[]> = {};
+  selectedVariant: Record<number, number | null> = {};
+
   constructor(
     private productService: ProductService,
     private cartService: CartService,
@@ -39,6 +38,14 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     this.productService.getProducts(this.statusFilter).subscribe(list => {
       this.products = list;
       this.applyFilter();
+
+      // Her ürün için varyantları yükle ve default seçili belirle
+      list.forEach(p => {
+        this.productService.getVariants(p.id).subscribe(vars => {
+          this.variantOptions[p.id] = vars;
+          this.selectedVariant[p.id] = vars.length ? vars[0].id : null;
+        });
+      });
     });
   }
 
@@ -50,13 +57,11 @@ export class ProductListPageComponent implements OnInit, OnChanges {
 
   private applyFilter(): void {
     this.filtered = this.products;
-
     if (this.categoryFilter) {
       this.filtered = this.filtered.filter(
-        p => p.category.toLowerCase() === this.categoryFilter.toLowerCase()
+        p => p.category?.toLowerCase() === this.categoryFilter.toLowerCase()
       );
     }
-
     if (this.searchTerm) {
       this.filtered = this.filtered.filter(
         p => p.name.toLowerCase().includes(this.searchTerm)
@@ -64,31 +69,33 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     }
   }
 
-  // Kartın tamamına tıklanınca
   viewDetails(product: Product): void {
-    this.router.navigate(['/products/detail', product.id]);
+    this.router.navigate(['/products', product.id]);
   }
 
   addToCart(product: Product, event: MouseEvent): void {
-  event.stopPropagation();
-  this.cartService.addToCart(product.id, 1)
-    .subscribe({
-      next: () => {
-        this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'bottom'
-        });
-      },
-      error: err => {
-        this.snackBar.open(`Sepete eklenemedi: ${err.message}`, 'Kapat', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'bottom'
-        });
-      }
-    });
-}
+    event.stopPropagation();
+    // null ise undefined yapıyoruz
+    const variantId = this.selectedVariant[product.id] ?? undefined;
+    this.cartService
+      .addToCart(product.id, 1, variantId)
+      .subscribe({
+        next: () => {
+          this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
+        },
+        error: err => {
+          this.snackBar.open(`Sepete eklenemedi: ${err.message}`, 'Kapat', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
+        }
+      });
+  }
 
   addToCompare(product: Product, event: MouseEvent): void {
     event.stopPropagation();

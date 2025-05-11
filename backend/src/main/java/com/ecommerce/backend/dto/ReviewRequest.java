@@ -1,3 +1,4 @@
+// src/main/java/com/ecommerce/backend/dto/ReviewRequest.java
 package com.ecommerce.backend.dto;
 
 public class ReviewRequest {
@@ -8,7 +9,6 @@ public class ReviewRequest {
     public Long getProductId() {
         return productId;
     }
-
     public void setProductId(Long productId) {
         this.productId = productId;
     }
@@ -16,7 +16,6 @@ public class ReviewRequest {
     public int getRating() {
         return rating;
     }
-
     public void setRating(int rating) {
         this.rating = rating;
     }
@@ -24,7 +23,6 @@ public class ReviewRequest {
     public String getComment() {
         return comment;
     }
-
     public void setComment(String comment) {
         this.comment = comment;
     }

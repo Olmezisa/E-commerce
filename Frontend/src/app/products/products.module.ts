@@ -17,6 +17,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
 import { VariantListComponent } from '../variant/variant-list/variant-list.component';
 import { VariantFormComponent } from '../variant/variant-form/variant-form.component';
 import { VariantModule } from '../variant/variant.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -37,6 +38,7 @@ import { VariantModule } from '../variant/variant.module';
     FormsModule,
     RouterModule,
     ProductsRoutingModule,
+    HttpClientModule,
     SharedModule,
     ReactiveFormsModule,
     VariantModule,

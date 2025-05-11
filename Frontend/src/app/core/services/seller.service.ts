@@ -18,7 +18,7 @@ export interface SellerDashboardDto {
 })
 export class SellerService {
   private url=`${environment.apiUrl}/auth/register-seller`;
-  private url1=`${environment.apiUrl}/seller`;
+  private baseUrl = `${environment.apiUrl}/seller`;
 
   constructor(private http:HttpClient) {}
 
@@ -26,11 +26,13 @@ export class SellerService {
       return this.http.post<UserResponse>(this.url,data);
     }
 
+  getDashboard(): Observable<SellerDashboardDto> {
+    return this.http.get<SellerDashboardDto>(`${this.baseUrl}/dashboard`);
+  }
+
+  /** Bu satıcının ürünlerini çeker */
   getMyProducts(): Observable<Product[]> {
-      return this.http.get<Product[]>(`${this.url1}/my-products`);
-    }
-  getDashboard():Observable<SellerDashboardDto>{
-    return this.http.get<SellerDashboardDto>(`${this.url1}/my-products`);
+    return this.http.get<Product[]>(`${this.baseUrl}/my-products`);
   }
 
 }

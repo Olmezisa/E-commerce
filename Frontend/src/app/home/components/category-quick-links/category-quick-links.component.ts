@@ -16,8 +16,9 @@ export class CategoryQuickLinksComponent implements OnInit {
   ngOnInit(): void {
     this.productService.getProducts().subscribe(products => {
       // Sadece benzersiz kategorileri al
-      this.categories = Array.from(new Set(products.map(p => p.category)));
-    });
+this.categories = Array.from(
+  new Set(products.map(p => p.category).filter((c): c is string => !!c))
+);    });
   }
 
   select(category: string) {
