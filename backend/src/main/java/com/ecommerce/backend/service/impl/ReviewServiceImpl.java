@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/backend/service/impl/ReviewServiceImpl.java
 package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ReviewRequest;

@@ -22,7 +22,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    // Yeni yorum ekleme
     @PostMapping
     @PreAuthorize("hasRole('BUYER')")
     public ResponseEntity<Void> addReview(@RequestBody ReviewRequest request, Principal principal) {
@@ -30,7 +29,6 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    // Bir ürünün tüm yorumlarını DTO olarak döner
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewResponse>> getReviewsByProduct(@PathVariable Long productId) {
         List<ReviewResponse> reviews = reviewService.getReviewsByProductId(productId);

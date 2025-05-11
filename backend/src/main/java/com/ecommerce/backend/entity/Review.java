@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/backend/entity/Review.java
 package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
@@ -23,7 +22,6 @@ public class Review {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // --- Getters & Setters ---
     public Long getId() {
         return id;
     }

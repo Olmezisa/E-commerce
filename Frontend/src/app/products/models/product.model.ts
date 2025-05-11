@@ -14,9 +14,9 @@ export interface Product {
   price: number;
   imageUrl: string;
   stock: number;
-  category?: string;  // Optional hale getirilirse daha güvenli
-  rating?: number;    // Optional
-  ratingCount?: number; // Optional
+  category?: string;
+  rating?: number;
+  ratingCount?: number;
   status: 'PENDING' | 'ACTIVE' | 'BANNED';
-  seller?: Seller; // Optional (?)
+  seller?: Seller;
 }

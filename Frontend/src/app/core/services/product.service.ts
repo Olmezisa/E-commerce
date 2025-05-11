@@ -1,4 +1,3 @@
-// src/app/core/services/product.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError } from 'rxjs';
@@ -56,7 +55,6 @@ export class ProductService {
     return this.http.put<Product>(`${this.apiUrl}/${id}/unban`, {});
   }
 
-  // --- Variant metodları ---
   getVariants(productId: number): Observable<ProductVariant[]> {
     return this.http.get<ProductVariant[]>(
       `${environment.apiUrl}/products/${productId}/variants`

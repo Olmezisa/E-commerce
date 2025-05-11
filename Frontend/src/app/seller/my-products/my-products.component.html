@@ -1,10 +1,8 @@
-<!-- src/app/seller/my-products/my-products.component.html -->
 <div *ngIf="loading" class="py-10 text-center">Yükleniyor…</div>
 <div *ngIf="error" class="py-4 text-red-600">{{ error }}</div>
 
 <div *ngIf="!loading && !error" class="overflow-x-auto">
   <table class="min-w-full bg-white border rounded-lg shadow-md text-sm text-gray-800">
-    <!-- başlık -->
     <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
       <tr>
         <th class="px-6 py-3 text-left">ID</th>
@@ -15,7 +13,6 @@
         <th class="px-6 py-3 text-right">İşlem</th>
       </tr>
     </thead>
-    <!-- satırlar -->
     <tbody class="divide-y divide-gray-200">
       <tr *ngFor="let p of products" class="hover:bg-gray-50 transition">
         <td class="px-6 py-4">{{ p.id }}</td>

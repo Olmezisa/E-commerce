@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/backend/controller/SellerController.java
 package com.ecommerce.backend.controller;
 
 import java.math.BigDecimal;
@@ -47,7 +46,6 @@ public class SellerController {
         String email = principal.getName();
         List<Product> products = productService.getProductsBySellerUsername(email);
 
-        // Entity → DTO dönüşümü
         List<ProductResponse> dto = products.stream()
             .map(this::toResponse)
             .collect(Collectors.toList());
@@ -55,7 +53,6 @@ public class SellerController {
         return ResponseEntity.ok(dto);
     }
 
-    // ProductController’daki toResponse metoduyla birebir uyumlu
     private ProductResponse toResponse(Product p) {
         SellerDto sellerDto = null;
         if (p.getSeller() != null) {

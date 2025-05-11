@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/backend/repository/ReviewRepository.java
 package com.ecommerce.backend.repository;
 
 import com.ecommerce.backend.entity.Review;

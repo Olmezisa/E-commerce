@@ -22,7 +22,6 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   selectedProducts: Product[] = [];
   searchTerm = '';
 
-  // Ürün bazlı varyant listesi ve seçili varyant id'leri
   variantOptions: Record<number, ProductVariant[]> = {};
   selectedVariant: Record<number, number | null> = {};
 
@@ -39,7 +38,6 @@ export class ProductListPageComponent implements OnInit, OnChanges {
       this.products = list;
       this.applyFilter();
 
-      // Her ürün için varyantları yükle ve default seçili belirle
       list.forEach(p => {
         this.productService.getVariants(p.id).subscribe(vars => {
           this.variantOptions[p.id] = vars;
@@ -75,7 +73,6 @@ export class ProductListPageComponent implements OnInit, OnChanges {
 
   addToCart(product: Product, event: MouseEvent): void {
     event.stopPropagation();
-    // null ise undefined yapıyoruz
     const variantId = this.selectedVariant[product.id] ?? undefined;
     this.cartService
       .addToCart(product.id, 1, variantId)

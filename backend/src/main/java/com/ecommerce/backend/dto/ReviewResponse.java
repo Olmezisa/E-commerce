@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/backend/dto/ReviewResponse.java
 package com.ecommerce.backend.dto;
 
 public class ReviewResponse {

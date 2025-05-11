@@ -30,7 +30,6 @@ export class SellerService {
     return this.http.get<SellerDashboardDto>(`${this.baseUrl}/dashboard`);
   }
 
-  /** Bu satıcının ürünlerini çeker */
   getMyProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}/my-products`);
   }

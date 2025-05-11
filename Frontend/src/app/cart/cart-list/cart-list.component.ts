@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../core/services/cart.service';
-import { CartItem } from '../cart-item.model';
 import { Router } from '@angular/router';
+import { CartItem } from '../cart-item.model';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart-list',
-  standalone:false,
+  standalone: false,
   templateUrl: './cart-list.component.html',
-  styleUrl: './cart-list.component.css'
+  styleUrls: ['./cart-list.component.css']
 })
 export class CartListComponent implements OnInit {
-  cartItems: CartItem[] = [];
-  totalPrice: number = 0;
+  cartItems:   CartItem[] = [];
+  totalPrice = 0;
 
   constructor(
     private cartService: CartService,
@@ -24,8 +24,8 @@ export class CartListComponent implements OnInit {
 
   refreshCart(): void {
     this.cartService.getCart().subscribe(items => {
-      this.cartItems = items;
-      this.totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      this.cartItems   = items;
+      this.totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
     });
   }
 
@@ -33,18 +33,29 @@ export class CartListComponent implements OnInit {
     this.router.navigate(['/products', productId]);
   }
 
-  removeItem(productId: number, event: MouseEvent): void {
+  removeItem(item: CartItem, event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.removeFromCart(productId).subscribe(() => this.refreshCart());
+    this.cartService
+      .removeFromCart(item.productId, item.variantId)
+      .subscribe(() => this.refreshCart());
   }
 
-  increaseQty(productId: number, event: MouseEvent): void {
+  increaseQty(item: CartItem, event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.addToCart(productId, 1).subscribe(() => this.refreshCart());
+    this.cartService
+      .addToCart(item.productId, 1, item.variantId)
+      .subscribe(() => this.refreshCart());
   }
 
-  decreaseQty(productId: number, event: MouseEvent): void {
+  decreaseQty(item: CartItem, event: MouseEvent): void {
     event.stopPropagation();
-    this.cartService.addToCart(productId, -1).subscribe(() => this.refreshCart());
+
+    if (item.quantity > 1) {
+      this.cartService
+        .addToCart(item.productId, -1, item.variantId)
+        .subscribe(() => this.refreshCart());
+    } else {
+      this.removeItem(item, event);
+    }
   }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -75,17 +76,24 @@ public class CartServiceImpl implements CartService {
         return cartRepo.findByUserEmail(user.getEmail());
     }
 
-    @Override
-    public void removeFromCart(Long productId, Long variantId, Principal principal) {
-        User user = userService.getCurrentUser();
-        if (variantId != null) {
-            cartRepo.findByUserEmailAndProductIdAndVariantId(
-                user.getEmail(), productId, variantId)
-                .ifPresent(cartRepo::delete);
-        } else {
-            cartRepo.deleteByUserEmailAndProductId(user.getEmail(), productId);
-        }
+@Override
+public void removeFromCart(Long productId, Long variantId, Principal principal) {
+    User user = userService.getCurrentUser();
+
+    Optional<CartItem> optItem;
+    if (variantId != null) {
+        optItem = cartRepo.findByUserEmailAndProductIdAndVariantId(
+            user.getEmail(), productId, variantId
+        );
+    } else {
+        optItem = cartRepo.findByUserEmailAndProductId(
+            user.getEmail(), productId
+        );
     }
+
+    optItem.ifPresent(cartRepo::delete);
+}
+
 
     @Override
     public void clearCart(Principal principal) {

@@ -40,7 +40,7 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     CommonModule,
     ProductsModule,
     SocialLoginModule,
-    BrowserAnimationsModule,  // önemli!
+    BrowserAnimationsModule,
     MatSnackBarModule,
     SharedModule,
     HttpClientModule

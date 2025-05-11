@@ -1,4 +1,3 @@
-// src/main/java/com/ecommerce/backend/security/JwtAuthenticationFilter.java
 package com.ecommerce.backend.security;
 
 import jakarta.servlet.FilterChain;
