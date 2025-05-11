@@ -1,63 +1,79 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-  <div
-    *ngFor="let p of filtered"
-    class="border rounded shadow p-4 hover:shadow-lg transition cursor-pointer relative"
-    (click)="viewDetails(p)"
-  >
-    <!-- Wishlist kalp ikonu -->
-    <button
-      class="absolute top-2 right-2 text-2xl focus:outline-none transition-transform duration-200 z-10"
-      (click)="toggleWishlist(p, $event)"
-      [ngClass]="{
-        'opacity-100 scale-110': isWishlisted(p),
-        'opacity-50 hover:opacity-100 hover:scale-110': !isWishlisted(p)
-      }"
+<section class="max-w-7xl mx-auto px-4 py-8">
+  <!-- Başlık -->
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Super Deal</h2>
+
+  <!-- Ürün Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div
+      *ngFor="let p of filtered"
+      class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer relative group"
+      (click)="viewDetails(p)"
     >
-      <mat-icon [ngClass]="{
-          'text-red-500': isWishlisted(p),
-          'text-gray-400': !isWishlisted(p)
-        }">
-        {{ isWishlisted(p) ? 'favorite' : 'favorite_border' }}
-      </mat-icon>
-    </button>
-
-    <!-- Ürün resmi -->
-    <img
-      [src]="p.imageUrl"
-      [alt]="p.name"
-      class="w-full h-40 object-cover rounded mb-4"
-    />
-
-    <h3 class="mt-2 font-semibold">{{ p.name }}</h3>
-    <p class="text-lg mb-2">{{ p.price | currency:'$' }}</p>
-
-    <div class="flex space-x-2">
-      <!-- Sepete Ekle -->
+      <!-- Favori ikonu -->
       <button
-        class="flex-1 py-1 rounded bg-green-500 text-white"
-        (click)="addToCart(p, $event)"
+        class="absolute top-3 right-3 z-10"
+        (click)="toggleWishlist(p, $event)"
       >
-        Sepete Ekle
+        <mat-icon
+          class="text-xl transition"
+          [ngClass]="isWishlisted(p) ? 'text-red-500' : 'text-gray-300 group-hover:text-red-400'"
+        >
+          {{ isWishlisted(p) ? 'favorite' : 'favorite_border' }}
+        </mat-icon>
       </button>
 
-      <!-- Karşılaştır -->
-      <button
-        class="flex-1 py-1 rounded bg-yellow-300"
-        [disabled]="selectedProducts.length >= 2"
-        (click)="addToCompare(p, $event)"
-      >
-        {{ selectedProducts.includes(p) ? 'Seçildi' : 'Karşılaştır' }}
-      </button>
+      <!-- Ürün resmi -->
+      <img
+        [src]="p.imageUrl"
+        [alt]="p.name"
+        class="w-full h-48 object-contain p-4 bg-gray-50"
+      />
+
+      <!-- Ürün Bilgi -->
+      <div class="p-4">
+        <h3 class="text-sm font-medium text-gray-800 truncate mb-1">{{ p.name }}</h3>
+        <p class="text-blue-600 text-lg font-semibold">{{ p.price | currency:'TRY':'symbol' }}</p>
+        <p class="text-xs text-gray-500 line-through">₺{{ p.price * 1.4 | number:'1.0-0' }}</p>
+
+        <!-- Rating -->
+        <div class="flex items-center text-yellow-400 text-xs mt-1 mb-3">
+          <ng-container *ngFor="let i of [1,2,3,4,5]; let idx = index">
+            <mat-icon [ngClass]="{ 'text-yellow-400': idx < (p.rating?.rate ?? 0), 'text-gray-300': idx >= (p.rating?.rate ?? 0) }">
+              star
+            </mat-icon>
+          </ng-container>
+          <span class="ml-1 text-gray-400">({{ p.rating?.count ?? 0 }})</span>
+        </div>
+
+        <!-- Butonlar -->
+        <div class="flex space-x-2">
+          <button
+            class="flex-1 bg-green-500 hover:bg-green-600 text-white text-xs py-2 rounded-lg"
+            (click)="addToCart(p, $event)"
+          >
+            Sepete Ekle
+          </button>
+
+          <button
+            class="flex-1 bg-yellow-300 hover:bg-yellow-400 text-gray-800 text-xs py-2 rounded-lg"
+            [disabled]="selectedProducts.length >= 2"
+            (click)="addToCompare(p, $event)"
+          >
+            {{ selectedProducts.includes(p) ? 'Seçildi' : 'Karşılaştır' }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="mt-4 text-right">
-  <button
-    class="px-4 py-2 rounded bg-blue-600 text-white"
-    [disabled]="selectedProducts.length !== 2"
-    (click)="compareSelected($event)"
-  >
-    Seçilenleri Karşılaştır ({{ selectedProducts.length }}/2)
-  </button>
-</div>
+  <!-- Alt Karşılaştır Butonu -->
+  <div class="mt-8 text-right">
+    <button
+      class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition disabled:opacity-50"
+      [disabled]="selectedProducts.length !== 2"
+      (click)="compareSelected($event)"
+    >
+      Seçilenleri Karşılaştır ({{ selectedProducts.length }}/2)
+    </button>
+  </div>
+</section>
