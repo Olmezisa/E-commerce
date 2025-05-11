@@ -3,6 +3,8 @@ package com.ecommerce.backend.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.ecommerce.backend.dto.OrderRequest;
+import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderStatus;
 
@@ -13,6 +15,11 @@ public interface OrderService {
     BigDecimal sumRevenueBySellerEmail(String sellerEmail);
     // varsa liste çekmek için:
     List<Order> findOrdersBySellerEmail(String sellerEmail);
+
+    OrderResponse placeOrder(OrderRequest request);
+    List<OrderResponse> getOrdersForBuyer();
+    List<OrderResponse> getOrdersForSeller();
+    void cancelOrder(Long orderId);
     
     
 }

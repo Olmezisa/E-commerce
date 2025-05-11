@@ -1,8 +1,6 @@
 package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ProductRequest;
-import com.ecommerce.backend.dto.ProductResponse;
-import com.ecommerce.backend.dto.SellerDto;
 import com.ecommerce.backend.dto.VariantRequest;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
@@ -10,7 +8,6 @@ import com.ecommerce.backend.entity.ProductVariant;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.ProductRepository;
 import com.ecommerce.backend.repository.ProductVariantRepository;
-import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.ProductService;
 import com.ecommerce.backend.service.UserService;
 

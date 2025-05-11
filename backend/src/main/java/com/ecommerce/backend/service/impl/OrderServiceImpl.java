@@ -1,22 +1,40 @@
 package com.ecommerce.backend.service.impl;
 
+import com.ecommerce.backend.dto.OrderItemRequest;
+import com.ecommerce.backend.dto.OrderItemResponse;
+import com.ecommerce.backend.dto.OrderRequest;
+import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
+import com.ecommerce.backend.entity.OrderItem;
 import com.ecommerce.backend.entity.OrderStatus;
+import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.OrderRepository;
+import com.ecommerce.backend.repository.ProductRepository;
 import com.ecommerce.backend.service.OrderService;
+import com.ecommerce.backend.service.UserService;
+
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
+    private final UserService userService;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository,ProductRepository productRepository,UserService userService) {
         this.orderRepository = orderRepository;
+        this.productRepository=productRepository;
+        this.userService=userService;
     }
 
     @Override
@@ -42,5 +60,77 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findOrdersBySellerEmail(String sellerEmail) {
         return orderRepository.findAllBySellerEmail(sellerEmail);
+    }
+
+    @Override
+    public OrderResponse placeOrder(OrderRequest request) {
+        User buyer = userService.getCurrentUser();
+        // assume all items belong to same seller; pick seller from first product
+        Product first = productRepository.findById(request.getItems().get(0).getProductId())
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User seller = first.getSeller();
+
+        Order order = new Order();
+        order.setBuyer(buyer);
+        order.setSeller(seller);
+
+        for (OrderItemRequest ir : request.getItems()) {
+            Product p = productRepository.findById(ir.getProductId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            OrderItem item = new OrderItem();
+            item.setProduct(p);
+            item.setQuantity(ir.getQuantity());
+            item.setUnitPrice(p.getPrice());
+            order.addItem(item);
+        }
+         BigDecimal total = order.getItems().stream()
+        .map(item ->
+          item.getUnitPrice()
+              .multiply(BigDecimal.valueOf(item.getQuantity()))
+        )
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotalAmount(total);
+
+    Order saved = orderRepository.save(order);
+    return toResponse(saved);
+
+    }
+
+    @Override
+    public List<OrderResponse> getOrdersForBuyer() {
+        User buyer = userService.getCurrentUser();
+        return orderRepository.findAllByBuyer(buyer).stream()
+                        .map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponse> getOrdersForSeller() {
+        User seller = userService.getCurrentUser();
+        return orderRepository.findAllBySeller(seller).stream()
+                        .map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        // only seller or buyer could cancel; check role if needed
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+    }
+
+    private OrderResponse toResponse(Order o) {
+        List<OrderItemResponse> items = o.getItems().stream().map(i ->
+            new OrderItemResponse(
+                i.getProduct().getId(),
+                i.getProduct().getName(),
+                i.getQuantity(),
+                i.getUnitPrice()
+            )
+        ).collect(Collectors.toList());
+
+        return new OrderResponse(
+            o.getId(), o.getStatus(), o.getCreatedAt(), items
+        );
     }
 }
