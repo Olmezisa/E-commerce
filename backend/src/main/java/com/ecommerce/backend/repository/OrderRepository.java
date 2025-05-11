@@ -2,6 +2,7 @@ package com.ecommerce.backend.repository;
 
 import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderStatus;
+import com.ecommerce.backend.entity.User;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +16,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     long countBySellerEmailAndStatus(String email, OrderStatus status);
     List<Order> findAllBySellerEmail(String email);
 
-    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o JOIN o.seller s WHERE s.email = :email")
-    BigDecimal sumTotalAmountBySellerEmail(@Param("email") String email);
+    @Query("""
+      SELECT COALESCE(SUM(item.unitPrice * item.quantity), 0)
+        FROM Order o
+        JOIN o.seller s
+        JOIN o.items item
+       WHERE s.email = :sellerEmail
+    """)
+    BigDecimal sumTotalAmountBySellerEmail(@Param("sellerEmail") String sellerEmail);
+
+    List<Order> findAllByBuyer(User buyer);
+    // for seller dashboard
+    List<Order> findAllBySeller(User seller);
+    
 }
