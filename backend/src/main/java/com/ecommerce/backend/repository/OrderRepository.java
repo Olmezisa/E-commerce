@@ -26,7 +26,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     BigDecimal sumTotalAmountBySellerEmail(@Param("sellerEmail") String sellerEmail);
 
     List<Order> findAllByBuyer(User buyer);
-    // for seller dashboard
     List<Order> findAllBySeller(User seller);
     
 }

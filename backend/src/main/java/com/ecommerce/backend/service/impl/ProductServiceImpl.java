@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -190,4 +191,14 @@ public class ProductServiceImpl implements ProductService {
         return variantRepository.findById(variantId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Variant not found"));
     }
+    @Override
+public Product findTopSellingProductBySeller(String email) {
+    return productRepository.findTopProductBySellerEmail(email)
+            .orElse(null);
+}
+
+@Override
+public BigDecimal calculateAverageProductPrice(String email) {
+    return productRepository.calculateAveragePriceBySellerEmail(email);
+}
 }

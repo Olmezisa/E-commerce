@@ -11,6 +11,9 @@ export interface SellerDashboardDto {
   totalOrders: number;
   pendingOrders: number;
   totalRevenue: number;
+  topProductName: string;
+  topProductSales: number;
+  avgProductPrice: number;
 }
 
 @Injectable({

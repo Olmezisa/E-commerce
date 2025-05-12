@@ -159,4 +159,14 @@ public class OrderServiceImpl implements OrderService {
             o.getId(), o.getStatus(), o.getCreatedAt(), items
         );
     }
+    @Override
+    public Product findTopSellingProductBySellerEmail(String email) {
+        return productRepository.findTopProductBySellerEmail(email)
+            .orElse(null); 
+    }
+
+    @Override
+    public BigDecimal calculateAverageProductPrice(String email) {
+        return productRepository.calculateAveragePriceBySellerEmail(email);
+    }
 }

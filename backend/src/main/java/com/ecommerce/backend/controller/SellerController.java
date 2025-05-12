@@ -30,16 +30,30 @@ public class SellerController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/dashboard")
-    public ResponseEntity<SellerDashboardDto> getDashboard(Principal principal) {
-        String email = principal.getName();
-        long totalProducts = productService.countProductsBySellerUsername(email);
-        long totalOrders = orderService.countOrdersBySellerEmail(email);
-        long pendingOrders = orderService.countOrdersBySellerEmailAndStatus(email, OrderStatus.PENDING);
-        BigDecimal revenue = orderService.sumRevenueBySellerEmail(email);
-        SellerDashboardDto dto = new SellerDashboardDto(totalProducts, totalOrders, pendingOrders, revenue);
-        return ResponseEntity.ok(dto);
-    }
+@GetMapping("/dashboard")
+public ResponseEntity<SellerDashboardDto> getDashboard(Principal principal) {
+    String email = principal.getName();
+
+    long totalProducts = productService.countProductsBySellerUsername(email);
+    long totalOrders = orderService.countOrdersBySellerEmail(email);
+    long pendingOrders = orderService.countOrdersBySellerEmailAndStatus(email, OrderStatus.PENDING);
+    BigDecimal revenue = orderService.sumRevenueBySellerEmail(email);
+
+    Product topProduct = productService.findTopSellingProductBySeller(email);
+    BigDecimal avgPrice = productService.calculateAverageProductPrice(email);
+
+    SellerDashboardDto dto = new SellerDashboardDto(
+        totalProducts,
+        totalOrders,
+        pendingOrders,
+        revenue,
+        topProduct != null ? topProduct.getName() : "Veri yok",
+        topProduct != null ? topProduct.getTotalSales() : 0,
+        avgPrice != null ? avgPrice : BigDecimal.ZERO
+    );
+
+    return ResponseEntity.ok(dto);
+}
 
     @GetMapping("/my-products")
     public ResponseEntity<List<ProductResponse>> getMyProducts(Principal principal) {

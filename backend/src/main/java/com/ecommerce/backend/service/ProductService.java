@@ -6,6 +6,7 @@ import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.entity.ProductVariant;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -26,6 +27,8 @@ public interface ProductService {
     ProductVariant updateVariant(Long variantId, VariantRequest dto);
     void deleteVariant(Long variantId);
     ProductVariant getVariantById(Long variantId);
+    Product findTopSellingProductBySeller(String email);
+BigDecimal calculateAverageProductPrice(String email);
 
     
 

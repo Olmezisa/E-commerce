@@ -157,5 +157,15 @@ public void setReviews(List<Review> reviews) {
     public void setCategory(Category category) {
         this.category = category;
     }
+    @Transient
+private long totalSales;
+
+public long getTotalSales() {
+    return totalSales;
+}
+
+public void setTotalSales(long totalSales) {
+    this.totalSales = totalSales;
+}
 
 }
