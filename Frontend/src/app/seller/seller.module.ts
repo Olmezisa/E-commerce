@@ -15,6 +15,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { OrderManagementComponent } from './order-management/order-management.component';
 
 
+
 @NgModule({
   declarations: [
     SellerComponent,

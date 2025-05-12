@@ -4,6 +4,7 @@ import { filter, map, Observable }             from 'rxjs';
 import { NavigationEnd, Router }                 from '@angular/router';
 import { AuthService, Role, User } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
+import { OrderResp } from '../../../core/services/order.service';
 
 @Component({
   selector: 'app-header',
@@ -55,6 +56,9 @@ export class HeaderComponent implements OnInit {
 
   goToAccount(): void {
     this.router.navigate(['/account/profile']);
+  }
+  goToOrderTracking():void{
+    this.router.navigate(['/orders/order-tracking']);
   }
 
 

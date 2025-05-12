@@ -8,6 +8,7 @@ import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderStatus;
 import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.entity.ShipmentStatus;
 
 public interface OrderService {
     Long countOrders();
@@ -24,6 +25,9 @@ public interface OrderService {
     Product findTopSellingProductBySellerEmail(String email);
     BigDecimal calculateAverageProductPrice(String email);
 
+
+    OrderResponse updateShipmentStatus(Long orderId, ShipmentStatus newStatus);
+    OrderResponse getOrderById(Long orderId);
     
     
 }

@@ -10,6 +10,7 @@
         <th class="px-4 py-2">Sipariş #</th>
         <th class="px-4 py-2">Tarih</th>
         <th class="px-4 py-2">Durum</th>
+        <th class="px-4 py-2">Kargo Durumu</th>
         <th class="px-4 py-2">Tutar</th>
         <th class="px-4 py-2">İşlem</th>
       </tr>
@@ -19,8 +20,9 @@
         <td class="px-4 py-2">{{ o.orderId }}</td>
         <td class="px-4 py-2">{{ o.createdAt | date:'short' }}</td>
         <td class="px-4 py-2">{{ o.status }}</td>
+        <td class="px-4 py-2">{{ o.shipmentStatus }}</td>
         <td class="px-4 py-2">{{ o.totalAmount | currency:'TRY':'symbol' }}</td>
-        <td class="px-4 py-2">
+        <td class="px-4 py-2 flex gap-2">
           <button
             *ngIf="o.status === 'PAID'"
             (click)="onCancel(o)"
@@ -28,12 +30,25 @@
           >
             İptal Et
           </button>
+          <button
+            (click)="trackOrder(o)"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1 rounded"
+          >
+            Takip Et
+          </button>
+          <button
+            *ngIf="shipmentSteps.indexOf(o.shipmentStatus || 'PENDING') < shipmentSteps.length - 1"
+            (click)="advanceShipment(o)"
+            class="bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded"
+          >
+            İlerle ➔
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 
   <p *ngIf="!loading && !orders.length" class="text-gray-600">
-    Henüz hiç satışınız yok ya da iptal edilebilir bir sipariş yok.
+    Henüz hiç satışınız yok ya da güncellenebilir bir sipariş yok.
   </p>
 </div>

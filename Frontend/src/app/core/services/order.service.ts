@@ -22,9 +22,11 @@ export interface ConfirmOrderReq {
 export interface OrderResp {
   orderId: number;
   status: string;
-  totalAmount: number;
-  currency: string;
-  createdAt:Date;
+  shipmentStatus?: string;
+  totalAmount?: number;
+  currency?: string;
+  createdAt: Date;
+  items?: { productId: number; productName: string; quantity: number; unitPrice: number }[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -57,6 +59,20 @@ export class OrderService {
   getSellerOrders(): Observable<OrderResp[]> {
     return this.http.get<OrderResp[]>(`${this.base}/seller`);
   }
+
+   getOrderById(orderId: number): Observable<OrderResp> {
+    return this.http.get<OrderResp>(`${this.base}/${orderId}`);
+  }
+
+
+  updateShipmentStatus(orderId: number, shipmentStatus: string): Observable<OrderResp> {
+    return this.http.put<OrderResp>(
+      `${this.base}/${orderId}/shipment`,
+      { shipmentStatus }
+    );
+  }
+
+
 
 
 }

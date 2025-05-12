@@ -8,6 +8,7 @@ import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderItem;
 import com.ecommerce.backend.entity.OrderStatus;
 import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.entity.ShipmentStatus;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.OrderRepository;
 import com.ecommerce.backend.repository.ProductRepository;
@@ -66,23 +67,22 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAllBySellerEmail(sellerEmail);
     }
 
-    @Override
-public OrderResponse placeOrder(OrderRequest request) {
-    var pi = paymentService.retrievePaymentIntent(request.getPaymentIntentId());
-    if (!"succeeded".equals(pi.getStatus())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ödeme tamamlanmadı: " + pi.getStatus());
-    }
+     @Override
+    public OrderResponse placeOrder(OrderRequest request) {
+        var pi = paymentService.retrievePaymentIntent(request.getPaymentIntentId());
+        if (!"succeeded".equals(pi.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ödeme tamamlanmadı: " + pi.getStatus());
+        }
+        User buyer = userService.getCurrentUser();
+        Product first = productRepository.findById(request.getItems().get(0).getProductId())
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User seller = first.getSeller();
 
-    User buyer = userService.getCurrentUser();
-    Product first = productRepository.findById(request.getItems().get(0).getProductId())
-                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    User seller = first.getSeller();
-
-    Order order = new Order();
-    order.setBuyer(buyer);
-    order.setSeller(seller);
-    order.setPaymentIntentId(pi.getId());
-    order.setStatus(OrderStatus.PAID);
+        Order order = new Order();
+        order.setBuyer(buyer);
+        order.setSeller(seller);
+        order.setPaymentIntentId(pi.getId());
+        order.setStatus(OrderStatus.PAID);
 
     for (OrderItemRequest ir : request.getItems()) {
         Product p = productRepository.findById(ir.getProductId())
@@ -117,38 +117,64 @@ public OrderResponse placeOrder(OrderRequest request) {
     public List<OrderResponse> getOrdersForBuyer() {
         User buyer = userService.getCurrentUser();
         return orderRepository.findAllByBuyer(buyer).stream()
-                        .map(this::toResponse).collect(Collectors.toList());
+                        .map(this::toResponse)
+                        .collect(Collectors.toList());
     }
 
     @Override
     public List<OrderResponse> getOrdersForSeller() {
         User seller = userService.getCurrentUser();
         return orderRepository.findAllBySeller(seller).stream()
-                        .map(this::toResponse).collect(Collectors.toList());
+                        .map(this::toResponse)
+                        .collect(Collectors.toList());
     }
 
-     @Override
+    @Override
+    @Transactional(readOnly = true)
+    public OrderResponse getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+          .orElseThrow(() -> new ResponseStatusException(
+              HttpStatus.NOT_FOUND, "Sipariş bulunamadı: " + orderId));
+        User current = userService.getCurrentUser();
+        boolean isBuyer = order.getBuyer().getId().equals(current.getId());
+        boolean isSeller = order.getSeller().getId().equals(current.getId());
+        if (!isBuyer && !isSeller) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu siparişi görmeye yetkiniz yok");
+        }
+        return toResponse(order);
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse updateShipmentStatus(Long orderId, ShipmentStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Sipariş bulunamadı: " + orderId));
+        if (!order.getSeller().equals(userService.getCurrentUser())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu işlemi yapmaya yetkiniz yok");
+        }
+        order.setShipmentStatus(newStatus);
+        Order saved = orderRepository.save(order);
+        return toResponse(saved);
+    }
+
+    @Override
     @Transactional
     public OrderResponse cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order bulunamadı: " + orderId));
-
         User current = userService.getCurrentUser();
-        boolean isBuyer  = order.getBuyer().getId().equals(current.getId());
+        boolean isBuyer = order.getBuyer().getId().equals(current.getId());
         boolean isSeller = order.getSeller().getId().equals(current.getId());
         if (!isBuyer && !isSeller) {
             throw new AccessDeniedException("Bu siparişi iptal etme yetkiniz yok");
         }
-
         if (order.getStatus() == OrderStatus.CANCELLED) {
             throw new RuntimeException("Sipariş zaten iptal edilmiş");
         }
-        // Opsiyonel: Stripe iadesi
         paymentService.refundPayment(order.getPaymentIntentId());
-
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
-
         return toResponse(order);
     }
 
@@ -163,7 +189,11 @@ public OrderResponse placeOrder(OrderRequest request) {
         ).collect(Collectors.toList());
 
         return new OrderResponse(
-            o.getId(), o.getStatus(), o.getCreatedAt(), items
+            o.getId(),
+            o.getStatus(),
+            o.getShipmentStatus(),
+            o.getCreatedAt(),
+            items
         );
     }
     @Override
