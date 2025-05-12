@@ -18,6 +18,7 @@ import { VariantListComponent } from '../variant/variant-list/variant-list.compo
 import { VariantFormComponent } from '../variant/variant-form/variant-form.component';
 import { VariantModule } from '../variant/variant.module';
 import { HttpClientModule } from '@angular/common/http';
+import { MatSpinner } from '@angular/material/progress-spinner';
 
 
 
@@ -42,6 +43,7 @@ import { HttpClientModule } from '@angular/common/http';
     SharedModule,
     ReactiveFormsModule,
     VariantModule,
+    MatSpinner
 
 ],
   providers: [
