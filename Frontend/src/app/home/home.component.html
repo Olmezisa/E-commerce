@@ -2,12 +2,11 @@
   <!-- Hero Banner -->
   <app-hero-carousel></app-hero-carousel>
 
-  <!-- Kategoriler -->
+  <!-- Kategori bağlantıları -->
   <app-category-quick-links (categorySelected)="onCategorySelected($event)"></app-category-quick-links>
 
   <!-- Çok Satanlar -->
   <app-best-sellers></app-best-sellers>
 
-  <!-- Ürün Listesi -->
-  <app-product-list-page [categoryFilter]="selectedCategory" statusFilter="ACTIVE"></app-product-list-page>
+<app-product-list-page></app-product-list-page>
 </main>

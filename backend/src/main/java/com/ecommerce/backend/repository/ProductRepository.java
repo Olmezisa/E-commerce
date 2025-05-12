@@ -32,5 +32,9 @@ Optional<Product> findTopProductBySellerEmail(@Param("email") String email);
 """)
 BigDecimal calculateAveragePriceBySellerEmail(@Param("email") String email);
 
+List<Product> findByCategoryId(Long categoryId);
+List<Product> findByCategoryName(String name);
+List<Product> findByCategoryNameAndStatus(String name, ProductStatus status);
+
 
 }

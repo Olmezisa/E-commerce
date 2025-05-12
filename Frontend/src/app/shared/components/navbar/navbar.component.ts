@@ -1,42 +1,42 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
-
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Category } from '../../../core/models/category.model';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-navbar',
-  standalone:false,
+  standalone: false,
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isClickedNavbar = false;
+  categories: Category[] = [];
 
+  constructor(
+    private el: ElementRef,
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
 
-
-  categories = [
-    { label: 'Top Offers', icon: 'star' },
-    { label: 'Grocery', icon: 'local_grocery_store' },
-    { label: 'Mobiles', icon: 'smartphone' },
-    { label: 'Home', icon: 'weekend' },
-    { label: 'Electronics', icon: 'devices_other' },
-    { label: 'Fashion', icon: 'checkroom' },
-    { label: 'Beauty & Accessories', icon: 'brush' },
-  ];
-
-  constructor(private el: ElementRef) {}
+  ngOnInit(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: cats => this.categories = cats,
+      error: err => console.error('❌ Kategoriler alınamadı:', err)
+    });
+  }
 
   isClicked() {
     this.isClickedNavbar = !this.isClickedNavbar;
   }
 
-  onCategory(cat: { label: string; icon: string }) {
-    console.log('Seçilen kategori:', cat.label);
+  onCategory(cat: Category) {
+    this.router.navigate(['/products'], { queryParams: { category: cat.id } });
     this.isClickedNavbar = false;
   }
 
-  // Sayfanın herhangi bir yerine tıklandığında...
   @HostListener('document:click', ['$event.target'])
   handleOutsideClick(target: HTMLElement) {
-    // Eğer tıklanan element bizdeki buton/menü kapsayıcısının dışında ise
     if (this.isClickedNavbar && !this.el.nativeElement.contains(target)) {
       this.isClickedNavbar = false;
     }

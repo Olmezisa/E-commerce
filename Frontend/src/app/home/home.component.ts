@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
 
@@ -10,13 +11,16 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class HomeComponent {
   isLoggedIn$: Observable<boolean>;
-  selectedCategory ='';
 
-
-  constructor(private auth:AuthService){
-    this.isLoggedIn$=this.auth.isLoggedIn$;
+  constructor(private auth: AuthService, private router: Router) {
+    this.isLoggedIn$ = this.auth.isLoggedIn$;
   }
-  onCategorySelected(cat:string){
-    this.selectedCategory=cat;
+
+  onCategorySelected(cat: { id: number; name: string } | null) {
+    if (cat?.id) {
+      this.router.navigate(['/products'], { queryParams: { category: cat.id } });
+    } else {
+      this.router.navigate(['/products']);
+    }
   }
 }

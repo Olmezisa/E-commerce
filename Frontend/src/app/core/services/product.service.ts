@@ -92,4 +92,8 @@ export class ProductService {
     return this.http.delete<void>(`${environment.apiUrl}/products/variants/${variantId}`);
   }
 
+  getProductsByCategory(id: number): Observable<Product[]> {
+  return this.http.get<Product[]>(`${this.apiUrl}/category/${id}`);
+}
+
 }
