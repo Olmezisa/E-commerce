@@ -25,6 +25,7 @@ const routes: Routes = [
   },
   { path:'search', loadChildren:() => import('./products/products.module').then(m=>m.ProductsModule)},
   { path: 'seller', loadChildren: () => import('./seller/seller.module').then(m => m.SellerModule) },
+  { path: 'payment', loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule) },
 
   { path: '**',        redirectTo: 'home' }
 ];

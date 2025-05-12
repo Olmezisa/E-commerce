@@ -5,13 +5,15 @@ import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersComponent } from './orders.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
 
 
 @NgModule({
   declarations: [
     OrdersComponent,
     OrderHistoryComponent,
-    OrderTrackingComponent
+    OrderTrackingComponent,
+    MyOrdersComponent
   ],
   imports: [
     CommonModule,

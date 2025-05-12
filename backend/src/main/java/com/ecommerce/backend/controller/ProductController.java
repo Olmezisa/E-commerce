@@ -3,7 +3,6 @@ package com.ecommerce.backend.controller;
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.dto.SellerDto;
-import com.ecommerce.backend.entity.Category;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
@@ -89,7 +88,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.countProducts());
     }
 
-    // 👇 Product → ProductResponse dönüşümü
+    
     private ProductResponse toResponse(Product p) {
         SellerDto sellerDto = null;
         if (p.getSeller() != null) {
@@ -100,7 +99,7 @@ public class ProductController {
             );
         }
 
-        // Kategori null olabilir
+        
         String categoryName = (p.getCategory() != null) ? p.getCategory().getName() : null;
 
         return new ProductResponse(

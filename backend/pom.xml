@@ -26,6 +26,11 @@
 	</properties>
 
 	<dependencies>
+	<dependency>
+  <groupId>com.stripe</groupId>
+  <artifactId>stripe-java</artifactId>
+  <version>21.9.0</version>
+</dependency>
 		<!-- Spring Boot Starters -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

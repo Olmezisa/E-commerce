@@ -7,6 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import {  ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { SellerComponent } from '../seller/seller.component';
+import { SellerRegisterComponent } from './seller-register/seller-register.component';
 
 
 
@@ -15,6 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
     AuthComponent,
     LoginComponent,
     RegisterComponent,
+    SellerRegisterComponent
+
 
   ],
   imports: [

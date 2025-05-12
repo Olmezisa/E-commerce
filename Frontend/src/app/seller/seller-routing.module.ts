@@ -3,7 +3,7 @@ import { RouterModule, Routes, CanActivate } from '@angular/router';
 import { SellerComponent } from './seller.component';
 import { SellerDashboardComponent } from './seller-dashboard/seller-dashboard.component';
 import { AddProductsComponent } from './add-products/add-products.component';
-import { SellerRegisterComponent } from './seller-register/seller-register.component';
+import { SellerRegisterComponent } from '../auth/seller-register/seller-register.component';
 import { MyProductsComponent } from './my-products/my-products.component';
 import { RoleGuard } from '../core/guards/role.guard';
 import { AuthGuard } from '../core/guards/auth.guard';

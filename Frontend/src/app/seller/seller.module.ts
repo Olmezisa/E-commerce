@@ -8,7 +8,6 @@ import { SellerAnalyticsComponent } from './seller-analytics/seller-analytics.co
 import { AddProductsComponent } from './add-products/add-products.component';
 import { MyProductsComponent } from './my-products/my-products.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SellerRegisterComponent } from './seller-register/seller-register.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { VariantModule } from '../variant/variant.module';
 
@@ -20,7 +19,6 @@ import { VariantModule } from '../variant/variant.module';
     SellerAnalyticsComponent,
     AddProductsComponent,
     MyProductsComponent,
-    SellerRegisterComponent,
     EditProductComponent
   ],
   imports: [

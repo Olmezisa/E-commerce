@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
   }
 
   goToOrders():void{
-    this.router.navigate(['/orders']);
+    this.router.navigate(['orders/my-orders']);
   }
 
   goToAccount(): void {
