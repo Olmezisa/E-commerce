@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { OrdersComponent } from './orders.component';
-import { OrderHistoryComponent } from './order-history/order-history.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+import { AuthGuard } from '../core/guards/auth.guard';
+import { RoleGuard } from '../core/guards/role.guard';
 
 const routes: Routes = [
-  { path: '', component: OrdersComponent,
+  {   path: '', component: OrdersComponent,
+      canActivate:[AuthGuard,RoleGuard],
+      data:{roles:['BUYER']},
     children:[
       {path:'my-orders',component:MyOrdersComponent},
       {path:'order-tracking/:id',component:OrderTrackingComponent}
