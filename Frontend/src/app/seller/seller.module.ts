@@ -11,7 +11,7 @@ import { MyProductsComponent } from './my-products/my-products.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 
 import { VariantModule } from '../variant/variant.module';
-import { NgChartsModule } from 'ng2-charts';
+
 
 @NgModule({
   declarations: [
@@ -20,7 +20,8 @@ import { NgChartsModule } from 'ng2-charts';
     SellerAnalyticsComponent,
     AddProductsComponent,
     MyProductsComponent,
-    EditProductComponent
+    EditProductComponent,
+    OrderManagementComponent
   ],
   imports: [
     CommonModule,
