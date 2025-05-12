@@ -42,14 +42,76 @@ A modern, full-featured e-commerce platform built with **Angular** (frontend) an
 
 ## 🛠️ Setup & Configuration
 
-### 📦 Backend (`ecommerce-backend`)
-Create a `.env` file in the backend root:
+### 📦 Backend (`backend`)
 
-```env
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRATION_MS=your_expiry
-DB_NAME=your_db_name
-DB_USER=your_user
-DB_PASS=your_pass
-STRIPE_SECRET_KEY=your_stripe_key
-SERVER_PORT=your_server_port
+applicationProperties
+
+
+
+Update application.properties accordingly:
+
+spring.datasource.url=jdbc:mysql://localhost:3306/${DB_NAME}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASS}
+jwt.secret=${JWT_SECRET}
+stripe.api.key=${STRIPE_SECRET_KEY}
+
+🌐 Frontend (frontend)
+
+In src/environments/environment.ts:
+
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api',
+  stripePublishableKey: 'your_stripe_publishable_key'
+};
+
+▶️ Running the Application
+Backend
+bash
+Kopyala
+Düzenle
+cd backend
+mvn clean install
+mvn spring-boot:run
+Frontend
+bash
+Kopyala
+Düzenle
+cd frontend
+npm install
+npm start
+Visit: http://localhost:4200
+
+🔐 User Management Flow
+Registration: Role-based (buyer / seller), with corporate field for sellers
+
+Login: JWT access & refresh tokens stored client-side
+
+Logout: Refresh token invalidated server-side
+
+Profile Management: Name, email, password updates (with validation)
+
+👥 Roles & Permissions
+Role	Access & Features
+Buyer	Cart, checkout, track orders, reviews, Stripe payments
+Seller	Product listing, variant management, order analytics
+Admin	User moderation, product approval, category and refund management
+Guest	View public data, must login to interact with cart/orders
+
+🔄 Application Flow
+Buyers: Browse → Login → Add to cart → Checkout → Track order → Review
+
+Sellers: Register → Submit product → Wait approval → Receive & ship orders
+
+Admins: Login → Approve products → Monitor users/orders → Manage issues/categories
+
+📊 ER Diagram
+See the ER diagram section in the project report or open via Workbench for structure.
+
+👨‍💻 Developers
+Pelin Sağlamer – 20230808066
+
+İsa Ölmez – 20220808032
+
+Created as part of CSE 214 - Advanced Application Development.
