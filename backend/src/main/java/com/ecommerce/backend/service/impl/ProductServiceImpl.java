@@ -201,4 +201,15 @@ public Product findTopSellingProductBySeller(String email) {
 public BigDecimal calculateAverageProductPrice(String email) {
     return productRepository.calculateAveragePriceBySellerEmail(email);
 }
+@Override
+public List<Product> getProductsByCategory(Long categoryId) {
+    return productRepository.findByCategoryId(categoryId);
+}
+@Override
+public List<Product> getProductsByCategory(String categoryName, ProductStatus status) {
+    if (status != null) {
+        return productRepository.findByCategoryNameAndStatus(categoryName, status);
+    }
+    return productRepository.findByCategoryName(categoryName);
+}
 }

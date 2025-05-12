@@ -29,6 +29,9 @@ public interface ProductService {
     ProductVariant getVariantById(Long variantId);
     Product findTopSellingProductBySeller(String email);
 BigDecimal calculateAverageProductPrice(String email);
+List<Product> getProductsByCategory(Long categoryId);
+List<Product> getProductsByCategory(String categoryName, ProductStatus status);
+
 
     
 

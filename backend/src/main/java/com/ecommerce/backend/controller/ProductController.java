@@ -30,13 +30,20 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    // ✅ Hem status hem category parametresi destekleniyor
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts(
-            @RequestParam(value = "status", required = false) ProductStatus status) {
+            @RequestParam(value = "status", required = false) ProductStatus status,
+            @RequestParam(value = "category", required = false) String categoryName) {
 
-        List<Product> products = (status == null)
-                ? productService.getAllProducts()
-                : productService.getProductsByStatus(status);
+        List<Product> products;
+        if (categoryName != null) {
+            products = productService.getProductsByCategory(categoryName, status);
+        } else if (status != null) {
+            products = productService.getProductsByStatus(status);
+        } else {
+            products = productService.getAllProducts();
+        }
 
         List<ProductResponse> response = products.stream()
                 .map(this::toResponse)
@@ -88,7 +95,16 @@ public class ProductController {
         return ResponseEntity.ok(productService.countProducts());
     }
 
-    
+    // Eski ID ile kategori filtreleme opsiyonel olarak bırakıldı
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable Long categoryId) {
+        List<Product> products = productService.getProductsByCategory(categoryId);
+        List<ProductResponse> dto = products.stream()
+                .map(this::toResponse)
+                .toList();
+        return ResponseEntity.ok(dto);
+    }
+
     private ProductResponse toResponse(Product p) {
         SellerDto sellerDto = null;
         if (p.getSeller() != null) {
@@ -99,7 +115,6 @@ public class ProductController {
             );
         }
 
-        
         String categoryName = (p.getCategory() != null) ? p.getCategory().getName() : null;
 
         return new ProductResponse(

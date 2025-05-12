@@ -1,15 +1,18 @@
-<nav class="flex space-x-2">
-  <!-- 'Tümü' seçeneği -->
-  <button (click)="select('')" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
+<nav class="flex space-x-2 overflow-x-auto">
+  <!-- Tümü butonu -->
+  <button
+    (click)="categorySelected.emit(null)"
+    class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 whitespace-nowrap"
+  >
     Tümü
   </button>
 
-  <!-- Dinamik kategori butonları -->
+  <!-- Dinamik kategoriler -->
   <button
     *ngFor="let c of categories"
     (click)="select(c)"
-    class="px-3 py-1 rounded bg-blue-100 hover:bg-blue-200"
+    class="px-3 py-1 rounded bg-blue-100 hover:bg-blue-200 whitespace-nowrap"
   >
-    {{ c | titlecase }}
+    {{ c.name | titlecase }}
   </button>
 </nav>

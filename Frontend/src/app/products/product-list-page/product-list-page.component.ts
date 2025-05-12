@@ -1,21 +1,23 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Product } from '../models/product.model';
 import { ProductVariant } from '../models/variant.model';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
+import { CategoryService } from '../../core/services/category.service';
 
 @Component({
   selector: 'app-product-list-page',
-  standalone: false,
   templateUrl: './product-list-page.component.html',
-  styleUrls: ['./product-list-page.component.css']
+  styleUrl: './product-list-page.component.css',
+  standalone:false
 })
-export class ProductListPageComponent implements OnInit, OnChanges {
-  @Input() categoryFilter = '';
-  @Input() statusFilter: 'PENDING' | 'ACTIVE' | 'BANNED' = 'ACTIVE';
+export class ProductListPageComponent implements OnInit {
+  categoryId: number | null = null;
+  categoryName: string | null = null;
+  statusFilter: 'PENDING' | 'ACTIVE' | 'BANNED' = 'ACTIVE';
 
   products: Product[] = [];
   filtered: Product[] = [];
@@ -29,40 +31,58 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     private productService: ProductService,
     private cartService: CartService,
     private router: Router,
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private wishlist: WishlistService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
-    this.productService.getProducts(this.statusFilter).subscribe(list => {
-      this.products = list;
-      this.applyFilter();
+    this.route.queryParams.subscribe(params => {
+      const id = +params['category'];
+      this.categoryId = isNaN(id) ? null : id;
 
-      list.forEach(p => {
-        this.productService.getVariants(p.id).subscribe(vars => {
-          this.variantOptions[p.id] = vars;
-          this.selectedVariant[p.id] = vars.length ? vars[0].id : null;
+      if (this.categoryId) {
+        this.categoryService.getAllCategories().subscribe(cats => {
+          const found = cats.find(c => c.id === this.categoryId);
+          this.categoryName = found?.name ?? null;
         });
+      }
+
+      this.fetchProducts();
+    });
+  }
+
+  fetchProducts(): void {
+    if (this.categoryId) {
+      this.productService.getProductsByCategory(this.categoryId).subscribe(list => {
+        this.products = list;
+        this.applyFilter();
+        this.initVariants(list);
+      });
+    } else {
+      this.productService.getProducts(this.statusFilter).subscribe(list => {
+        this.products = list;
+        this.applyFilter();
+        this.initVariants(list);
+      });
+    }
+  }
+
+  private initVariants(list: Product[]): void {
+    list.forEach(p => {
+      this.productService.getVariants(p.id).subscribe(vars => {
+        this.variantOptions[p.id] = vars;
+        this.selectedVariant[p.id] = vars.length ? vars[0].id : null;
       });
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['categoryFilter'] || changes['statusFilter']) {
-      this.applyFilter();
-    }
-  }
-
   private applyFilter(): void {
     this.filtered = this.products;
-    if (this.categoryFilter) {
-      this.filtered = this.filtered.filter(
-        p => p.category?.name?.toLowerCase() === this.categoryFilter.toLowerCase()
-      );
-    }
     if (this.searchTerm) {
-      this.filtered = this.filtered.filter(
-        p => p.name.toLowerCase().includes(this.searchTerm)
+      this.filtered = this.filtered.filter(p =>
+        p.name.toLowerCase().includes(this.searchTerm)
       );
     }
   }
@@ -74,24 +94,22 @@ export class ProductListPageComponent implements OnInit, OnChanges {
   addToCart(product: Product, event: MouseEvent): void {
     event.stopPropagation();
     const variantId = this.selectedVariant[product.id] ?? undefined;
-    this.cartService
-      .addToCart(product.id, 1, variantId)
-      .subscribe({
-        next: () => {
-          this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
-            duration: 3000,
-            horizontalPosition: 'end',
-            verticalPosition: 'bottom'
-          });
-        },
-        error: err => {
-          this.snackBar.open(`Sepete eklenemedi: ${err.message}`, 'Kapat', {
-            duration: 3000,
-            horizontalPosition: 'end',
-            verticalPosition: 'bottom'
-          });
-        }
-      });
+    this.cartService.addToCart(product.id, 1, variantId).subscribe({
+      next: () => {
+        this.snackBar.open(`${product.name} sepete eklendi.`, 'Kapat', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      },
+      error: err => {
+        this.snackBar.open(`Sepete eklenemedi: ${err.message}`, 'Kapat', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      }
+    });
   }
 
   addToCompare(product: Product, event: MouseEvent): void {

@@ -49,7 +49,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
           .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
           .requestMatchers(HttpMethod.POST, "/api/cart/add").permitAll()
-
+    .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() 
           .requestMatchers("/api/cart/**").permitAll()
           
 
