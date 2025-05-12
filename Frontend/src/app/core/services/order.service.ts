@@ -48,11 +48,15 @@ export class OrderService {
     return this.http.get<OrderResp[]>(`${this.base}/my`);
   }
 
-cancelOrder(orderId: number): Observable<OrderResp> {
+  cancelOrder(orderId: number): Observable<OrderResp> {
   return this.http.post<OrderResp>(
     `${this.base}/${orderId}/cancel`, {}
   );
-}
+  }
+
+  getSellerOrders(): Observable<OrderResp[]> {
+    return this.http.get<OrderResp[]>(`${this.base}/seller`);
+  }
 
 
 }

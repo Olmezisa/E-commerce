@@ -10,6 +10,7 @@ import { MyProductsComponent } from './my-products/my-products.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { VariantModule } from '../variant/variant.module';
+import { OrderManagementComponent } from './order-management/order-management.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { VariantModule } from '../variant/variant.module';
     SellerAnalyticsComponent,
     AddProductsComponent,
     MyProductsComponent,
-    EditProductComponent
+    EditProductComponent,
+    OrderManagementComponent
   ],
   imports: [
     CommonModule,
