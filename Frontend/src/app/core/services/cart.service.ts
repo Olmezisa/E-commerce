@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './auth.service';
@@ -39,6 +39,13 @@ export class CartService {
     quantity: number,
     variantId?: number
   ): Observable<void> {
+
+    if(!this.auth.isAuthenticated()||this.auth.userRole !=='BUYER'){
+      this.router.navigate(['/auth/login'], {
+      queryParams: { returnUrl: this.router.url }
+    });
+    return EMPTY;
+    }
     let params = new HttpParams()
       .set('productId', productId.toString())
       .set('quantity',  quantity.toString());

@@ -30,7 +30,7 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     private cartService: CartService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private wishlist: WishlistService
+    private wishlist: WishlistService,
   ) {}
 
   ngOnInit(): void {
