@@ -9,7 +9,7 @@ import { RoleGuard } from '../core/guards/role.guard';
 const routes: Routes = [
   {   path: '', component: OrdersComponent,
       canActivate:[AuthGuard,RoleGuard],
-      data:{roles:['SELLER']},
+      data:{roles:['BUYER']},
     children:[
       {path:'my-orders',component:MyOrdersComponent},
       {path:'order-tracking/:id',component:OrderTrackingComponent}
