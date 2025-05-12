@@ -1,3 +1,4 @@
+
 import { Component, OnInit }      from '@angular/core';
 import { filter, map, Observable }             from 'rxjs';
 
@@ -13,6 +14,7 @@ import { OrderResp } from '../../../core/services/order.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+
   isLoggedIn$: Observable<boolean>;
   currentUser$: Observable<User | null>;
   cartCount$: Observable<number>;
@@ -57,8 +59,9 @@ export class HeaderComponent implements OnInit {
   goToAccount(): void {
     this.router.navigate(['/account/profile']);
   }
-  goToOrderTracking():void{
-    this.router.navigate(['/orders/order-tracking']);
+
+  goToOrderHistory():void{
+    this.router.navigate(['/orders/order-history']);
   }
 
 

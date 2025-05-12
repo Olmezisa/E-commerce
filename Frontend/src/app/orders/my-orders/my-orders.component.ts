@@ -23,7 +23,9 @@ export class MyOrdersComponent implements OnInit {
     this.loading = true;
     this.orderSvc.getBuyerOrders().subscribe({
       next: data => {
-        this.orders = data;
+        this.orders = data.filter(o =>
+          o.status !== 'CANCELLED' && o.status !== 'DELIVERED'
+        );
         this.loading = false;
       },
       error: err => {

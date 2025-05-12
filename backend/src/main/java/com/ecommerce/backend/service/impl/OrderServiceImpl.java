@@ -174,6 +174,7 @@ public class OrderServiceImpl implements OrderService {
         }
         paymentService.refundPayment(order.getPaymentIntentId());
         order.setStatus(OrderStatus.CANCELLED);
+        order.setShipmentStatus(null);
         orderRepository.save(order);
         return toResponse(order);
     }

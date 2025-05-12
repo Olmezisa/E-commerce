@@ -16,8 +16,7 @@ export class OrderTrackingComponent implements OnInit {
   loading = true;
   error = '';
 
-  isSeller = false;  // seller role flag
-
+  isSeller = false;
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
@@ -25,7 +24,7 @@ export class OrderTrackingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // determine user role
+
     this.auth.currentUser$.subscribe((user: User | null) => {
       this.isSeller = user?.role === 'SELLER';
     });
@@ -51,7 +50,7 @@ export class OrderTrackingComponent implements OnInit {
     });
   }
 
-  // only seller can call
+
   markShipped(): void {
     if (!this.isSeller) return;
     if (!confirm('Bu siparişi kargoya vermek istediğinize emin misiniz?')) return;

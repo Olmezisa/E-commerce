@@ -5,6 +5,7 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { RoleGuard } from '../core/guards/role.guard';
+import { OrderHistoryComponent } from './order-history/order-history.component';
 
 const routes: Routes = [
   {   path: '', component: OrdersComponent,
@@ -12,7 +13,11 @@ const routes: Routes = [
       data:{roles:['BUYER']},
     children:[
       {path:'my-orders',component:MyOrdersComponent},
-      {path:'order-tracking/:id',component:OrderTrackingComponent}
+      {path:'order-tracking/:id',component:OrderTrackingComponent},
+      {path:'order-history',component:OrderHistoryComponent},
+
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+
     ]
    }
 ];

@@ -16,7 +16,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let o of orders" class="border-b">
+      <tr *ngFor="let o of orders" class="border-b"
+      >
         <td class="px-4 py-2">{{ o.orderId }}</td>
         <td class="px-4 py-2">{{ o.createdAt | date:'short' }}</td>
         <td class="px-4 py-2">{{ o.status }}</td>

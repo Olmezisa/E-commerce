@@ -30,7 +30,7 @@ export class OrderManagementComponent implements OnInit {
     this.error = '';
     this.orderSvc.getSellerOrders().subscribe({
       next: data => {
-        this.orders = data;
+        this.orders = data.filter(o=>!!o.shipmentStatus);
         this.loading = false;
       },
       error: err => {
