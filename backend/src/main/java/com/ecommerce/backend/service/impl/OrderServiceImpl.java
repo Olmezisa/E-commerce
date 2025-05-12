@@ -67,44 +67,51 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse placeOrder(OrderRequest request) {
-        var pi = paymentService.retrievePaymentIntent(request.getPaymentIntentId());
-        if (!"succeeded".equals(pi.getStatus())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ödeme tamamlanmadı: " + pi.getStatus());
-        }
-        User buyer = userService.getCurrentUser();
-        // assume all items belong to same seller; pick seller from first product
-        Product first = productRepository.findById(request.getItems().get(0).getProductId())
-                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        User seller = first.getSeller();
+public OrderResponse placeOrder(OrderRequest request) {
+    var pi = paymentService.retrievePaymentIntent(request.getPaymentIntentId());
+    if (!"succeeded".equals(pi.getStatus())) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ödeme tamamlanmadı: " + pi.getStatus());
+    }
 
-        Order order = new Order();
-        order.setBuyer(buyer);
-        order.setSeller(seller);
-        order.setPaymentIntentId(pi.getId());
-        order.setStatus(OrderStatus.PAID);
+    User buyer = userService.getCurrentUser();
+    Product first = productRepository.findById(request.getItems().get(0).getProductId())
+                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    User seller = first.getSeller();
 
-        for (OrderItemRequest ir : request.getItems()) {
-            Product p = productRepository.findById(ir.getProductId())
-                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-            OrderItem item = new OrderItem();
-            item.setProduct(p);
-            item.setQuantity(ir.getQuantity());
-            item.setUnitPrice(p.getPrice());
-            order.addItem(item);
+    Order order = new Order();
+    order.setBuyer(buyer);
+    order.setSeller(seller);
+    order.setPaymentIntentId(pi.getId());
+    order.setStatus(OrderStatus.PAID);
+
+    for (OrderItemRequest ir : request.getItems()) {
+        Product p = productRepository.findById(ir.getProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (p.getStock() < ir.getQuantity()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Yetersiz stok: " + p.getName());
         }
-         BigDecimal total = order.getItems().stream()
-        .map(item ->
-          item.getUnitPrice()
-              .multiply(BigDecimal.valueOf(item.getQuantity()))
-        )
+
+        p.setStock(p.getStock() - ir.getQuantity());
+        productRepository.save(p);
+
+        OrderItem item = new OrderItem();
+        item.setProduct(p);
+        item.setQuantity(ir.getQuantity());
+        item.setUnitPrice(p.getPrice());
+        order.addItem(item);
+    }
+
+    BigDecimal total = order.getItems().stream()
+        .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
         .reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setTotalAmount(total);
+
+    order.setTotalAmount(total);
 
     Order saved = orderRepository.save(order);
     return toResponse(saved);
+}
 
-    }
 
     @Override
     public List<OrderResponse> getOrdersForBuyer() {
