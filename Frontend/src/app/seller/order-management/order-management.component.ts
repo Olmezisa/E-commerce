@@ -48,7 +48,7 @@ export class OrderManagementComponent implements OnInit {
     });
   }
 
-  // navigate to tracking page
+
   trackOrder(o: OrderResp) {
     this.router.navigate(['/orders/order-tracking', o.orderId]);
   }

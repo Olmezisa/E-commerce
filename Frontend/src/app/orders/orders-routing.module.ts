@@ -9,12 +9,18 @@ import { OrderHistoryComponent } from './order-history/order-history.component';
 
 const routes: Routes = [
   {   path: '', component: OrdersComponent,
-      canActivate:[AuthGuard,RoleGuard],
-      data:{roles:['BUYER']},
     children:[
-      {path:'my-orders',component:MyOrdersComponent},
-      {path:'order-tracking/:id',component:OrderTrackingComponent},
-      {path:'order-history',component:OrderHistoryComponent},
+      {path:'my-orders',component:MyOrdersComponent,
+        canActivate:[AuthGuard,RoleGuard],
+      data:{roles:['BUYER']}
+      },
+      {path:'order-tracking/:id',component:OrderTrackingComponent,
+        canActivate:[AuthGuard,RoleGuard],data:{roles:['SELLER','BUYER']}
+      },
+      {path:'order-history',component:OrderHistoryComponent,
+        canActivate:[AuthGuard,RoleGuard],
+      data:{roles:['BUYER']}
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 
