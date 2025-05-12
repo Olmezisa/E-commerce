@@ -12,6 +12,7 @@ import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.OrderRepository;
 import com.ecommerce.backend.repository.ProductRepository;
 import com.ecommerce.backend.service.OrderService;
+import com.ecommerce.backend.service.PaymentService;
 import com.ecommerce.backend.service.UserService;
 
 import java.math.BigDecimal;
@@ -30,11 +31,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final PaymentService paymentService;
 
-    public OrderServiceImpl(OrderRepository orderRepository,ProductRepository productRepository,UserService userService) {
+    public OrderServiceImpl(OrderRepository orderRepository,ProductRepository productRepository,UserService userService,PaymentService paymentService) {
         this.orderRepository = orderRepository;
         this.productRepository=productRepository;
         this.userService=userService;
+        this.paymentService = paymentService;
     }
 
     @Override
@@ -64,6 +67,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse placeOrder(OrderRequest request) {
+        var pi = paymentService.retrievePaymentIntent(request.getPaymentIntentId());
+        if (!"succeeded".equals(pi.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ödeme tamamlanmadı: " + pi.getStatus());
+        }
         User buyer = userService.getCurrentUser();
         // assume all items belong to same seller; pick seller from first product
         Product first = productRepository.findById(request.getItems().get(0).getProductId())
@@ -73,6 +80,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setBuyer(buyer);
         order.setSeller(seller);
+        order.setPaymentIntentId(pi.getId());
+        order.setStatus(OrderStatus.APPROVED);
 
         for (OrderItemRequest ir : request.getItems()) {
             Product p = productRepository.findById(ir.getProductId())

@@ -32,12 +32,7 @@ public class OrderController {
     public ResponseEntity<Long> getOrderCount() {
         return ResponseEntity.ok(orderService.countOrders());
     }
-    @PostMapping
-    @PreAuthorize("hasRole('BUYER')")
-    public OrderResponse placeOrder(@RequestBody OrderRequest req) {
-        return orderService.placeOrder(req);
-    }
-
+    
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('BUYER')")
@@ -66,4 +61,7 @@ public class OrderController {
     public void cancelOrder(@PathVariable Long id) {
         orderService.cancelOrder(id);
     }
+
+    
+
 }

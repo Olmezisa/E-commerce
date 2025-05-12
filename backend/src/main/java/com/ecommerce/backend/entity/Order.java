@@ -22,9 +22,15 @@ public class Order {
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller; // the owner of the products purchased :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
 
+    @Column(name = "payment_intent_id", nullable = false, unique = true)
+    private String paymentIntentId;
+ 
+    public String getPaymentIntentId() { return paymentIntentId; }
+    public void setPaymentIntentId(String paymentIntentId) { this.paymentIntentId = paymentIntentId; }
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OrderStatus status = OrderStatus.PENDING; // :contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}
+    private OrderStatus status; // :contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}
 
     @Column(nullable = false)
     private BigDecimal totalAmount;
