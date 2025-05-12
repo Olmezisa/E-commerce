@@ -21,7 +21,7 @@ public class Product {
     private String description;
 
     private String imageUrl;
-    private int rating;
+    private double rating;
     private String comment;
 
     @Column(nullable = false)
@@ -112,10 +112,10 @@ public class Product {
     public User getSeller() {
         return seller;
     }
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
     public ProductStatus getPreviousStatus() {
