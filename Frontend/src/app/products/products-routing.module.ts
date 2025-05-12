@@ -15,8 +15,8 @@ const routes: Routes = [
     component: ProductsComponent,
     children: [
       { path: '', component: ProductListPageComponent },
-      { path: ':id', component: ProductDetailPageComponent },
       { path: 'compare', component: ProductComparePageComponent },
+      { path: ':id', component: ProductDetailPageComponent },
       { path: 'search', component: SearchPageComponent }
     ]
   }
