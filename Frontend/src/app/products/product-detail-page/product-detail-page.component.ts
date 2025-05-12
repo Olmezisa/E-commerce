@@ -44,7 +44,6 @@ export class ProductDetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('▶️ ngOnInit OK, şimdi forkJoin öncesi');
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     forkJoin({
@@ -71,11 +70,13 @@ export class ProductDetailPageComponent implements OnInit {
       )
     }).subscribe({
       next: ({ product, variants, reviews }) => {
-        console.log('✅ forkJoin next:', { product, variants, reviews });
         this.product = product;
         this.variants = variants;
         this.selectedVariant = variants.length > 0 ? variants[0] : null;
         this.reviews = reviews;
+
+        const sum = reviews.reduce((acc, rev) => acc + rev.rating, 0);
+        this.product!.rating = reviews.length ? +(sum / reviews.length).toFixed(1) : 0;
 
         this.reviewForm = this.fb.group({
           rating: [5, Validators.required],
@@ -105,15 +106,23 @@ export class ProductDetailPageComponent implements OnInit {
 
   submitReview(): void {
     if (!this.product || this.reviewForm.invalid) return;
+
     this.reviewService.postReview(this.product.id, this.reviewForm.value).subscribe({
       next: () => {
         this.snackBar.open('Yorumunuz kaydedildi!', 'Kapat', { duration: 2000 });
-        this.reviewService.getReviews(this.product!.id)
-          .subscribe(r => (this.reviews = r));
+
+        this.reviewService.getReviews(this.product!.id).subscribe(r => {
+          this.reviews = r;
+
+          const sum = r.reduce((acc, rev) => acc + rev.rating, 0);
+          this.product!.rating = r.length ? +(sum / r.length).toFixed(1) : 0;
+        });
+
         this.reviewForm.reset({ rating: 5, comment: '' });
       },
-      error: () =>
-        this.snackBar.open('Yorum gönderilirken hata oluştu.', 'Kapat', { duration: 2000 })
+      error: () => {
+        this.snackBar.open('Yorum gönderilirken hata oluştu.', 'Kapat', { duration: 2000 });
+      }
     });
   }
 }
