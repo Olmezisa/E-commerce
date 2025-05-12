@@ -17,12 +17,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllBySellerEmail(String email);
 
     @Query("""
-      SELECT COALESCE(SUM(item.unitPrice * item.quantity), 0)
-        FROM Order o
-        JOIN o.seller s
-        JOIN o.items item
-       WHERE s.email = :sellerEmail
-    """)
+  SELECT COALESCE(SUM(o.totalAmount), 0)
+    FROM Order o
+   WHERE o.seller.email = :sellerEmail
+     AND o.status <> 'CANCELLED'
+""")
     BigDecimal sumTotalAmountBySellerEmail(@Param("sellerEmail") String sellerEmail);
 
     List<Order> findAllByBuyer(User buyer);

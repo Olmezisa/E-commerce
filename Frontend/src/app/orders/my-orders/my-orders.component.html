@@ -1,3 +1,4 @@
+<!-- src/app/my-orders/my-orders.component.html -->
 <div class="container mx-auto p-6 max-w-3xl">
   <h2 class="text-2xl font-bold mb-4">🛒 Siparişlerim</h2>
 
@@ -15,27 +16,30 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let o of orders" class="border-b">
-        <td class="px-4 py-2">{{ o.orderId }}</td>
-        <td class="px-4 py-2">{{ o.createdAt | date:'short' }}</td>
-        <td class="px-4 py-2">{{ o.status }}</td>
-        <td class="px-4 py-2">{{ o.totalAmount | currency:'TRY':'symbol' }}</td>
-        <td class="px-4 py-2 flex gap-2">
-          <button
-            *ngIf="o.status === 'PAID'"
-            (click)="onCancel(o)"
-            class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded"
-          >
-            İptal Et
-          </button>
-          <button
-            (click)="trackOrder(o)"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1 rounded"
-          >
-            Takip Et
-          </button>
-        </td>
-      </tr>
+      <!-- ng-container ile önce döngü -->
+      <ng-container *ngFor="let o of orders">
+        <!-- sonra şart -->
+        <tr *ngIf="o.status !== 'CANCELLED' && o.shipmentStatus !== 'DELIVERED'"
+            class="border-b">
+          <td class="px-4 py-2">{{ o.orderId }}</td>
+          <td class="px-4 py-2">{{ o.createdAt | date:'short' }}</td>
+          <td class="px-4 py-2">{{ o.status }}</td>
+          <td class="px-4 py-2">{{ o.totalAmount | currency:'TRY':'symbol' }}</td>
+          <td class="px-4 py-2 flex gap-2">
+            <button
+              *ngIf="o.status === 'PAID'"
+              (click)="onCancel(o)"
+              class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded">
+              İptal Et
+            </button>
+            <button
+              (click)="trackOrder(o)"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-1 rounded">
+              Takip Et
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
 

@@ -1,12 +1,11 @@
-<!-- src/app/order-tracking/order-tracking.component.html -->
 
-<!-- Sadece order geldiğinde ve loading/error yokken render et -->
+
+
 <div *ngIf="!loading && !error && order" class="container mx-auto p-6 max-w-3xl">
   <h2 class="text-2xl font-bold mb-4">
     🚚 Sipariş Takibi #{{ order.orderId }}
   </h2>
 
-  <!-- Kargoya Ver / durum adımları vs. buraya gelir -->
   <ul class="flex justify-between mb-8">
     <li *ngFor="let step of shipmentSteps; let i = index" class="flex-1 text-center">
       <div
@@ -22,8 +21,7 @@
     </li>
   </ul>
 
-  <!-- Ürünler, butonlar vs. -->
-  …
+
 </div>
 
 <ng-template #loadingOrError>

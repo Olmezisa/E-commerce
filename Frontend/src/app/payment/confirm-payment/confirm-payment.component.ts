@@ -38,7 +38,7 @@ export class ConfirmPaymentComponent implements OnInit{
     this.shipping = info;
 
     // Stripe init
-    const stripeInstance = await loadStripe('pk_test_51RNs87008FzfN01miHqsjpF5pHwZReW2c8G9eHu4HyyOfP5lP0ViT87R5r8cDtGDdHpGE2edh5hR6in0b2GBsUf900ha8VBUB0');
+    const stripeInstance = await loadStripe('pk_test_51RNEhKGbGwHjhJb4NuxqHm4bUCLAHw8oGuAQBtnn8IsOPOY0gJTEiChYrjBEqG1bDmXzQlEm8znI15CqEGXePgtk00LQx7P0jJ');
     if (!stripeInstance) {
       this.errorMessage = 'Stripe failed to load.';
       return;

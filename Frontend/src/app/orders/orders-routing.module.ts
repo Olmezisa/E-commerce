@@ -5,14 +5,25 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { RoleGuard } from '../core/guards/role.guard';
+import { OrderHistoryComponent } from './order-history/order-history.component';
 
 const routes: Routes = [
   {   path: '', component: OrdersComponent,
-      canActivate:[AuthGuard,RoleGuard],
-      data:{roles:['BUYER']},
     children:[
-      {path:'my-orders',component:MyOrdersComponent},
-      {path:'order-tracking/:id',component:OrderTrackingComponent}
+      {path:'my-orders',component:MyOrdersComponent,
+        canActivate:[AuthGuard,RoleGuard],
+      data:{roles:['BUYER']}
+      },
+      {path:'order-tracking/:id',component:OrderTrackingComponent,
+        canActivate:[AuthGuard,RoleGuard],data:{roles:['SELLER','BUYER']}
+      },
+      {path:'order-history',component:OrderHistoryComponent,
+        canActivate:[AuthGuard,RoleGuard],
+      data:{roles:['BUYER']}
+      },
+
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+
     ]
    }
 ];

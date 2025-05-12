@@ -11,6 +11,7 @@ import { CartService } from '../../../core/services/cart.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+
   isLoggedIn$: Observable<boolean>;
   currentUser$: Observable<User | null>;
   cartCount$: Observable<number>;
@@ -55,8 +56,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/account/profile']);
   }
 
-  goToOrderTracking(): void {
-    this.router.navigate(['/orders/order-tracking']);
+  goToOrderHistory():void{
+    this.router.navigate(['/orders/order-history']);
   }
 
   onSearch(term: string): void {
