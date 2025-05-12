@@ -24,6 +24,9 @@ public class Order {
 
     @Column(name = "payment_intent_id", nullable = false, unique = true)
     private String paymentIntentId;
+
+    @Enumerated(EnumType.STRING)
+    private ShipmentStatus shipmentStatus = ShipmentStatus.PENDING;
  
     public String getPaymentIntentId() { return paymentIntentId; }
     public void setPaymentIntentId(String paymentIntentId) { this.paymentIntentId = paymentIntentId; }
@@ -97,5 +100,11 @@ public class Order {
     public void addItem(OrderItem item) {
         items.add(item);
         item.setOrder(this);
+    }
+    public void setShipmentStatus(ShipmentStatus shipmentStatus) {
+        this.shipmentStatus = shipmentStatus;
+    }
+    public ShipmentStatus getShipmentStatus() {
+        return shipmentStatus;
     }
 }

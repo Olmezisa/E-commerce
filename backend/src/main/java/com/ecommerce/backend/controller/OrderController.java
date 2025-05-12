@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.backend.dto.OrderRequest;
 import com.ecommerce.backend.dto.OrderResponse;
+import com.ecommerce.backend.dto.ShipmentStatusUpdateRequest;
 import com.ecommerce.backend.service.OrderService;
 
 
@@ -65,6 +67,20 @@ public class OrderController {
     @PostMapping("/{id}/cancel")
     public OrderResponse cancel(@PathVariable("id") Long id) {
         return orderService.cancelOrder(id);
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponse getOrderById(@PathVariable Long id) {
+        return orderService.getOrderById(id);
+    }
+
+    @PutMapping("/{id}/shipment")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderResponse updateShipmentStatus(
+            @PathVariable Long id,
+            @RequestBody ShipmentStatusUpdateRequest req
+    ) {
+        return orderService.updateShipmentStatus(id, req.getShipmentStatus());
     }
 
     

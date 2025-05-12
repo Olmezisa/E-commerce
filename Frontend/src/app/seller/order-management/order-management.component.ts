@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { OrderResp, OrderService } from '../../core/services/order.service';
 
 @Component({
   selector: 'app-order-management',
-  standalone: false,
+  standalone:false,
   templateUrl: './order-management.component.html',
-  styleUrl: './order-management.component.css'
+  styleUrls: ['./order-management.component.css']
 })
 export class OrderManagementComponent implements OnInit {
-orders: OrderResp[] = [];
+  orders: OrderResp[] = [];
   loading = true;
   error = '';
 
-  constructor(private orderSvc: OrderService) {}
+  // possible shipment steps in order
+  shipmentSteps = ['PENDING', 'SHIPPED', 'IN_TRANSIT', 'DELIVERED'];
+
+  constructor(
+    private orderSvc: OrderService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadOrders();
@@ -38,6 +45,24 @@ orders: OrderResp[] = [];
     this.orderSvc.cancelOrder(o.orderId).subscribe({
       next: () => this.loadOrders(),
       error: err => alert('İptal sırasında hata: ' + (err.message || err.statusText))
+    });
+  }
+
+  // navigate to tracking page
+  trackOrder(o: OrderResp) {
+    this.router.navigate(['/orders/order-tracking', o.orderId]);
+  }
+
+  // update to next shipment status
+  advanceShipment(o: OrderResp) {
+    const currentIndex = this.shipmentSteps.indexOf(o.shipmentStatus || 'PENDING');
+    if (currentIndex < 0 || currentIndex >= this.shipmentSteps.length - 1) return;
+    const nextStatus = this.shipmentSteps[currentIndex + 1];
+    if (!confirm(`Sipariş #${o.orderId} durumunu '${nextStatus}' olarak güncellemek istediğinize emin misiniz?`)) return;
+
+    this.orderSvc.updateShipmentStatus(o.orderId, nextStatus).subscribe({
+      next: () => this.loadOrders(),
+      error: err => alert('Durum güncellenemedi: ' + (err.message || err.statusText))
     });
   }
 }

@@ -6,6 +6,8 @@ import { OrdersComponent } from './orders.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AppRoutingModule } from '../app-routing.module';
 
 
 @NgModule({
@@ -17,7 +19,7 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
   ],
   imports: [
     CommonModule,
-    OrdersRoutingModule
+    OrdersRoutingModule,
   ]
 })
 export class OrdersModule { }

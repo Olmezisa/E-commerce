@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderResp, OrderService } from '../../core/services/order.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-orders',
@@ -12,7 +13,7 @@ export class MyOrdersComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private orderSvc: OrderService) {}
+  constructor(private orderSvc: OrderService,private router: Router) {}
 
   ngOnInit() {
     this.loadOrders();
@@ -38,12 +39,14 @@ export class MyOrdersComponent implements OnInit {
     }
     this.orderSvc.cancelOrder(order.orderId).subscribe({
       next: updated => {
-        // Durum değişti; yeniden çek
         this.loadOrders();
       },
       error: err => {
         alert('İptal sırasında hata: ' + (err.message || err.statusText));
       }
     });
+  }
+   trackOrder(o: OrderResp): void {
+    this.router.navigate(['/orders/order-tracking', o.orderId]);
   }
 }
