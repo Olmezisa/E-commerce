@@ -43,21 +43,18 @@ public class OrderController {
         return orderService.placeOrder(orderRequest);
     }
 
-    // 2) Buyer views own orders
     @GetMapping("/my")
     @PreAuthorize("hasRole('BUYER')")
     public List<OrderResponse> getMyOrders() {
         return orderService.getOrdersForBuyer();
     }
 
-    // 3) Seller views orders for their products
     @GetMapping("/seller")
     @PreAuthorize("hasRole('SELLER')")
     public List<OrderResponse> getSellerOrders() {
         return orderService.getOrdersForSeller();
     }
 
-    // 4) Seller (or Buyer) cancels an order
     @PatchMapping("/{id}/cancel")
     @PreAuthorize("hasAnyRole('SELLER','BUYER')")
     public void cancelOrder(@PathVariable Long id) {

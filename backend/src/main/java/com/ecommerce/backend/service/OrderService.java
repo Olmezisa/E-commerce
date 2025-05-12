@@ -15,7 +15,6 @@ public interface OrderService {
     long countOrdersBySellerEmail(String sellerEmail);
     long countOrdersBySellerEmailAndStatus(String sellerEmail, OrderStatus status);
     BigDecimal sumRevenueBySellerEmail(String sellerEmail);
-    // varsa liste çekmek için:
     List<Order> findOrdersBySellerEmail(String sellerEmail);
 
     OrderResponse placeOrder(OrderRequest request);

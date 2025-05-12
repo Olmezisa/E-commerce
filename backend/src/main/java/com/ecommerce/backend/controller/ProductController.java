@@ -30,7 +30,6 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    // ✅ Hem status hem category parametresi destekleniyor
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts(
             @RequestParam(value = "status", required = false) ProductStatus status,
@@ -95,7 +94,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.countProducts());
     }
 
-    // Eski ID ile kategori filtreleme opsiyonel olarak bırakıldı
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable Long categoryId) {
         List<Product> products = productService.getProductsByCategory(categoryId);

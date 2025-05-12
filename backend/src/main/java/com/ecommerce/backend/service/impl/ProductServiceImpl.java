@@ -46,7 +46,6 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(request.getStock());
         product.setStatus(ProductStatus.PENDING);
 
-        // 👇 Kategori setleme
         Category category = categoryRepository.findById(request.getCategoryId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
         product.setCategory(category);
@@ -68,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(request.getStock());
         product.setStatus(request.getStatus());
 
-        // 👇 Güncelleme sırasında kategori güncellemesi
         Category category = categoryRepository.findById(request.getCategoryId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
         product.setCategory(category);

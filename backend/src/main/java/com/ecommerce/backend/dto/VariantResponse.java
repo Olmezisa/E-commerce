@@ -26,13 +26,29 @@ public class VariantResponse {
         this.imageUrl = imageUrl;
     }
 
-    // getters
-    public Long getId() { return id; }
-    public Long getProductId() { return productId; }
-    public String getSku() { return sku; }
-    public String getOptionName() { return optionName; }
-    public String getOptionValue() { return optionValue; }
-    public BigDecimal getPrice() { return price; }
-    public int getStock() { return stock; }
-    public String getImageUrl() { return imageUrl; }
+    
+    public Long getId() { 
+        return id;
+     }
+    public Long getProductId() { 
+        return productId; 
+    }
+    public String getSku() { 
+        return sku; 
+    }
+    public String getOptionName() {
+         return optionName; 
+        }
+    public String getOptionValue() {
+         return optionValue;
+         }
+    public BigDecimal getPrice() {
+         return price; 
+        }
+    public int getStock() {
+         return stock;
+         }
+    public String getImageUrl() {
+         return imageUrl; 
+        }
 }

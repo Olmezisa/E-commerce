@@ -40,13 +40,13 @@ export class CheckoutComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    // bilgileri ve sepeti CheckoutService’e kaydet
+
     this.checkoutSvc.setShipping({
       ...this.form.value,
       items: this.cartItems,
       totalPrice: this.totalPrice
     });
-    // ödeme sayfasına yönlendir
+
     this.router.navigate(['/payment/confirm-payment']);
   }
 }

@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
-import { PricePipe } from './pipes/price.pipe';
-import { RoleDirective } from './directives/role.directive';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,8 +21,6 @@ import { MatRippleModule } from '@angular/material/core';
     FooterComponent,
     HeaderComponent,
     ProductCardComponent,
-    PricePipe,
-    RoleDirective,
     SearchBarComponent
   ],
   imports: [
@@ -47,8 +43,6 @@ import { MatRippleModule } from '@angular/material/core';
     FooterComponent,
     HeaderComponent,
     ProductCardComponent,
-    PricePipe,
-    RoleDirective,
     SearchBarComponent
   ]
 

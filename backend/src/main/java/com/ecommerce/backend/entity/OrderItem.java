@@ -17,7 +17,7 @@ public class OrderItem {
     private Order order;
 
     @ManyToOne @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // :contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
+    private Product product; 
 
     @Column(nullable = false)
     private int quantity;

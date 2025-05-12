@@ -51,7 +51,6 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.save(review);
 
         
-    // ⭐️ Ortalama rating güncelleme
     List<Review> reviews = reviewRepository.findByProductId(product.getId());
     double avg = reviews.stream()
         .mapToInt(Review::getRating)

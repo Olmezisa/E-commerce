@@ -32,15 +32,37 @@ public class ProductResponse {
         this.ratingCount = ratingCount;
     }
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public BigDecimal getPrice() { return price; }
-    public int getStock() { return stock; }
-    public String getImageUrl() { return imageUrl; }
-    public ProductStatus getStatus() { return status; }
-    public SellerDto getSeller() { return seller; }
-    public String getCategory() { return category; }
-    public double getRating() { return rating; }
-    public int getRatingCount() { return ratingCount; }
+    public Long getId() { 
+        return id; 
+    }
+    public String getName() { 
+        return name;
+     }
+    public String getDescription() { 
+        return description; 
+    }
+    public BigDecimal getPrice() {
+         return price; 
+        }
+    public int getStock() {
+         return stock; 
+        }
+    public String getImageUrl() {
+         return imageUrl; 
+        }
+    public ProductStatus getStatus() {
+         return status; 
+        }
+    public SellerDto getSeller() {
+         return seller; 
+        }
+    public String getCategory() {
+         return category; 
+        }
+    public double getRating() {
+         return rating; 
+        }
+    public int getRatingCount() {
+         return ratingCount; 
+        }
 }

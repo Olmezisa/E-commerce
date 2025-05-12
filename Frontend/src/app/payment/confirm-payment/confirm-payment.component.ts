@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CheckoutService, ShippingInfo } from '../../core/services/checkout.service';
 import { Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-confirm-payment',
@@ -38,7 +39,7 @@ export class ConfirmPaymentComponent implements OnInit{
     this.shipping = info;
 
     // Stripe init
-    const stripeInstance = await loadStripe('pk_test_51RNEhKGbGwHjhJb4NuxqHm4bUCLAHw8oGuAQBtnn8IsOPOY0gJTEiChYrjBEqG1bDmXzQlEm8znI15CqEGXePgtk00LQx7P0jJ');
+    const stripeInstance = await loadStripe(environment.stripePublishableKey);
     if (!stripeInstance) {
       this.errorMessage = 'Stripe failed to load.';
       return;
