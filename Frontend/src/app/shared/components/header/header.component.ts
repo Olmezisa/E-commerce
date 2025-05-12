@@ -1,14 +1,12 @@
-import { Component, OnInit }      from '@angular/core';
-import { filter, map, Observable }             from 'rxjs';
-
-import { NavigationEnd, Router }                 from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { filter, map, Observable } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 import { AuthService, Role, User } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
-import { OrderResp } from '../../../core/services/order.service';
 
 @Component({
   selector: 'app-header',
-  standalone:false,
+  standalone: false,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -16,27 +14,27 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   currentUser$: Observable<User | null>;
   cartCount$: Observable<number>;
-  isSeller$:Observable<boolean>;
-  isBuyer$:Observable<boolean>;
-  userRole$:Observable<Role|null>;
-  isAdmin$:Observable<boolean>;
+  isSeller$: Observable<boolean>;
+  isBuyer$: Observable<boolean>;
+  isAdmin$: Observable<boolean>;
+  userRole$: Observable<Role | null>;
 
   constructor(
     private auth: AuthService,
     private cartService: CartService,
     private router: Router
   ) {
-    this.isLoggedIn$   = this.auth.isLoggedIn$;
-    this.currentUser$  = this.auth.currentUser$;
-    this.cartCount$    = this.cartService.cartCount$;
-    this.userRole$   = this.auth.userRole$;
-    this.isSeller$   = this.userRole$.pipe(map(r => r === 'SELLER'));
-    this.isBuyer$    = this.userRole$.pipe(map(r => r === 'BUYER'));
-    this.isAdmin$ = this.userRole$.pipe(map(r=> r =='ADMIN'));
+    this.isLoggedIn$ = this.auth.isLoggedIn$;
+    this.currentUser$ = this.auth.currentUser$;
+    this.cartCount$ = this.cartService.cartCount$;
+    this.userRole$ = this.auth.userRole$;
+    this.isSeller$ = this.userRole$.pipe(map(r => r === 'SELLER'));
+    this.isBuyer$ = this.userRole$.pipe(map(r => r === 'BUYER'));
+    this.isAdmin$ = this.userRole$.pipe(map(r => r === 'ADMIN'));
   }
 
   ngOnInit(): void {
-     this.router.events.pipe(
+    this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     ).subscribe(() => {
       if (this.auth.isLoggedInSnapshot()) {
@@ -45,30 +43,27 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-
   logout(): void {
     this.auth.logout();
   }
 
-  goToOrders():void{
+  goToOrders(): void {
     this.router.navigate(['orders/my-orders']);
   }
 
   goToAccount(): void {
     this.router.navigate(['/account/profile']);
   }
-  goToOrderTracking():void{
+
+  goToOrderTracking(): void {
     this.router.navigate(['/orders/order-tracking']);
   }
 
-
-
-onSearch(term: string): void {
-  if (term.trim()) {
-    this.router.navigate(['/products/search'], {
-      queryParams: { q: term.trim() }
-    });
+  onSearch(term: string): void {
+    if (term.trim()) {
+      this.router.navigate(['/products'], {
+        queryParams: { search: term.trim() }
+      });
+    }
   }
-}
-
 }

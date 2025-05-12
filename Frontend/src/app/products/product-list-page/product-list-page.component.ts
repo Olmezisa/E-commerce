@@ -12,17 +12,17 @@ import { CategoryService } from '../../core/services/category.service';
   selector: 'app-product-list-page',
   templateUrl: './product-list-page.component.html',
   styleUrl: './product-list-page.component.css',
-  standalone:false
+  standalone: false
 })
 export class ProductListPageComponent implements OnInit {
   categoryId: number | null = null;
   categoryName: string | null = null;
+  searchTerm = '';
   statusFilter: 'PENDING' | 'ACTIVE' | 'BANNED' = 'ACTIVE';
 
   products: Product[] = [];
   filtered: Product[] = [];
   selectedProducts: Product[] = [];
-  searchTerm = '';
 
   variantOptions: Record<number, ProductVariant[]> = {};
   selectedVariant: Record<number, number | null> = {};
@@ -40,7 +40,9 @@ export class ProductListPageComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const id = +params['category'];
+      const search = params['search']?.trim().toLowerCase() ?? '';
       this.categoryId = isNaN(id) ? null : id;
+      this.searchTerm = search;
 
       if (this.categoryId) {
         this.categoryService.getAllCategories().subscribe(cats => {
@@ -54,19 +56,15 @@ export class ProductListPageComponent implements OnInit {
   }
 
   fetchProducts(): void {
-    if (this.categoryId) {
-      this.productService.getProductsByCategory(this.categoryId).subscribe(list => {
-        this.products = list;
-        this.applyFilter();
-        this.initVariants(list);
-      });
-    } else {
-      this.productService.getProducts(this.statusFilter).subscribe(list => {
-        this.products = list;
-        this.applyFilter();
-        this.initVariants(list);
-      });
-    }
+    const source$ = this.categoryId
+      ? this.productService.getProductsByCategory(this.categoryId)
+      : this.productService.getProducts(this.statusFilter);
+
+    source$.subscribe(list => {
+      this.products = list;
+      this.applyFilter();
+      this.initVariants(list);
+    });
   }
 
   private initVariants(list: Product[]): void {
@@ -79,12 +77,16 @@ export class ProductListPageComponent implements OnInit {
   }
 
   private applyFilter(): void {
-    this.filtered = this.products;
-    if (this.searchTerm) {
-      this.filtered = this.filtered.filter(p =>
-        p.name.toLowerCase().includes(this.searchTerm)
-      );
-    }
+    this.filtered = this.searchTerm
+      ? this.products.filter(p =>
+          p.name.toLowerCase().includes(this.searchTerm)
+        )
+      : this.products;
+  }
+
+  onSearch(term: string): void {
+    this.searchTerm = term.trim().toLowerCase();
+    this.applyFilter();
   }
 
   viewDetails(product: Product): void {
@@ -112,6 +114,15 @@ export class ProductListPageComponent implements OnInit {
     });
   }
 
+  toggleWishlist(product: Product, event: MouseEvent): void {
+    event.stopPropagation();
+    this.wishlist.toggle(product);
+  }
+
+  isWishlisted(p: Product): boolean {
+    return this.wishlist.isInWishlist(p.id);
+  }
+
   addToCompare(product: Product, event: MouseEvent): void {
     event.stopPropagation();
     if (!this.selectedProducts.includes(product) && this.selectedProducts.length < 2) {
@@ -130,19 +141,5 @@ export class ProductListPageComponent implements OnInit {
       });
       this.selectedProducts = [];
     }
-  }
-
-  toggleWishlist(product: Product, event: MouseEvent): void {
-    event.stopPropagation();
-    this.wishlist.toggle(product);
-  }
-
-  isWishlisted(p: Product): boolean {
-    return this.wishlist.isInWishlist(p.id);
-  }
-
-  onSearch(term: string): void {
-    this.searchTerm = term.trim().toLowerCase();
-    this.applyFilter();
   }
 }

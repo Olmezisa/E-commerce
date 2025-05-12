@@ -12,7 +12,7 @@ import {
   filter,
   tap
 } from 'rxjs/operators';
-import { Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 import Fuse from 'fuse.js';
@@ -21,9 +21,9 @@ import { ProductService } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-search-bar',
-  standalone: false,
   templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.css']
+  styleUrls: ['./search-bar.component.css'],
+  standalone: false
 })
 export class SearchBarComponent implements OnInit, OnDestroy {
   searchControl = new FormControl('', { nonNullable: true });
@@ -43,7 +43,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
     this.productService.getProducts().subscribe(list => {
       this.allProducts = list;
       this.fuse = new Fuse(list, {
-        keys: ['title'],
+        keys: ['name'],
         threshold: 0.4,
         includeScore: true
       });
@@ -79,11 +79,8 @@ export class SearchBarComponent implements OnInit, OnDestroy {
     const term = this.searchControl.value.trim();
     if (!term) return;
 
-    const results = this.fuse.search(term).slice(0, 20);
-    this.suggestions = results.map(r => r.item);
-
-    // Emit the term for parent filtering logic
     this.search.emit(term);
+    this.clear();
   }
 
   clear(): void {
