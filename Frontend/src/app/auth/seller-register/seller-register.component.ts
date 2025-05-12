@@ -69,7 +69,7 @@ export class SellerRegisterComponent implements OnInit {
     this.auth.registerSeller(this.registerForm.value).subscribe({
       next: () => {
         alert('registration is successful!');
-        this.router.navigate(['/seller/dashboard']);
+        this.router.navigate(['/auth/login']);
       },
       error: err => {
         console.error('registration failed.', err);

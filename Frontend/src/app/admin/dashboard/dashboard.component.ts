@@ -1,3 +1,4 @@
+import { OrderService } from './../../core/services/order.service';
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../core/services/admin.service';
 @Component({
@@ -11,7 +12,7 @@ export class DashboardComponent implements OnInit {
   productCount = 0;
   orderCount = 0;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService,private orderService: OrderService) {}
 
   ngOnInit(): void {
     this.adminService.getUserCount().subscribe({
@@ -19,6 +20,6 @@ export class DashboardComponent implements OnInit {
       error: err => console.error('User count error:', err)
     });
     this.adminService.getProductCount().subscribe(c => this.productCount = c);
-    this.adminService.getOrderCount().subscribe(c => this.orderCount = c);
+    this.orderService.getTotalOrders().subscribe(c => this.orderCount = c);
   }
 }

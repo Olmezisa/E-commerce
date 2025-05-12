@@ -72,6 +72,10 @@ export class OrderService {
     );
   }
 
+  getTotalOrders(): Observable<number> {
+  return this.http.get<number>(`${environment.apiUrl}/orders/count`);
+}
+
 
 
 

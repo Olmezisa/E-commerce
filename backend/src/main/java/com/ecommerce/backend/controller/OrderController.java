@@ -30,6 +30,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping("/count")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> getOrderCount() {
         return ResponseEntity.ok(orderService.countOrders());
