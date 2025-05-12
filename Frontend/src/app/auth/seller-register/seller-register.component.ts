@@ -21,13 +21,17 @@ export class SellerRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      fullName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)],this.passwordStrengthValidator()],
-      confirmPassword: ['',[Validators.required, this.passwordMatchValidator.bind(this)]],
-      corporate: [false],
-      brandName: ['']
-    });
+  fullName: ['', Validators.required],
+  email: ['', [Validators.required, Validators.email]],
+  password: ['', [
+    Validators.required,
+    Validators.minLength(8),
+    this.passwordStrengthValidator()
+  ]],
+  confirmPassword: ['', [Validators.required, this.passwordMatchValidator.bind(this)]],
+  corporate: [false],
+  brandName: ['']
+});
 
     this.registerForm.get('corporate')!.valueChanges.subscribe((corp: boolean) => {
       const brandControl = this.registerForm.get('brandName')!;
@@ -65,7 +69,7 @@ export class SellerRegisterComponent implements OnInit {
     this.auth.registerSeller(this.registerForm.value).subscribe({
       next: () => {
         alert('registration is successful!');
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/seller/dashboard']);
       },
       error: err => {
         console.error('registration failed.', err);
