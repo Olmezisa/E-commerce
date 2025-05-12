@@ -54,7 +54,8 @@
         </div>
 
         <div class="text-sm text-gray-500 mt-1">
-          ⭐ {{ p.rating?.toFixed(1) ?? '0.0' }} / 5 ({{ p.ratingCount ?? 0 }} yorum)
+          ⭐ {{ p.rating != null ? (p.rating % 1 === 0 ? p.rating : p.rating.toFixed(1)) : '0' }} / 5
+
         </div>
 
         <div class="flex space-x-2 pt-2">
