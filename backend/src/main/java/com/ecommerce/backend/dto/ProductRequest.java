@@ -12,6 +12,7 @@ public class ProductRequest {
     private int stock;
     private ProductStatus status;
     private double rating;
+    private Long categoryId;
 
     public String getName() {
         return name;
@@ -65,5 +66,11 @@ public class ProductRequest {
     }
     public void setRating(double rating) {
         this.rating = rating;
+    }
+    public Long getCategoryId() {
+        return categoryId;
+    }
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

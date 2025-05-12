@@ -40,6 +40,20 @@
       </div>
     </div>
 
+    <!-- Kategori Dropdown -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+      <select
+        formControlName="categoryId"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+      >
+        <option value="">Kategori Seçin</option>
+        <option *ngFor="let c of categories" [value]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+    </div>
+
     <input type="hidden" formControlName="status"/>
 
     <div class="pt-4">

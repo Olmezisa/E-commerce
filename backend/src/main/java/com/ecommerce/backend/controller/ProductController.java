@@ -3,6 +3,7 @@ package com.ecommerce.backend.controller;
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.dto.SellerDto;
+import com.ecommerce.backend.entity.Category;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
@@ -22,7 +23,6 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-    
 
     @PostMapping
     @PreAuthorize("hasRole('SELLER')")
@@ -31,18 +31,17 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts(
             @RequestParam(value = "status", required = false) ProductStatus status) {
-    
+
         List<Product> products = (status == null)
-            ? productService.getAllProducts()
-            : productService.getProductsByStatus(status);
+                ? productService.getAllProducts()
+                : productService.getProductsByStatus(status);
 
         List<ProductResponse> response = products.stream()
-            .map(this::toResponse)
-            .toList();
+                .map(this::toResponse)
+                .toList();
 
         return ResponseEntity.ok(response);
     }
@@ -52,6 +51,7 @@ public class ProductController {
         Product p = productService.getProductById(id);
         return ResponseEntity.ok(toResponse(p));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(id, request));
@@ -62,6 +62,7 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> approveProduct(@PathVariable Long id) {
@@ -75,43 +76,45 @@ public class ProductController {
         return ResponseEntity.ok(productService.rejectProduct(id));
     }
 
-    @GetMapping("/count")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Long> getProductCount() {
-        return ResponseEntity.ok(productService.countProducts());
-    }
-private ProductResponse toResponse(Product p) {
-    SellerDto sellerDto = null;
-    if (p.getSeller() != null) {
-        sellerDto = new SellerDto(
-            p.getSeller().getId(),
-            p.getSeller().getFullName(),
-            p.getSeller().getEmail()
-        );
-    }
-
-    return new ProductResponse(
-        p.getId(),
-        p.getName(),
-        p.getDescription(),
-        p.getPrice(),
-        p.getStock(),
-        p.getImageUrl(),
-        p.getStatus(),
-        sellerDto,
-        p.getCategory(),
-        p.getRating(),
-        p.getReviews().size()
-    );
-}
     @PutMapping("/{id}/unban")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> unbanProduct(@PathVariable Long id) {
         Product updated = productService.unbanProduct(id);
         return ResponseEntity.ok(toResponse(updated));
     }
-    
-   
 
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getProductCount() {
+        return ResponseEntity.ok(productService.countProducts());
+    }
 
+    // 👇 Product → ProductResponse dönüşümü
+    private ProductResponse toResponse(Product p) {
+        SellerDto sellerDto = null;
+        if (p.getSeller() != null) {
+            sellerDto = new SellerDto(
+                    p.getSeller().getId(),
+                    p.getSeller().getFullName(),
+                    p.getSeller().getEmail()
+            );
+        }
+
+        // Kategori null olabilir
+        String categoryName = (p.getCategory() != null) ? p.getCategory().getName() : null;
+
+        return new ProductResponse(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                p.getStock(),
+                p.getImageUrl(),
+                p.getStatus(),
+                sellerDto,
+                categoryName,
+                p.getRating(),
+                p.getReviews().size()
+        );
+    }
 }

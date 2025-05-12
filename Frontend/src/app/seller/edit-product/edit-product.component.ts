@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VariantListComponent } from '../../variant/variant-list/variant-list.component';
+import { Category } from '../../core/models/category.model';
+import { CategoryService } from '../../core/services/category.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -17,6 +19,7 @@ export class EditProductComponent implements OnInit {
   variants: ProductVariant[] = [];
   editingVariant?: ProductVariant;
   productForm!: FormGroup;
+  categories: Category[] = [];
 
   @ViewChild(VariantListComponent) variantListComponent!: VariantListComponent;
 
@@ -24,6 +27,7 @@ export class EditProductComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private categoryService: CategoryService,
     private svc: ProductService
   ) {}
 
@@ -40,7 +44,12 @@ export class EditProductComponent implements OnInit {
       price:       [0, [Validators.required, Validators.min(0)]],
       stock:       [0, [Validators.required, Validators.min(0)]],
       imageUrl:    [''],
-      status:      ['', Validators.required]
+      status:      ['', Validators.required],
+      categoryId:  [null, Validators.required]
+    });
+
+    this.categoryService.getAllCategories().subscribe({
+      next: cats => this.categories = cats
     });
 
     this.svc.getProductById(id).subscribe(p => {
@@ -51,7 +60,8 @@ export class EditProductComponent implements OnInit {
         price:       p.price,
         stock:       p.stock,
         imageUrl:    p.imageUrl,
-        status:      p.status
+        status:      p.status,
+        categoryId:  p.category?.id || null
       });
     });
 
@@ -63,11 +73,7 @@ export class EditProductComponent implements OnInit {
   }
 
   onProductSubmit(): void {
-    console.log('SUBMIT tıklandı – form.valid:', this.productForm.valid, this.productForm.value);
-    if (this.productForm.invalid) {
-      console.warn('Form geçersiz, geri dönülüyor');
-      return;
-    }
+    if (this.productForm.invalid) return;
 
     const body = {
       name:        this.productForm.value.name,
@@ -75,14 +81,12 @@ export class EditProductComponent implements OnInit {
       price:       this.productForm.value.price,
       stock:       this.productForm.value.stock,
       imageUrl:    this.productForm.value.imageUrl,
-      status:      this.productForm.value.status
+      status:      this.productForm.value.status,
+      categoryId:  this.productForm.value.categoryId
     };
 
     this.svc.updateProduct(this.product.id, body).subscribe({
-      next: updated => {
-        console.log('PUT başarılı', updated);
-        alert('Ürün başarıyla güncellendi!');
-      },
+      next: () => alert('Ürün başarıyla güncellendi!'),
       error: err => {
         console.error('PUT hatası:', err);
         alert(`Güncelleme hatası: ${err.status} ${err.message}`);

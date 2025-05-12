@@ -1,3 +1,4 @@
+import { Category } from '../../core/models/category.model';
 import { User } from '../../core/services/auth.service';
 import { Review } from './review.model'; // Review modelini içe aktar
 
@@ -14,7 +15,7 @@ export interface Product {
   price: number;
   imageUrl: string;
   stock: number;
-  category?: string;
+  category?: Category;
   rating?: number;
   ratingCount?: number;
   status: 'PENDING' | 'ACTIVE' | 'BANNED';

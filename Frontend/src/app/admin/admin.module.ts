@@ -8,6 +8,8 @@ import { OrderManagementComponent } from './order-management/order-management.co
 import { ProductManagementComponent } from './product-management/product-management.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { RouterModule } from '@angular/router';
+import { CategoryManagementComponent } from './category-management/category-management.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -16,12 +18,14 @@ import { RouterModule } from '@angular/router';
     DashboardComponent,
     OrderManagementComponent,
     ProductManagementComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    CategoryManagementComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule
   ]
 })
 export class AdminModule { }

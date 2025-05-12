@@ -57,7 +57,7 @@ export class ProductListPageComponent implements OnInit, OnChanges {
     this.filtered = this.products;
     if (this.categoryFilter) {
       this.filtered = this.filtered.filter(
-        p => p.category?.toLowerCase() === this.categoryFilter.toLowerCase()
+        p => p.category?.name?.toLowerCase() === this.categoryFilter.toLowerCase()
       );
     }
     if (this.searchTerm) {

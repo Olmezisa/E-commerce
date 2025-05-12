@@ -27,14 +27,14 @@ public class SellerController {
 
     public SellerController(ProductService productService, OrderService orderService) {
         this.productService = productService;
-        this.orderService   = orderService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/dashboard")
     public ResponseEntity<SellerDashboardDto> getDashboard(Principal principal) {
         String email = principal.getName();
         long totalProducts = productService.countProductsBySellerUsername(email);
-        long totalOrders   = orderService.countOrdersBySellerEmail(email);
+        long totalOrders = orderService.countOrdersBySellerEmail(email);
         long pendingOrders = orderService.countOrdersBySellerEmailAndStatus(email, OrderStatus.PENDING);
         BigDecimal revenue = orderService.sumRevenueBySellerEmail(email);
         SellerDashboardDto dto = new SellerDashboardDto(totalProducts, totalOrders, pendingOrders, revenue);
@@ -47,8 +47,8 @@ public class SellerController {
         List<Product> products = productService.getProductsBySellerUsername(email);
 
         List<ProductResponse> dto = products.stream()
-            .map(this::toResponse)
-            .collect(Collectors.toList());
+                .map(this::toResponse)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(dto);
     }
@@ -57,24 +57,26 @@ public class SellerController {
         SellerDto sellerDto = null;
         if (p.getSeller() != null) {
             sellerDto = new SellerDto(
-                p.getSeller().getId(),
-                p.getSeller().getFullName(),
-                p.getSeller().getEmail()
+                    p.getSeller().getId(),
+                    p.getSeller().getFullName(),
+                    p.getSeller().getEmail()
             );
         }
 
+        String categoryName = (p.getCategory() != null) ? p.getCategory().getName() : null;
+
         return new ProductResponse(
-            p.getId(),
-            p.getName(),
-            p.getDescription(),
-            p.getPrice(),
-            p.getStock(),
-            p.getImageUrl(),
-            p.getStatus(),
-            sellerDto,
-            p.getCategory(),
-            p.getRating(),
-            p.getReviews().size()
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                p.getStock(),
+                p.getImageUrl(),
+                p.getStatus(),
+                sellerDto,
+                categoryName,
+                p.getRating(),
+                p.getReviews().size()
         );
     }
 }

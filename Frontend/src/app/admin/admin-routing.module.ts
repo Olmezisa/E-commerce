@@ -7,6 +7,7 @@ import { OrderManagementComponent } from './order-management/order-management.co
 import { UserManagementComponent } from './user-management/user-management.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { RoleGuard } from '../core/guards/role.guard';
+import { CategoryManagementComponent } from './category-management/category-management.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'products/pending', component: ProductManagementComponent },
       { path: 'orders', component: OrderManagementComponent },
       { path: 'users', component: UserManagementComponent },
+      { path: 'categories', component: CategoryManagementComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

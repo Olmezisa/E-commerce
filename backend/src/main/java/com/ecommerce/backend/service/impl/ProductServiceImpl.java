@@ -2,10 +2,8 @@ package com.ecommerce.backend.service.impl;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.VariantRequest;
-import com.ecommerce.backend.entity.Product;
-import com.ecommerce.backend.entity.ProductStatus;
-import com.ecommerce.backend.entity.ProductVariant;
-import com.ecommerce.backend.entity.User;
+import com.ecommerce.backend.entity.*;
+import com.ecommerce.backend.repository.CategoryRepository;
 import com.ecommerce.backend.repository.ProductRepository;
 import com.ecommerce.backend.repository.ProductVariantRepository;
 import com.ecommerce.backend.service.ProductService;
@@ -23,16 +21,19 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserService userService;
     private final ProductVariantRepository variantRepository;
+    private final CategoryRepository categoryRepository;
 
-
-    public ProductServiceImpl(ProductRepository productRepository, UserService userService,
-    ProductVariantRepository variantRepository) {
+    public ProductServiceImpl(
+        ProductRepository productRepository,
+        UserService userService,
+        ProductVariantRepository variantRepository,
+        CategoryRepository categoryRepository
+    ) {
         this.productRepository = productRepository;
         this.userService = userService;
         this.variantRepository = variantRepository;
-
+        this.categoryRepository = categoryRepository;
     }
-
 
     @Override
     public Product createProduct(ProductRequest request) {
@@ -42,23 +43,17 @@ public class ProductServiceImpl implements ProductService {
         product.setImageUrl(request.getImageUrl());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
-        product.setStatus(ProductStatus.PENDING); 
+        product.setStatus(ProductStatus.PENDING);
+
+        // 👇 Kategori setleme
+        Category category = categoryRepository.findById(request.getCategoryId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+        product.setCategory(category);
 
         User seller = userService.getCurrentUser();
         product.setSeller(seller);
 
         return productRepository.save(product);
-    }
-
-    @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
-    @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
     }
 
     @Override
@@ -72,18 +67,34 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(request.getStock());
         product.setStatus(request.getStatus());
 
+        // 👇 Güncelleme sırasında kategori güncellemesi
+        Category category = categoryRepository.findById(request.getCategoryId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+        product.setCategory(category);
+
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
     }
 
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
     @Override
     public Product approveProduct(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         product.setStatus(ProductStatus.ACTIVE);
         return productRepository.save(product);
     }
@@ -96,14 +107,26 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(ProductStatus.BANNED);
         return productRepository.save(product);
     }
+
+    @Override
+    public Product unbanProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        product.setStatus(ProductStatus.ACTIVE);
+        product.setPreviousStatus(null);
+        return productRepository.save(product);
+    }
+
     @Override
     public List<Product> getProductsByStatus(ProductStatus status) {
         return productRepository.findByStatus(status);
     }
+
     @Override
     public Long countProducts() {
         return productRepository.count();
     }
+
     @Override
     public List<Product> getProductsBySellerUsername(String username) {
         return productRepository.findAllBySellerEmail(username);
@@ -113,20 +136,9 @@ public class ProductServiceImpl implements ProductService {
     public long countProductsBySellerUsername(String username) {
         return productRepository.countBySellerEmail(username);
     }
-@Override
-public Product unbanProduct(Long productId) {
-    Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
-    product.setStatus(ProductStatus.ACTIVE);
-    product.setPreviousStatus(null);
-
-    return productRepository.save(product);
-}
 
     @Override
     public List<ProductVariant> getVariantsForProduct(Long productId) {
-        // Ürünün var olduğundan emin olalım
         if (!productRepository.existsById(productId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         }

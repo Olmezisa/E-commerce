@@ -5,6 +5,7 @@ import { Product } from '../../products/models/product.model';
 import { environment } from '../../environments/environment';
 import { ProductVariant } from '../../products/models/variant.model';
 import { VariantRequest } from '../../products/models/variant-request.model';
+import { Category } from '../models/category.model';
 
 @Injectable({
   providedIn: 'root'
@@ -90,4 +91,5 @@ export class ProductService {
   deleteVariant(variantId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/products/variants/${variantId}`);
   }
+
 }
