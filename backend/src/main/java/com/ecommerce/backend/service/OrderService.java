@@ -19,7 +19,7 @@ public interface OrderService {
     OrderResponse placeOrder(OrderRequest request);
     List<OrderResponse> getOrdersForBuyer();
     List<OrderResponse> getOrdersForSeller();
-    void cancelOrder(Long orderId);
+    OrderResponse cancelOrder(Long orderId);
     
     
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -81,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
         order.setBuyer(buyer);
         order.setSeller(seller);
         order.setPaymentIntentId(pi.getId());
-        order.setStatus(OrderStatus.APPROVED);
+        order.setStatus(OrderStatus.PAID);
 
         for (OrderItemRequest ir : request.getItems()) {
             Product p = productRepository.findById(ir.getProductId())
@@ -119,13 +120,29 @@ public class OrderServiceImpl implements OrderService {
                         .map(this::toResponse).collect(Collectors.toList());
     }
 
-    @Override
-    public void cancelOrder(Long orderId) {
+     @Override
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        // only seller or buyer could cancel; check role if needed
+            .orElseThrow(() -> new RuntimeException("Order bulunamadı: " + orderId));
+
+        User current = userService.getCurrentUser();
+        boolean isBuyer  = order.getBuyer().getId().equals(current.getId());
+        boolean isSeller = order.getSeller().getId().equals(current.getId());
+        if (!isBuyer && !isSeller) {
+            throw new AccessDeniedException("Bu siparişi iptal etme yetkiniz yok");
+        }
+
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new RuntimeException("Sipariş zaten iptal edilmiş");
+        }
+        // Opsiyonel: Stripe iadesi
+        paymentService.refundPayment(order.getPaymentIntentId());
+
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
+
+        return toResponse(order);
     }
 
     private OrderResponse toResponse(Order o) {
