@@ -11,6 +11,8 @@ import { MyProductsComponent } from './my-products/my-products.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 
 import { VariantModule } from '../variant/variant.module';
+import { NgChartsModule } from 'ng2-charts';
+import { OrderManagementComponent } from './order-management/order-management.component';
 
 
 @NgModule({
